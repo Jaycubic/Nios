@@ -94,61 +94,92 @@ export default function P1_ProgressOverview() {
         {/* ── Hero Card: Big number + trajectory ── */}
         <Grid item xs={12} md={7}>
           <Card elevation={0} sx={{ height: '100%' }}>
-            <CardContent>
-              <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', mb: 1 }}>
-                <Box>
-                  <Typography variant="overline">Monthly Progress</Typography>
-                  <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1, mt: 0.5 }}>
-                    <Typography sx={{
-                      fontSize: '3.8rem',
-                      fontWeight: 800,
-                      color: COLORS.green,
-                      lineHeight: 1,
-                      fontFamily: "'DM Sans'",
-                      letterSpacing: '-0.03em',
-                    }}>+20%</Typography>
-                    <Typography sx={{ color: COLORS.textMuted, fontSize: '1rem', fontWeight: 500 }}>this month</Typography>
+            <CardContent sx={{ p: { xs: 2.5, sm: 3.5 } }}>
+              {/* ── 1. Monthly Progress Section ── */}
+              <Box sx={{ mb: 4 }}>
+                <Typography variant="overline" sx={{ display: 'block', mb: 1.5, color: COLORS.textSecondary, fontWeight: 600, letterSpacing: 1 }}>
+                  Monthly Progress
+                </Typography>
+                
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
+                  <Typography sx={{
+                    fontSize: '4.2rem',
+                    fontWeight: 800,
+                    color: COLORS.green,
+                    lineHeight: 1,
+                    fontFamily: "'DM Sans'",
+                    letterSpacing: '-0.04em',
+                  }}>+20%</Typography>
+                  <Box>
+                    <Typography sx={{ color: COLORS.textPrimary, fontSize: '1.15rem', fontWeight: 700, mb: 0.2 }}>
+                      overall improvement
+                    </Typography>
+                    <Chip
+                      size="small"
+                      label="↑ Up from last month"
+                      sx={{
+                        background: `${COLORS.green}15`,
+                        color: COLORS.greenDark,
+                        fontWeight: 700,
+                        fontSize: '0.75rem',
+                        border: `1px solid ${COLORS.green}30`,
+                      }}
+                    />
                   </Box>
                 </Box>
-                <Chip
-                  label="↑ Improving"
-                  sx={{
-                    background: `${COLORS.green}18`,
-                    color: COLORS.greenDark,
-                    fontWeight: 700,
-                    fontSize: '0.78rem',
-                    border: `1px solid ${COLORS.green}35`,
-                  }}
-                />
-              </Box>
 
-              {/* Supportive message */}
-              <Box sx={{
-                background: `linear-gradient(135deg, ${COLORS.green}10, ${COLORS.blue}08)`,
-                border: `1px solid ${COLORS.green}25`,
-                borderRadius: '12px',
-                p: 2,
-                mb: 3,
-              }}>
-                <Typography sx={{ fontSize: '0.92rem', color: COLORS.textPrimary, lineHeight: 1.6 }}>
-                  🎉 <strong>Aarav is making great progress!</strong> He has improved consistently over the past 4 weeks and is developing strong understanding across core subjects.
-                </Typography>
-              </Box>
-
-              {/* Level transition */}
-              <Box sx={{ mb: 3 }}>
-                <Typography variant="overline" sx={{ mb: 1.5, display: 'block' }}>Learning Journey</Typography>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                  <Chip label="Developing" sx={{ background: `${COLORS.yellow}20`, color: COLORS.yellowDark, fontWeight: 600, border: `1px solid ${COLORS.yellow}40` }} />
-                  <Typography sx={{ color: COLORS.textMuted, fontSize: '1.2rem' }}>→</Typography>
-                  <Chip label="Proficient" sx={{ background: `${COLORS.green}20`, color: COLORS.greenDark, fontWeight: 600, border: `1px solid ${COLORS.green}40` }} />
-                  <Typography variant="caption" sx={{ ml: 1, color: COLORS.textMuted }}>in progress</Typography>
+                {/* Positive emotional summary */}
+                <Box sx={{
+                  background: `linear-gradient(135deg, ${COLORS.green}08, ${COLORS.blue}05)`,
+                  borderLeft: `4px solid ${COLORS.green}`,
+                  borderRadius: '0 12px 12px 0',
+                  p: 2.5,
+                }}>
+                  <Typography sx={{ fontSize: '1rem', color: COLORS.textPrimary, lineHeight: 1.6, fontWeight: 500 }}>
+                    <span style={{ fontSize: '1.2rem', marginRight: '8px' }}>🎉</span>
+                    <strong>Aarav is flourishing!</strong> He's showing highly consistent effort over the past 4 weeks and rapidly building mastery across core subjects.
+                  </Typography>
                 </Box>
               </Box>
 
-              {/* Plant growth */}
-              <Typography variant="overline" sx={{ mb: 1.5, display: 'block' }}>Growth Stage</Typography>
-              <PlantGrowthVisual level={2} />
+              <Divider sx={{ my: 4, opacity: 0.5 }} />
+
+              {/* ── 2. Learning Journey Section ── */}
+              <Box>
+                <Typography variant="overline" sx={{ display: 'block', mb: 3, color: COLORS.textSecondary, fontWeight: 600, letterSpacing: 1 }}>
+                  Learning Journey
+                </Typography>
+                
+                {/* Movement from current to next stage */}
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 1.5, mb: 5, px: { xs: 0, sm: 2 } }}>
+                  <Box sx={{ textAlign: 'center', flex: 1.2 }}>
+                    <Typography variant="caption" sx={{ color: COLORS.textSecondary, fontWeight: 600, display: 'block', mb: 1, textTransform: 'uppercase', letterSpacing: 0.5 }}>Current</Typography>
+                    <Chip label="Developing" sx={{ background: `${COLORS.yellow}15`, color: COLORS.yellowDark, fontWeight: 700, fontSize: '0.95rem', py: 2.5, borderRadius: '12px', border: `1px solid ${COLORS.yellow}40`, width: '100%' }} />
+                  </Box>
+                  
+                  <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 3, position: 'relative' }}>
+                    <Typography variant="caption" sx={{ color: COLORS.green, fontWeight: 700, position: 'absolute', top: -20, whiteSpace: 'nowrap' }}>in progress</Typography>
+                    <Box sx={{ width: '100%', height: 4, background: `linear-gradient(90deg, ${COLORS.yellow}40, ${COLORS.green})`, borderRadius: 2, position: 'relative' }}>
+                       <Box sx={{ position:'absolute', right: -4, top: '50%', transform:'translateY(-50%)', width: 12, height: 12, borderRadius: '50%', background: COLORS.green, border: '2px solid white', boxShadow: `0 0 0 3px ${COLORS.green}30` }} />
+                    </Box>
+                  </Box>
+
+                  <Box sx={{ textAlign: 'center', flex: 1.2 }}>
+                    <Typography variant="caption" sx={{ color: COLORS.textSecondary, fontWeight: 600, display: 'block', mb: 1, textTransform: 'uppercase', letterSpacing: 0.5 }}>Next</Typography>
+                    <Chip label="Proficient" sx={{ background: `transparent`, color: COLORS.textMuted, fontWeight: 600, fontSize: '0.95rem', py: 2.5, borderRadius: '12px', border: `1px dashed ${COLORS.textMuted}`, opacity: 0.8, width: '100%' }} />
+                  </Box>
+                </Box>
+
+                {/* Current growth stage visual map */}
+                <Box sx={{ 
+                  background: 'rgba(0,0,0,0.015)', 
+                  borderRadius: '16px', 
+                  p: 3,
+                  border: `1px solid rgba(0,0,0,0.04)`,
+                }}>
+                  <PlantGrowthVisual level={2} />
+                </Box>
+              </Box>
             </CardContent>
           </Card>
         </Grid>
@@ -162,10 +193,10 @@ export default function P1_ProgressOverview() {
               <CardContent>
                 <Typography variant="overline" sx={{ display: 'block', mb: 2 }}>Quick Learning Snapshot</Typography>
                 <Box sx={{ display: 'flex', gap: 1.5, flexWrap: 'wrap' }}>
-                  <StatBadge label="Current level" value="72%" color={COLORS.green} />
-                  <StatBadge label="Practice attempts" value="146" color={COLORS.blue} />
-                  <StatBadge label="Study streak" value="12-day" color={COLORS.yellow} />
-                  <StatBadge label="This week" value="3.5 hrs" color={COLORS.purple} />
+                  <StatBadge label="Overall Score" value="72%" color={COLORS.green} />
+                  <StatBadge label="Practice sessions" value="146" color={COLORS.blue} />
+                  <StatBadge label="Day consistency" value="12-day" color={COLORS.yellow} />
+                  <StatBadge label="Study time" value="3.5 hrs" color={COLORS.purple} />
                 </Box>
               </CardContent>
             </Card>
