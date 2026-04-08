@@ -11,15 +11,16 @@ import { COLORS } from '../../theme';
 function StatBadge({ label, value, color }) {
   return (
     <Box sx={{
-      px: 2, py: 1.5,
+      flex: 1,
+      px: 2, py: 2,
       background: `${color}12`,
       border: `1px solid ${color}30`,
       borderRadius: '12px',
       textAlign: 'center',
-      minWidth: 90,
+      minWidth: 100,
     }}>
-      <Typography sx={{ fontWeight: 700, fontSize: '1.1rem', color, fontFamily: "'DM Sans'" }}>{value}</Typography>
-      <Typography variant="caption" sx={{ color: COLORS.textMuted, display: 'block', mt: 0.3 }}>{label}</Typography>
+      <Typography sx={{ fontWeight: 700, fontSize: '1.3rem', color, fontFamily: "'DM Sans'" }}>{value}</Typography>
+      <Typography variant="caption" sx={{ color: COLORS.textMuted, display: 'block', mt: 0.4, fontSize: '0.8rem' }}>{label}</Typography>
     </Box>
   );
 }
@@ -159,12 +160,12 @@ export default function P1_ProgressOverview() {
             {/* Stats row */}
             <Card elevation={0}>
               <CardContent>
-                <Typography variant="overline" sx={{ display: 'block', mb: 2 }}>At a glance</Typography>
+                <Typography variant="overline" sx={{ display: 'block', mb: 2 }}>Quick Learning Snapshot</Typography>
                 <Box sx={{ display: 'flex', gap: 1.5, flexWrap: 'wrap' }}>
-                  <StatBadge label="Accuracy" value="72%" color={COLORS.green} />
-                  <StatBadge label="Attempted" value="146" color={COLORS.blue} />
-                  <StatBadge label="Streak" value="12d" color={COLORS.yellow} />
-                  <StatBadge label="Hours/wk" value="3.5h" color={COLORS.purple} />
+                  <StatBadge label="Current level" value="72%" color={COLORS.green} />
+                  <StatBadge label="Practice attempts" value="146" color={COLORS.blue} />
+                  <StatBadge label="Study streak" value="12-day" color={COLORS.yellow} />
+                  <StatBadge label="This week" value="3.5 hrs" color={COLORS.purple} />
                 </Box>
               </CardContent>
             </Card>
