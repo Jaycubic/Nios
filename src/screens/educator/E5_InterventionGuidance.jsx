@@ -138,7 +138,7 @@ export default function E5_InterventionGuidance() {
 
         {/* ── Header summary ── */}
         <Grid item xs={12}>
-          <Card elevation={0} sx={{ background: COLORS.bgNav, border: 'none' }}>
+          <Card elevation={0} sx={{ background: COLORS.bgDark, border: 'none' }}>
             <CardContent sx={{ py: '16px !important' }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 3, flexWrap: 'wrap' }}>
                 <Box>

@@ -93,7 +93,7 @@ export default function P4_SupportGuidance() {
         {/* ── Header card ── */}
         <Grid item xs={12}>
           <Card elevation={0} sx={{
-            background: `linear-gradient(135deg, ${COLORS.bgNav} 0%, #3d3858 100%)`,
+            background: `linear-gradient(135deg, ${COLORS.bgDark} 0%, #3d3858 100%)`,
             border: 'none',
           }}>
             <CardContent>

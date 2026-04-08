@@ -20,6 +20,7 @@ export const COLORS = {
   bgWarm:  '#F9FAFC',   // Extremely pale grey / almost white
   bgCard:  '#ffffff',
   bgNav:   '#F9FAFC',   // Same as background for a light theme look
+  bgDark:  '#2d2a38',   // High contrast dark bg
 
   // Neutral
   textPrimary:   '#1A1D20',
