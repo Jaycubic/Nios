@@ -149,11 +149,12 @@ export default function P2_EffortConsistency() {
         <Grid item xs={12} md={4}>
           <Card elevation={0} sx={{ height: '100%' }}>
             <CardContent>
-              <Typography variant="overline" sx={{ display: 'block', mb: 2 }}>Current Streak</Typography>
+              <Typography variant="overline" sx={{ display: 'block', mb: 2 }}>Study Consistency</Typography>
 
               <Box sx={{
                 textAlign: 'center',
                 py: 3,
+                px: 2,
                 background: `linear-gradient(135deg, ${COLORS.yellow}12, ${COLORS.amber}08)`,
                 borderRadius: '12px',
                 border: `1px solid ${COLORS.yellow}25`,
@@ -164,8 +165,11 @@ export default function P2_EffortConsistency() {
                   fontSize: '3.5rem', fontWeight: 800, color: COLORS.yellow,
                   fontFamily: "'DM Sans'", letterSpacing: '-0.03em', lineHeight: 1.1,
                 }}>12</Typography>
-                <Typography sx={{ color: COLORS.textSecondary, fontWeight: 500, fontSize: '0.9rem', mt: 0.5 }}>
-                  day streak
+                <Typography sx={{ color: COLORS.textSecondary, fontWeight: 700, fontSize: '1rem', mt: 0.5 }}>
+                  day study streak
+                </Typography>
+                <Typography sx={{ color: COLORS.textPrimary, fontSize: '0.9rem', mt: 2, lineHeight: 1.5, fontWeight: 600 }}>
+                  Aarav has studied consistently for 12 days in a row.
                 </Typography>
               </Box>
 
@@ -209,39 +213,35 @@ export default function P2_EffortConsistency() {
             {/* ── Time spent rings ── */}
             <Card elevation={0} sx={{ flexGrow: 1 }}>
               <CardContent>
-                <Typography variant="overline" sx={{ display: 'block', mb: 2 }}>Time Invested</Typography>
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
+                  <Typography variant="overline">Study Time Overview</Typography>
+                  <Chip
+                    size="small"
+                    label="↑ +0.5h vs last week"
+                    sx={{
+                      background: `${COLORS.green}15`,
+                      color: COLORS.greenDark,
+                      fontWeight: 700,
+                      fontSize: '0.75rem',
+                      border: `1px solid ${COLORS.green}30`,
+                    }}
+                  />
+                </Box>
+                
                 <Box sx={{ display: 'flex', justifyContent: 'space-around', py: 1 }}>
                   <TimeRing hours={3.5} label="This week" color={COLORS.green} total={7} />
                   <TimeRing hours={14} label="This month" color={COLORS.blue} total={30} />
                   <TimeRing hours={48} label="Total" color={COLORS.purple} total={100} />
                 </Box>
-              </CardContent>
-            </Card>
-
-            {/* ── Weekly goal bar ── */}
-            <Card elevation={0}>
-              <CardContent sx={{ py: '16px !important' }}>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                  <Typography variant="body2" sx={{ fontWeight: 600, whiteSpace: 'nowrap', minWidth: 100 }}>
-                    Weekly goal: 5h
-                  </Typography>
-                  <Box sx={{ flexGrow: 1 }}>
-                    <LinearProgress
-                      variant="determinate"
-                      value={70}
-                      sx={{
-                        height: 12,
-                        borderRadius: 8,
-                        background: `${COLORS.green}15`,
-                        '& .MuiLinearProgress-bar': {
-                          background: `linear-gradient(90deg, ${COLORS.green}aa, ${COLORS.green})`,
-                        },
-                      }}
-                    />
+                
+                <Divider sx={{ my: 3, opacity: 0.6 }} />
+                
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: `${COLORS.blue}08`, p: 2.5, borderRadius: '12px', border: `1px solid ${COLORS.blue}20` }}>
+                  <Box>
+                    <Typography variant="body2" sx={{ fontWeight: 700, color: COLORS.textPrimary, mb: 0.5 }}>Daily average</Typography>
+                    <Typography variant="caption" sx={{ color: COLORS.textSecondary }}>Per day actively studied</Typography>
                   </Box>
-                  <Typography sx={{ fontWeight: 700, color: COLORS.green, fontFamily: "'DM Sans'", whiteSpace: 'nowrap' }}>
-                    3.5h / 5h
-                  </Typography>
+                  <Typography sx={{ fontWeight: 800, color: COLORS.blue, fontSize: '1.3rem', fontFamily: "'DM Sans'" }}>42 min/day</Typography>
                 </Box>
               </CardContent>
             </Card>
