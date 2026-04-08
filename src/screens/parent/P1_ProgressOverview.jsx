@@ -96,11 +96,11 @@ export default function P1_ProgressOverview() {
           <Card elevation={0} sx={{ height: '100%' }}>
             <CardContent sx={{ p: { xs: 2.5, sm: 3.5 } }}>
               {/* ── 1. Monthly Progress Section ── */}
-              <Box sx={{ mb: 4 }}>
+              <Box sx={{ mb: 0 }}>
                 <Typography variant="overline" sx={{ display: 'block', mb: 1.5, color: COLORS.textSecondary, fontWeight: 600, letterSpacing: 1 }}>
                   Monthly Progress
                 </Typography>
-                
+
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
                   <Typography sx={{
                     fontSize: '4.2rem',
@@ -142,25 +142,25 @@ export default function P1_ProgressOverview() {
                 </Box>
               </Box>
 
-              <Divider sx={{ my: 4, opacity: 0.5 }} />
+              <Divider sx={{ my: 2.5, opacity: 0.5 }} />
 
               {/* ── 2. Learning Journey Section ── */}
               <Box>
                 <Typography variant="overline" sx={{ display: 'block', mb: 3, color: COLORS.textSecondary, fontWeight: 600, letterSpacing: 1 }}>
                   Learning Journey
                 </Typography>
-                
+
                 {/* Movement from current to next stage */}
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 1.5, mb: 5, px: { xs: 0, sm: 2 } }}>
                   <Box sx={{ textAlign: 'center', flex: 1.2 }}>
                     <Typography variant="caption" sx={{ color: COLORS.textSecondary, fontWeight: 600, display: 'block', mb: 1, textTransform: 'uppercase', letterSpacing: 0.5 }}>Current</Typography>
                     <Chip label="Developing" sx={{ background: `${COLORS.yellow}15`, color: COLORS.yellowDark, fontWeight: 700, fontSize: '0.95rem', py: 2.5, borderRadius: '12px', border: `1px solid ${COLORS.yellow}40`, width: '100%' }} />
                   </Box>
-                  
+
                   <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 3, position: 'relative' }}>
                     <Typography variant="caption" sx={{ color: COLORS.green, fontWeight: 700, position: 'absolute', top: -20, whiteSpace: 'nowrap' }}>in progress</Typography>
                     <Box sx={{ width: '100%', height: 4, background: `linear-gradient(90deg, ${COLORS.yellow}40, ${COLORS.green})`, borderRadius: 2, position: 'relative' }}>
-                       <Box sx={{ position:'absolute', right: -4, top: '50%', transform:'translateY(-50%)', width: 12, height: 12, borderRadius: '50%', background: COLORS.green, border: '2px solid white', boxShadow: `0 0 0 3px ${COLORS.green}30` }} />
+                      <Box sx={{ position: 'absolute', right: -4, top: '50%', transform: 'translateY(-50%)', width: 12, height: 12, borderRadius: '50%', background: COLORS.green, border: '2px solid white', boxShadow: `0 0 0 3px ${COLORS.green}30` }} />
                     </Box>
                   </Box>
 
@@ -171,9 +171,9 @@ export default function P1_ProgressOverview() {
                 </Box>
 
                 {/* Current growth stage visual map */}
-                <Box sx={{ 
-                  background: 'rgba(0,0,0,0.015)', 
-                  borderRadius: '16px', 
+                <Box sx={{
+                  background: 'rgba(0,0,0,0.015)',
+                  borderRadius: '16px',
                   p: 3,
                   border: `1px solid rgba(0,0,0,0.04)`,
                 }}>
@@ -202,7 +202,7 @@ export default function P1_ProgressOverview() {
             </Card>
 
             {/* Subject overview */}
-            <Card elevation={0} sx={{ flexGrow: 1 }}>
+            <Card elevation={0}>
               <CardContent>
                 <Typography variant="overline" sx={{ display: 'block', mb: 2 }}>Subject Overview</Typography>
                 <SubjectRow label="Mathematics" value={68} color={COLORS.blue} />
@@ -224,37 +224,6 @@ export default function P1_ProgressOverview() {
             </Card>
 
           </Box>
-        </Grid>
-
-        {/* ── Trajectory card - full width bottom ── */}
-        <Grid item xs={12}>
-          <Card elevation={0}>
-            <CardContent>
-              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
-                <Typography variant="h6">4-Week Performance Trend</Typography>
-                <Chip label="Improving overall" size="small" sx={{ background: `${COLORS.green}15`, color: COLORS.greenDark, fontWeight: 600, fontSize: '0.72rem', border: `1px solid ${COLORS.green}30` }} />
-              </Box>
-
-              {/* Simple sparkline-style visual */}
-              <Box sx={{ display: 'flex', gap: 2, alignItems: 'flex-end', height: 80 }}>
-                {[52, 58, 63, 72].map((val, i) => (
-                  <Box key={i} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1, flex: 1 }}>
-                    <Typography sx={{ fontWeight: 700, color: i === 3 ? COLORS.green : COLORS.textSecondary, fontSize: '0.85rem' }}>{val}%</Typography>
-                    <Box sx={{
-                      width: '100%',
-                      height: `${(val / 100) * 50}px`,
-                      background: i === 3
-                        ? `linear-gradient(180deg, ${COLORS.green}cc, ${COLORS.green}44)`
-                        : `linear-gradient(180deg, ${COLORS.blue}80, ${COLORS.blue}20)`,
-                      borderRadius: '6px 6px 4px 4px',
-                      transition: 'height 0.4s',
-                    }} />
-                    <Typography variant="caption" sx={{ color: COLORS.textMuted }}>Wk {i + 1}</Typography>
-                  </Box>
-                ))}
-              </Box>
-            </CardContent>
-          </Card>
         </Grid>
 
       </Grid>
