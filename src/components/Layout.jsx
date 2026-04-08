@@ -71,13 +71,13 @@ function Sidebar({ navItems, role }) {
               sx={{
                 width: 48, height: 48,
                 borderRadius: '12px',
-                color: active ? '#fff' : 'rgba(255,255,255,0.45)',
+                color: active ? COLORS.greenDark : COLORS.textSecondary,
                 background: active ? `${COLORS.green}30` : 'transparent',
                 border: active ? `1px solid ${COLORS.green}60` : '1px solid transparent',
                 transition: 'all 0.2s ease',
                 '&:hover': {
                   background: `${COLORS.green}20`,
-                  color: 'rgba(255,255,255,0.8)',
+                  color: COLORS.greenDark,
                 },
               }}
             >
@@ -92,8 +92,8 @@ function Sidebar({ navItems, role }) {
       <Tooltip title="Settings" placement="right">
         <IconButton sx={{
           width: 48, height: 48, borderRadius: '12px',
-          color: 'rgba(255,255,255,0.35)',
-          '&:hover': { color: 'rgba(255,255,255,0.7)', background: 'rgba(255,255,255,0.08)' },
+          color: COLORS.textSecondary,
+          '&:hover': { color: COLORS.textPrimary, background: COLORS.divider },
         }}>
           <IconSettings />
         </IconButton>
@@ -117,14 +117,14 @@ function TopNav({ title, subtitle, role, onSwitch }) {
       alignItems: 'center',
       px: 3,
       gap: 2,
-      borderBottom: '1px solid rgba(255,255,255,0.06)',
+      borderBottom: `1px solid ${COLORS.border}`,
     }}>
       <Box sx={{ flexGrow: 1 }}>
-        <Typography sx={{ color: '#fff', fontWeight: 600, fontSize: '0.95rem', fontFamily: "'DM Sans'" }}>
+        <Typography sx={{ color: COLORS.textPrimary, fontWeight: 600, fontSize: '0.95rem', fontFamily: "'DM Sans'" }}>
           {title}
         </Typography>
         {subtitle && (
-          <Typography sx={{ color: 'rgba(255,255,255,0.45)', fontSize: '0.75rem', fontFamily: "'Inter'" }}>
+          <Typography sx={{ color: COLORS.textSecondary, fontSize: '0.75rem', fontFamily: "'Inter'" }}>
             {subtitle}
           </Typography>
         )}
@@ -149,17 +149,17 @@ function TopNav({ title, subtitle, role, onSwitch }) {
         onClick={onSwitch}
         clickable
         sx={{
-          background: 'rgba(255,255,255,0.08)',
-          color: 'rgba(255,255,255,0.6)',
-          border: '1px solid rgba(255,255,255,0.12)',
+          background: 'transparent',
+          color: COLORS.textSecondary,
+          border: `1px solid ${COLORS.border}`,
           fontSize: '0.7rem',
           fontFamily: "'Inter'",
           cursor: 'pointer',
-          '&:hover': { background: 'rgba(255,255,255,0.14)' },
+          '&:hover': { background: COLORS.divider, color: COLORS.textPrimary },
         }}
       />
 
-      <Avatar sx={{ width: 34, height: 34, background: COLORS.green, fontSize: '0.85rem', fontWeight: 700 }}>A</Avatar>
+      <Avatar sx={{ width: 34, height: 34, background: COLORS.textPrimary, color: COLORS.bgWarm, fontSize: '0.85rem', fontWeight: 700 }}>A</Avatar>
     </Box>
   );
 }

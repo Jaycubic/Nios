@@ -3,30 +3,30 @@ import { createTheme } from '@mui/material/styles';
 // ─── Moodboard-exact palette ────────────────────────────────────────────────
 export const COLORS = {
   // Brand primaries (from moodboard)
-  green:    '#7aaa8a',   // Muted Green  — growth, mastered, positive
-  yellow:   '#c9a94a',   // Warm Yellow  — encouragement, developing, effort
-  purple:   '#a49acc',   // Light Purple — cognition, Bloom's taxonomy
-  blue:     '#7ba8cc',   // Soft Blue    — trust, clarity, trends
-  amber:    '#c4804a',   // Warm Amber   — gaps/errors (replaces harsh red)
+  green:    '#5AAF68',   // Match screenshot 'Science' green
+  yellow:   '#F5A84F',   // Match screenshot 'English' orange-yellow
+  purple:   '#A370E0',   // Match screenshot 'Social Science' purple
+  blue:     '#4F81ED',   // Match screenshot 'Mathematics' blue
+  amber:    '#D85842',   // Match screenshot 'Needs Attention' alert orange/red
 
   // Deeper variants
-  greenDark:  '#4d8060',
-  yellowDark: '#9c7c2a',
-  purpleDark: '#6b5f9e',
-  blueDark:   '#4a7aaa',
-  amberDark:  '#9c5a2a',
+  greenDark:  '#337D56',
+  yellowDark: '#C48135',
+  purpleDark: '#7953A8',
+  blueDark:   '#3A62B6',
+  amberDark:  '#A64834',
 
   // Backgrounds
-  bgWarm:  '#f2efe9',   // Warm off-white
+  bgWarm:  '#F9FAFC',   // Extremely pale grey / almost white
   bgCard:  '#ffffff',
-  bgNav:   '#2d2a38',   // Warm dark
+  bgNav:   '#F9FAFC',   // Same as background for a light theme look
 
   // Neutral
-  textPrimary:   '#1e1b2e',
-  textSecondary: '#6b6880',
-  textMuted:     '#a8a4b8',
-  border:        '#e4e0d8',
-  divider:       '#ede9e1',
+  textPrimary:   '#1A1D20',
+  textSecondary: '#6B7280',
+  textMuted:     '#9CA3AF',
+  border:        '#E5E7EB',
+  divider:       '#F3F4F6',
 };
 
 const theme = createTheme({
