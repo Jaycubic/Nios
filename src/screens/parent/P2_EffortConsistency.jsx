@@ -211,9 +211,9 @@ export default function P2_EffortConsistency() {
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5, height: '100%' }}>
 
             {/* ── Time spent rings ── */}
-            <Card elevation={0} sx={{ flexGrow: 1 }}>
+            <Card elevation={0}>
               <CardContent>
-                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
                   <Typography variant="overline">Study Time Overview</Typography>
                   <Chip
                     size="small"
@@ -228,15 +228,15 @@ export default function P2_EffortConsistency() {
                   />
                 </Box>
                 
-                <Box sx={{ display: 'flex', justifyContent: 'space-around', py: 1 }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-around', py: 0.5 }}>
                   <TimeRing hours={3.5} label="This week" color={COLORS.green} total={7} />
                   <TimeRing hours={14} label="This month" color={COLORS.blue} total={30} />
                   <TimeRing hours={48} label="Total" color={COLORS.purple} total={100} />
                 </Box>
                 
-                <Divider sx={{ my: 3, opacity: 0.6 }} />
+                <Divider sx={{ my: 2, opacity: 0.6 }} />
                 
-                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: `${COLORS.blue}08`, p: 2.5, borderRadius: '12px', border: `1px solid ${COLORS.blue}20` }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: `${COLORS.blue}08`, py: 1.5, px: 2.5, borderRadius: '12px', border: `1px solid ${COLORS.blue}20` }}>
                   <Box>
                     <Typography variant="body2" sx={{ fontWeight: 700, color: COLORS.textPrimary, mb: 0.5 }}>Daily average</Typography>
                     <Typography variant="caption" sx={{ color: COLORS.textSecondary }}>Per day actively studied</Typography>
