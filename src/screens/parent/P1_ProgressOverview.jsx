@@ -7,24 +7,6 @@ import {
 import Layout from '../../components/Layout';
 import { COLORS } from '../../theme';
 
-// ─── Mini stat card ───────────────────────────────────────────────────────────
-function StatBadge({ label, value, color }) {
-  return (
-    <Box sx={{
-      flex: 1,
-      px: 2, py: 2,
-      background: `${color}12`,
-      border: `1px solid ${color}30`,
-      borderRadius: '12px',
-      textAlign: 'center',
-      minWidth: 100,
-    }}>
-      <Typography sx={{ fontWeight: 700, fontSize: '1.3rem', color, fontFamily: "'DM Sans'" }}>{value}</Typography>
-      <Typography variant="caption" sx={{ color: COLORS.textMuted, display: 'block', mt: 0.4, fontSize: '0.8rem' }}>{label}</Typography>
-    </Box>
-  );
-}
-
 // ─── Plant growth visual ──────────────────────────────────────────────────────
 function PlantGrowthVisual({ level }) {
   // level: 0=seed, 1=sprout, 2=growth, 3=maturity
@@ -50,7 +32,6 @@ function PlantGrowthVisual({ level }) {
           {i < stages.length - 1 && (
             <Box sx={{
               position: 'absolute',
-              // connector handled by gap
             }} />
           )}
         </Box>
@@ -78,6 +59,76 @@ function SubjectRow({ label, value, color }) {
         }}
       />
     </Box>
+  );
+}
+
+// ─── Reusable Metric Card (From Consistency Screen) ───────────────────────────
+function MetricCard({ overline, title, subtitle, icon, color, detailLabel, detailValue, progress, progressLabel }) {
+  return (
+    <Card elevation={0} sx={{ height: '100%', position: 'relative', overflow: 'hidden', border: `1px solid ${COLORS.divider}` }}>
+      
+      {/* Top subtle background gradient */}
+      <Box sx={{
+        position: 'absolute', top: 0, left: 0, right: 0, height: 100,
+        background: `linear-gradient(180deg, ${color}10, transparent)`,
+        pointerEvents: 'none'
+      }} />
+
+      <CardContent sx={{ p: { xs: 3, sm: 4 }, display: 'flex', flexDirection: 'column', height: '100%', position: 'relative', zIndex: 1 }}>
+        <Typography variant="overline" sx={{ display: 'block', mb: 3, color: COLORS.textSecondary, fontWeight: 700, letterSpacing: 1.2 }}>
+          {overline}
+        </Typography>
+
+        <Box sx={{ display: 'flex', gap: 2.5, mb: 4, alignItems: 'center' }}>
+          <Box sx={{
+            width: 56, height: 56, borderRadius: '16px',
+            background: `${color}15`,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontSize: '2rem', border: `1px solid ${color}30`, flexShrink: 0
+          }}>
+            {icon}
+          </Box>
+          <Box>
+            <Typography sx={{ fontSize: '2.2rem', fontWeight: 800, color: color, lineHeight: 1, fontFamily: "'DM Sans'", mb: 0.8, letterSpacing: '-0.02em' }}>
+              {title}
+            </Typography>
+            <Chip 
+              label={subtitle} 
+              size="small" 
+              sx={{ 
+                background: 'transparent',
+                border: `1px solid ${COLORS.divider}`,
+                color: COLORS.textSecondary, 
+                fontWeight: 600, 
+                fontSize: '0.75rem',
+                borderRadius: '6px'
+              }} 
+            />
+          </Box>
+        </Box>
+
+        <Typography component="div" sx={{ color: COLORS.textPrimary, mb: 5, lineHeight: 1.6, flexGrow: 1, fontWeight: 500 }}>
+          {detailLabel}
+        </Typography>
+
+        <Box>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+            <Typography variant="caption" sx={{ fontWeight: 600, color: COLORS.textMuted, textTransform: 'uppercase', letterSpacing: 0.5 }}>{progressLabel}</Typography>
+            <Typography variant="caption" sx={{ fontWeight: 800, color: color }}>{detailValue}</Typography>
+          </Box>
+          <LinearProgress
+            variant="determinate"
+            value={progress}
+            sx={{
+              height: 10,
+              borderRadius: 5,
+              background: `${color}15`,
+              '& .MuiLinearProgress-bar': { background: `linear-gradient(90deg, ${color}cc, ${color})`, borderRadius: 5 },
+            }}
+          />
+        </Box>
+      </CardContent>
+    </Card>
   );
 }
 
@@ -184,23 +235,10 @@ export default function P1_ProgressOverview() {
           </Card>
         </Grid>
 
-        {/* ── Quick Stats column ── */}
+        {/* ── Subject Overview Column ── */}
         <Grid item xs={12} md={5}>
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5, height: '100%' }}>
-
-            {/* Stats row */}
-            <Card elevation={0}>
-              <CardContent>
-                <Typography variant="overline" sx={{ display: 'block', mb: 2 }}>Quick Learning Snapshot</Typography>
-                <Box sx={{ display: 'flex', gap: 1.5, flexWrap: 'wrap' }}>
-                  <StatBadge label="Overall Score" value="72%" color={COLORS.green} />
-                  <StatBadge label="Practice sessions" value="146" color={COLORS.blue} />
-                  <StatBadge label="Day consistency" value="12-day" color={COLORS.yellow} />
-                  <StatBadge label="Study time" value="3.5 hrs" color={COLORS.purple} />
-                </Box>
-              </CardContent>
-            </Card>
-
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5}}>
+            
             {/* Subject overview */}
             <Card elevation={0}>
               <CardContent>
@@ -222,8 +260,58 @@ export default function P1_ProgressOverview() {
                 </Box>
               </CardContent>
             </Card>
-
           </Box>
+        </Grid>
+
+        {/* ── 3. Effort & Study Habits (Integrated from Consistency Screen) ── */}
+        <Grid item xs={12}>
+          <Box sx={{ mt: 3, mb: 2, px: 1 }}>
+            <Typography variant="h6" sx={{ fontWeight: 800, fontFamily: "'DM Sans'", mb: 0.5 }}>Effort & Study Habits</Typography>
+            <Typography variant="body2" sx={{ color: COLORS.textSecondary }}>A clear breakdown of learning behaviors and practice intensity.</Typography>
+          </Box>
+          <Grid container spacing={2.5}>
+            <Grid item xs={12} md={4}>
+              <MetricCard
+                overline="Study Consistency"
+                icon="🔥"
+                title="Good"
+                subtitle="Streaks & Goals"
+                color={COLORS.yellow}
+                detailLabel={<>Aarav has studied <strong>4 days this week</strong>, maintaining steady momentum towards his weekly goals.</>}
+                progressLabel="Active this week"
+                detailValue="4 / 7 Days"
+                progress={(4/7) * 100}
+              />
+            </Grid>
+
+            <Grid item xs={12} md={4}>
+              <MetricCard
+                overline="Practice Level"
+                icon="📝"
+                title="High"
+                subtitle="Questions Practiced"
+                color={COLORS.blue}
+                detailLabel={<>He has actively answered <strong>146 practice questions</strong>, demonstrating deep cognitive engagement with the material.</>}
+                progressLabel="Monthly Volume"
+                detailValue="146 Qs"
+                progress={85}
+              />
+            </Grid>
+
+            <Grid item xs={12} md={4}>
+              <MetricCard
+                overline="Accuracy Level"
+                icon="🎯"
+                title="72%"
+                subtitle="Mock Test Results"
+                color={COLORS.green}
+                detailLabel={<>His mock test accuracy is currently at <strong>72%</strong>, showing strong and developing comprehension across core subjects.</>}
+                progressLabel="Average Score"
+                detailValue="72%"
+                progress={72}
+              />
+            </Grid>
+          </Grid>
         </Grid>
 
       </Grid>

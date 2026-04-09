@@ -5,7 +5,6 @@ import theme from './theme';
 
 // Parent screens
 import P1_ProgressOverview  from './screens/parent/P1_ProgressOverview';
-import P2_EffortConsistency from './screens/parent/P2_EffortConsistency';
 import P3_LearningAreas     from './screens/parent/P3_LearningAreas';
 import P4_SupportGuidance   from './screens/parent/P4_SupportGuidance';
 
@@ -27,7 +26,6 @@ export default function App() {
 
           {/* Parent */}
           <Route path="/parent/overview"    element={<P1_ProgressOverview />} />
-          <Route path="/parent/consistency" element={<P2_EffortConsistency />} />
           <Route path="/parent/learning"    element={<P3_LearningAreas />} />
           <Route path="/parent/support"     element={<P4_SupportGuidance />} />
 
