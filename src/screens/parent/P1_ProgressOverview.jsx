@@ -215,12 +215,6 @@ export default function P1_ProgressOverview() {
 
 
         {/* ── ROW 2: Effort & Study Habits ── */}
-        <Grid item xs={12}>
-          <Box sx={{ pt: 1, pb: 0.5, px: 0.5 }}>
-            <Typography variant="h5" sx={{ fontWeight: 800, fontFamily: "'DM Sans'", mb: 0.5 }}>Behavioral Insights</Typography>
-            <Typography variant="body1" sx={{ color: COLORS.textSecondary, fontWeight: 500 }}>A clear breakdown of learning behaviors, practice intensity, and test performance.</Typography>
-          </Box>
-        </Grid>
 
         <Grid item xs={12} md={4}>
           <MetricCard
