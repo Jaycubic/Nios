@@ -15,7 +15,6 @@ const IconSettings   = () => <svg width="20" height="20" viewBox="0 0 24 24" fil
 // ─── Nav config ──────────────────────────────────────────────────────────────
 const PARENT_NAV = [
   { label: 'Overview',    path: '/parent/overview',     Icon: IconDashboard   },
-  { label: 'Learning',    path: '/parent/learning',     Icon: IconLearning    },
   { label: 'Support',     path: '/parent/support',      Icon: IconSupport     },
 ];
 

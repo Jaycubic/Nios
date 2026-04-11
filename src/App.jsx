@@ -5,7 +5,6 @@ import theme from './theme';
 
 // Parent screens
 import P1_ProgressOverview  from './screens/parent/P1_ProgressOverview';
-import P3_LearningAreas     from './screens/parent/P3_LearningAreas';
 import P4_SupportGuidance   from './screens/parent/P4_SupportGuidance';
 
 // Educator screens
@@ -25,7 +24,6 @@ export default function App() {
 
           {/* Parent */}
           <Route path="/parent/overview"    element={<P1_ProgressOverview />} />
-          <Route path="/parent/learning"    element={<P3_LearningAreas />} />
           <Route path="/parent/support"     element={<P4_SupportGuidance />} />
 
           {/* Educator — Mode 1: Class Overview */}
