@@ -1,3 +1,4 @@
+// src/screens/educator/E5_InterventionGuidance.jsx
 import React, { useState } from 'react';
 import {
   Box, Typography, Card, CardContent, Chip, Button, Grid, Divider, Snackbar, Alert,
@@ -7,15 +8,15 @@ import { COLORS } from '../../theme';
 
 // ─── Data ────────────────────────────────────────────────────────────────────
 const conceptRecs = [
-  { id: 'C1', topic: 'Basic Algebra',          reason: 'Foundation required before quadratic formula work',         priority: 'high',   icon: '📐', subject: 'Math'    },
-  { id: 'C2', topic: 'Quadratic Formula',      reason: 'Core gap — substitution error pattern confirmed in 4 Qs',   priority: 'high',   icon: '🔢', subject: 'Math'    },
-  { id: 'C3', topic: 'Trigonometry Basics',    reason: 'Confusing complementary angle values — needs table review', priority: 'medium', icon: '📐', subject: 'Math'    },
+  { id: 'C1', topic: 'Basic Algebra', reason: 'Foundation required before quadratic formula work', priority: 'high', icon: '📐', subject: 'Math' },
+  { id: 'C2', topic: 'Quadratic Formula', reason: 'Core gap — substitution error pattern confirmed in 4 Qs', priority: 'high', icon: '🔢', subject: 'Math' },
+  { id: 'C3', topic: 'Trigonometry Basics', reason: 'Confusing complementary angle values — needs table review', priority: 'medium', icon: '📐', subject: 'Math' },
 ];
 
 const practiceRecs = [
-  { id: 'P1', label: '10 questions on Linear Equations',  type: 'Adaptive drill',   est: '~15 min', icon: '📝', color: COLORS.blue   },
-  { id: 'P2', label: '2 practice sets — Trigonometry basics', type: 'Concept building', est: '~20 min', icon: '📝', color: COLORS.purple  },
-  { id: 'P3', label: 'Quadratic Formula step drill (5 Qs)', type: 'Targeted practice', est: '~12 min', icon: '📋', color: COLORS.green   },
+  { id: 'P1', label: '10 questions on Linear Equations', type: 'Adaptive drill', est: '~15 min', icon: '📝', color: COLORS.blue },
+  { id: 'P2', label: '2 practice sets — Trigonometry basics', type: 'Concept building', est: '~20 min', icon: '📝', color: COLORS.purple },
+  { id: 'P3', label: 'Quadratic Formula step drill (5 Qs)', type: 'Targeted practice', est: '~12 min', icon: '📋', color: COLORS.green },
 ];
 
 const teachingStrategies = [
@@ -25,9 +26,9 @@ const teachingStrategies = [
 ];
 
 const priorityStyle = {
-  high:   { bg: `${COLORS.amber}18`,  color: COLORS.amberDark,  label: '🔴 High'   },
+  high: { bg: `${COLORS.amber}18`, color: COLORS.amberDark, label: '🔴 High' },
   medium: { bg: `${COLORS.yellow}15`, color: COLORS.yellowDark, label: '🟡 Medium' },
-  low:    { bg: `${COLORS.blue}12`,   color: COLORS.blue,       label: '🔵 Low'    },
+  low: { bg: `${COLORS.blue}12`, color: COLORS.blue, label: '🔵 Low' },
 };
 
 // ─── §5A: Concept recommendation card ────────────────────────────────────────
@@ -94,7 +95,7 @@ function PracticeRecCard({ id, label, type, est, icon, color, onSend, sent }) {
         <Typography sx={{ fontWeight: 600, fontSize: '0.83rem', color: COLORS.textPrimary, mb: 0.3 }}>{label}</Typography>
         <Box sx={{ display: 'flex', gap: 1 }}>
           <Chip label={type} size="small" sx={{ height: 18, fontSize: '0.62rem', background: `${color}12`, color, '& .MuiChip-label': { px: 0.8 } }} />
-          <Chip label={est}  size="small" sx={{ height: 18, fontSize: '0.62rem', background: COLORS.divider, color: COLORS.textMuted, '& .MuiChip-label': { px: 0.8 } }} />
+          <Chip label={est} size="small" sx={{ height: 18, fontSize: '0.62rem', background: COLORS.divider, color: COLORS.textMuted, '& .MuiChip-label': { px: 0.8 } }} />
         </Box>
       </Box>
       <Button
@@ -119,7 +120,7 @@ function PracticeRecCard({ id, label, type, est, icon, color, onSend, sent }) {
 function TeachingStrategy() {
   const [copied, setCopied] = useState(false);
   return (
-    <Card elevation={0} sx={{ height: '100%' }}>
+    <Card elevation={0}>
       <CardContent>
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -174,21 +175,6 @@ function TeachingStrategy() {
             </Box>
           ))}
         </Box>
-
-        <Divider sx={{ my: 2.5 }} />
-
-        <Box sx={{
-          p: 2, borderRadius: '12px',
-          background: `${COLORS.green}08`, border: `1px solid ${COLORS.green}22`,
-        }}>
-          <Typography sx={{ fontWeight: 700, fontSize: '0.82rem', color: COLORS.greenDark, mb: 0.5 }}>
-            📈 Expected Impact
-          </Typography>
-          <Typography variant="body2" sx={{ color: COLORS.textSecondary, lineHeight: 1.6 }}>
-            Completing concept tasks + practice sets is projected to improve accuracy by{' '}
-            <strong>8–12%</strong> within 2 weeks, based on similar student patterns.
-          </Typography>
-        </Box>
       </CardContent>
     </Card>
   );
@@ -197,8 +183,8 @@ function TeachingStrategy() {
 // ─── Main screen ──────────────────────────────────────────────────────────────
 export default function E5_InterventionGuidance() {
   const [assigned, setAssigned] = useState({});
-  const [sent, setSent]         = useState({});
-  const [snack, setSnack]       = useState(null);
+  const [sent, setSent] = useState({});
+  const [snack, setSnack] = useState(null);
 
   const handleAssign = (id) => {
     setAssigned(p => ({ ...p, [id]: !p[id] }));
@@ -208,8 +194,6 @@ export default function E5_InterventionGuidance() {
     setSent(p => ({ ...p, [id]: !p[id] }));
     setSnack(sent[id] ? null : 'Practice questions sent to Rahul\'s dashboard!');
   };
-  const assignAll = () => { const s = {}; conceptRecs.forEach(r => s[r.id] = true); setAssigned(s); setSnack('All concept tasks assigned!'); };
-  const sendAll   = () => { const s = {}; practiceRecs.forEach(r => s[r.id] = true); setSent(s); setSnack('All practice sets sent!'); };
 
   return (
     <Layout
@@ -219,37 +203,9 @@ export default function E5_InterventionGuidance() {
     >
       <Grid container spacing={2.5}>
 
-        {/* Header */}
-        <Grid item xs={12}>
-          <Card elevation={0} sx={{ background: COLORS.bgDark, border: 'none' }}>
-            <CardContent sx={{ py: '16px !important' }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 3, flexWrap: 'wrap' }}>
-                <Box>
-                  <Typography sx={{ color: '#fff', fontWeight: 700, fontFamily: "'DM Sans'", fontSize: '1rem' }}>
-                    🎯 Intervention Plan for Rahul Sharma
-                  </Typography>
-                  <Typography sx={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.78rem', mt: 0.3 }}>
-                    Based on 4 concept gaps · 2 blocked topics · personalised recommendations below
-                  </Typography>
-                </Box>
-                <Box sx={{ ml: 'auto', display: 'flex', gap: 1.5 }}>
-                  <Button size="small" onClick={assignAll}
-                    sx={{ background: `${COLORS.purple}30`, color: COLORS.purple, border: `1px solid ${COLORS.purple}50`, fontSize: '0.75rem', '&:hover': { background: `${COLORS.purple}45` } }}>
-                    Assign All →
-                  </Button>
-                  <Button size="small" onClick={sendAll}
-                    sx={{ background: `${COLORS.green}30`, color: COLORS.green, border: `1px solid ${COLORS.green}50`, fontSize: '0.75rem', '&:hover': { background: `${COLORS.green}45` } }}>
-                    Send All →
-                  </Button>
-                </Box>
-              </Box>
-            </CardContent>
-          </Card>
-        </Grid>
-
         {/* §5A: Concept Recommendations */}
         <Grid item xs={12} lg={4}>
-          <Card elevation={0} sx={{ height: '100%' }}>
+          <Card elevation={0}>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -261,16 +217,13 @@ export default function E5_InterventionGuidance() {
               {conceptRecs.map(r => (
                 <ConceptRecCard key={r.id} {...r} onAssign={handleAssign} assigned={!!assigned[r.id]} />
               ))}
-              <Typography variant="caption" sx={{ color: COLORS.textSecondary, lineHeight: 1.6, display: 'block', mt: 1 }}>
-                💡 Assigns concept task to Rahul's revision panel with linked material.
-              </Typography>
             </CardContent>
           </Card>
         </Grid>
 
         {/* §5B: Practice Recommendations */}
         <Grid item xs={12} lg={4}>
-          <Card elevation={0} sx={{ height: '100%' }}>
+          <Card elevation={0}>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>

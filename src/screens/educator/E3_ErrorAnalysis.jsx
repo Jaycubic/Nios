@@ -1,3 +1,4 @@
+// src/screens/educator/E3_ErrorAnalysis.jsx
 import React, { useState } from 'react';
 import {
   Box, Typography, Card, CardContent, Chip, Grid, Divider, Button, Tooltip,
@@ -11,9 +12,9 @@ const questions = [
     id: 'Q1', topic: 'Quadratic Equations',
     question: 'Solve: x² - 5x + 6 = 0',
     steps: [
-      { step: 1, label: 'Formula recall',     status: 'correct',  note: 'Correctly recalled quadratic formula'           },
-      { step: 2, label: 'Substitution',       status: 'error',    note: 'Substituted wrong values for b and c'           },
-      { step: 3, label: 'Calculation',         status: 'error',    note: 'Arithmetic error in discriminant computation'   },
+      { step: 1, label: 'Formula recall', status: 'correct', note: 'Correctly recalled quadratic formula' },
+      { step: 2, label: 'Substitution', status: 'error', note: 'Substituted wrong values for b and c' },
+      { step: 3, label: 'Calculation', status: 'error', note: 'Arithmetic error in discriminant computation' },
     ],
     insight: 'Student understands formula but fails in execution',
     rootCause: 'Procedural gap: knows the method but makes substitution errors under pressure',
@@ -22,9 +23,9 @@ const questions = [
     id: 'Q2', topic: 'Trigonometry',
     question: 'Find sin(30°) + cos(60°)',
     steps: [
-      { step: 1, label: 'Recall sin(30°)',    status: 'correct',  note: 'Correctly recalled as 1/2'                      },
-      { step: 2, label: 'Recall cos(60°)',    status: 'error',    note: 'Confused with cos(30°) = √3/2'                  },
-      { step: 3, label: 'Addition',           status: 'skipped',  note: 'Not attempted — error in step 2'                },
+      { step: 1, label: 'Recall sin(30°)', status: 'correct', note: 'Correctly recalled as 1/2' },
+      { step: 2, label: 'Recall cos(60°)', status: 'error', note: 'Confused with cos(30°) = √3/2' },
+      { step: 3, label: 'Addition', status: 'skipped', note: 'Not attempted — error in step 2' },
     ],
     insight: 'Trigonometric table recall is inconsistent — confuses 30° and 60° values',
     rootCause: 'Memory gap in trig value table, especially complementary angles',
@@ -33,10 +34,10 @@ const questions = [
 
 // ─── §4B: Concept gap data ────────────────────────────────────────────────────
 const conceptGaps = [
-  { label: 'Quadratic Formula application', subject: 'Math',    attempts: 5, severity: 'high'   },
-  { label: 'Trigonometric identities',      subject: 'Math',    attempts: 4, severity: 'high'   },
-  { label: 'Chemical Reactions balance',    subject: 'Science', attempts: 3, severity: 'medium' },
-  { label: 'BODMAS — order of operations',  subject: 'Math',    attempts: 2, severity: 'medium' },
+  { label: 'Quadratic Formula application', subject: 'Math', attempts: 5, severity: 'high' },
+  { label: 'Trigonometric identities', subject: 'Math', attempts: 4, severity: 'high' },
+  { label: 'Chemical Reactions balance', subject: 'Science', attempts: 3, severity: 'medium' },
+  { label: 'BODMAS — order of operations', subject: 'Math', attempts: 2, severity: 'medium' },
 ];
 
 // ─── §4C: Prerequisite gap map nodes/edges ────────────────────────────────────
@@ -44,17 +45,17 @@ const conceptGaps = [
 // status: mastered | proficient | developing | gap | blocked
 const mapNodes = [
   // Level 0: Foundation
-  { id: 'n1',  label: 'Basic\nArithmetic',    x: 80,  y: 60,  status: 'mastered'   },
-  { id: 'n2',  label: 'Fractions',            x: 80,  y: 160, status: 'gap'        },
-  { id: 'n3',  label: 'BODMAS',              x: 80,  y: 260, status: 'gap'        },
+  { id: 'n1', label: 'Basic\nArithmetic', x: 80, y: 60, status: 'mastered' },
+  { id: 'n2', label: 'Fractions', x: 80, y: 160, status: 'gap' },
+  { id: 'n3', label: 'BODMAS', x: 80, y: 260, status: 'gap' },
   // Level 1: Intermediate
-  { id: 'n4',  label: 'Algebra\nBasics',      x: 260, y: 100, status: 'developing' },
-  { id: 'n5',  label: 'Exponents &\nRoots',   x: 260, y: 210, status: 'developing' },
-  { id: 'n6',  label: 'Linear\nEquations',    x: 260, y: 300, status: 'proficient' },
+  { id: 'n4', label: 'Algebra\nBasics', x: 260, y: 100, status: 'developing' },
+  { id: 'n5', label: 'Exponents &\nRoots', x: 260, y: 210, status: 'developing' },
+  { id: 'n6', label: 'Linear\nEquations', x: 260, y: 300, status: 'proficient' },
   // Level 2: Advanced
-  { id: 'n7',  label: 'Quadratic\nFormula',   x: 450, y: 80,  status: 'blocked'    },
-  { id: 'n8',  label: 'Trigonometry',         x: 450, y: 200, status: 'blocked'    },
-  { id: 'n9',  label: 'Polynomials',          x: 450, y: 310, status: 'gap'        },
+  { id: 'n7', label: 'Quadratic\nFormula', x: 450, y: 80, status: 'blocked' },
+  { id: 'n8', label: 'Trigonometry', x: 450, y: 200, status: 'blocked' },
+  { id: 'n9', label: 'Polynomials', x: 450, y: 310, status: 'gap' },
 ];
 
 const mapEdges = [
@@ -70,17 +71,17 @@ const mapEdges = [
 ];
 
 const levelLabels = [
-  { label: 'Foundation', x: 80,  y: 14 },
+  { label: 'Foundation', x: 80, y: 14 },
   { label: 'Intermediate', x: 260, y: 14 },
-  { label: 'Advanced',   x: 450, y: 14 },
+  { label: 'Advanced', x: 450, y: 14 },
 ];
 
 const statusStyle = {
-  mastered:   { fill: COLORS.green,    ring: COLORS.green,    label: 'Mastered',   text: '#fff' },
-  proficient: { fill: COLORS.blue,     ring: COLORS.blue,     label: 'Proficient', text: '#fff' },
-  developing: { fill: COLORS.yellow,   ring: COLORS.yellow,   label: 'Developing', text: '#fff' },
-  gap:        { fill: COLORS.amber,    ring: COLORS.amber,    label: 'Gap',        text: '#fff' },
-  blocked:    { fill: '#B91C1C',       ring: '#B91C1C',       label: 'Blocked',    text: '#fff' },
+  mastered: { fill: COLORS.green, ring: COLORS.green, label: 'Mastered', text: '#fff' },
+  proficient: { fill: COLORS.blue, ring: COLORS.blue, label: 'Proficient', text: '#fff' },
+  developing: { fill: COLORS.yellow, ring: COLORS.yellow, label: 'Developing', text: '#fff' },
+  gap: { fill: COLORS.amber, ring: COLORS.amber, label: 'Gap', text: '#fff' },
+  blocked: { fill: '#B91C1C', ring: '#B91C1C', label: 'Blocked', text: '#fff' },
 };
 
 // ─── Prerequisite Gap Map SVG ─────────────────────────────────────────────────
@@ -156,7 +157,7 @@ function PrereqGapMap() {
           {/* Edges */}
           {mapEdges.map((e, i) => {
             const from = nodeById[e.from];
-            const to   = nodeById[e.to];
+            const to = nodeById[e.to];
             const isBlocked = to.status === 'blocked' || from.status === 'gap' || from.status === 'blocked';
             return (
               <path
@@ -271,9 +272,9 @@ function PrereqGapMap() {
 
 // ─── §4A: Step-wise error analysis ───────────────────────────────────────────
 const stepStyles = {
-  correct: { bg: `${COLORS.green}10`,  border: COLORS.green,  dot: COLORS.green,     icon: '✓', textColor: COLORS.greenDark  },
-  error:   { bg: `${COLORS.amber}10`,  border: COLORS.amber,  dot: COLORS.amber,     icon: '✗', textColor: COLORS.amberDark  },
-  skipped: { bg: COLORS.divider,       border: COLORS.border, dot: COLORS.textMuted, icon: '—', textColor: COLORS.textMuted  },
+  correct: { bg: `${COLORS.green}10`, border: COLORS.green, dot: COLORS.green, icon: '✓', textColor: COLORS.greenDark },
+  error: { bg: `${COLORS.amber}10`, border: COLORS.amber, dot: COLORS.amber, icon: '✗', textColor: COLORS.amberDark },
+  skipped: { bg: COLORS.divider, border: COLORS.border, dot: COLORS.textMuted, icon: '—', textColor: COLORS.textMuted },
 };
 
 function StepRow({ step, label, status, note }) {
@@ -353,9 +354,9 @@ function ErrorAnalysisSection() {
 // ─── §4B: Concept-level gaps ─────────────────────────────────────────────────
 function ConceptGapsSection() {
   const sevStyle = {
-    high:   { color: COLORS.amber,  bg: `${COLORS.amber}12`,  label: '🔴 High'   },
+    high: { color: COLORS.amber, bg: `${COLORS.amber}12`, label: '🔴 High' },
     medium: { color: COLORS.yellow, bg: `${COLORS.yellow}12`, label: '🟡 Medium' },
-    low:    { color: COLORS.blue,   bg: `${COLORS.blue}10`,   label: '🔵 Low'    },
+    low: { color: COLORS.blue, bg: `${COLORS.blue}10`, label: '🔵 Low' },
   };
   return (
     <Box>
@@ -391,33 +392,9 @@ export default function E3_ErrorAnalysis() {
     <Layout
       role="educator"
       title="Learning Diagnosis — Rahul Sharma"
-      subtitle="Mode 2 §4: Step-wise errors · Concept gaps · Prerequisite gap map"
+      subtitle="Step-wise errors · Concept gaps · Prerequisite gap map"
     >
       <Grid container spacing={2.5}>
-
-        {/* Dark summary bar */}
-        <Grid item xs={12}>
-          <Card elevation={0} sx={{ background: COLORS.bgDark, border: 'none' }}>
-            <CardContent sx={{ py: '16px !important' }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 3, flexWrap: 'wrap' }}>
-                <Typography sx={{ color: '#fff', fontWeight: 700, fontFamily: "'DM Sans'" }}>🧠 Learning Diagnosis</Typography>
-                {[
-                  { label: 'Questions analysed', value: '2',  color: COLORS.blue   },
-                  { label: 'Steps checked',       value: '6',  color: COLORS.purple },
-                  { label: 'Errors found',        value: '4',  color: COLORS.amber  },
-                  { label: 'Correct steps',       value: '2',  color: COLORS.green  },
-                  { label: 'Concept gaps',        value: '4',  color: COLORS.yellow },
-                  { label: 'Blocked  concepts',   value: '2',  color: '#EF4444'     },
-                ].map(s => (
-                  <Box key={s.label} sx={{ textAlign: 'center' }}>
-                    <Typography sx={{ fontWeight: 900, fontSize: '1.2rem', color: s.color, fontFamily: "'DM Sans'", lineHeight: 1 }}>{s.value}</Typography>
-                    <Typography sx={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.68rem' }}>{s.label}</Typography>
-                  </Box>
-                ))}
-              </Box>
-            </CardContent>
-          </Card>
-        </Grid>
 
         {/* §4A: Error analysis (left) + §4B: Concept gaps (right top) + §4C Gap Map (right bottom) */}
         <Grid item xs={12} md={6}>
