@@ -9,10 +9,9 @@ import P3_LearningAreas     from './screens/parent/P3_LearningAreas';
 import P4_SupportGuidance   from './screens/parent/P4_SupportGuidance';
 
 // Educator screens
-import E1_StudentOverview      from './screens/educator/E1_StudentOverview';
-import E2_PerformanceBreakdown from './screens/educator/E2_PerformanceBreakdown';
-import E3_ErrorAnalysis        from './screens/educator/E3_ErrorAnalysis';
-import E4_ConceptGaps          from './screens/educator/E4_ConceptGaps';
+import E0_ClassOverview       from './screens/educator/E0_ClassOverview';
+import E1_StudentOverview     from './screens/educator/E1_StudentOverview';
+import E3_ErrorAnalysis       from './screens/educator/E3_ErrorAnalysis';
 import E5_InterventionGuidance from './screens/educator/E5_InterventionGuidance';
 
 export default function App() {
@@ -29,12 +28,13 @@ export default function App() {
           <Route path="/parent/learning"    element={<P3_LearningAreas />} />
           <Route path="/parent/support"     element={<P4_SupportGuidance />} />
 
-          {/* Educator */}
-          <Route path="/educator/overview"    element={<E1_StudentOverview />} />
-          <Route path="/educator/performance" element={<E2_PerformanceBreakdown />} />
-          <Route path="/educator/diagnosis"   element={<E3_ErrorAnalysis />} />
-          <Route path="/educator/gaps"        element={<E4_ConceptGaps />} />
-          <Route path="/educator/intervene"   element={<E5_InterventionGuidance />} />
+          {/* Educator — Mode 1: Class Overview */}
+          <Route path="/educator/class"     element={<E0_ClassOverview />} />
+
+          {/* Educator — Mode 2: Student Deep Dive */}
+          <Route path="/educator/overview"  element={<E1_StudentOverview />} />
+          <Route path="/educator/diagnosis" element={<E3_ErrorAnalysis />} />
+          <Route path="/educator/intervene" element={<E5_InterventionGuidance />} />
 
           {/* 404 fallback */}
           <Route path="*" element={<Navigate to="/" replace />} />

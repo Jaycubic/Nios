@@ -1,227 +1,353 @@
-import React from 'react';
-import { Box, Typography, Card, CardContent, Chip, Grid, Divider } from '@mui/material';
+import React, { useState } from 'react';
+import {
+  Box, Typography, Card, CardContent, Chip, Grid, Divider, Button,
+  Table, TableBody, TableCell, TableHead, TableRow, Collapse, LinearProgress,
+} from '@mui/material';
 import Layout from '../../components/Layout';
 import { COLORS } from '../../theme';
 
-// ─── Bloom's taxonomy ladder ──────────────────────────────────────────────────
-const bloomLevels = [
-  { label: 'Remember',  color: COLORS.textMuted,  active: true  },
-  { label: 'Understand',color: COLORS.blue,        active: true  },
-  { label: 'Apply',     color: COLORS.green,       active: true  },
-  { label: 'Analyse',   color: COLORS.yellow,      active: false },
-  { label: 'Evaluate',  color: COLORS.purple,      active: false },
-  { label: 'Create',    color: COLORS.amber,       active: false },
+// ─── Student data ─────────────────────────────────────────────────────────────
+const student = {
+  name: 'Rahul Sharma',
+  grade: 'Grade 10 · NIOS',
+  rollNo: '2024NIOS1048',
+  accuracy: 52,
+  practice: 'Medium',
+  retention: 60,
+  status: 'Needs Support',
+};
+
+const subjectData = [
+  { subject: '📐 Math',    accuracy: 45, practice: 'High',   retention: 50, status: '🔴', statusColor: COLORS.amber  },
+  { subject: '🔬 Science', accuracy: 58, practice: 'Medium', retention: 62, status: '🟡', statusColor: COLORS.yellow },
+  { subject: '📖 English', accuracy: 72, practice: 'High',   retention: 78, status: '🟢', statusColor: COLORS.green  },
+  { subject: '🌍 Social',  accuracy: 61, practice: 'Low',    retention: 55, status: '🟡', statusColor: COLORS.yellow },
 ];
 
-function BloomLadder({ current = 'Apply' }) {
+const chapterData = {
+  '📐 Math': [
+    { chapter: 'Trigonometry',       accuracy: 38, retention: 45, attempts: 4, status: '🔴', statusColor: COLORS.amber  },
+    { chapter: 'Algebra',            accuracy: 60, retention: 65, attempts: 5, status: '🟡', statusColor: COLORS.yellow },
+    { chapter: 'Linear Equations',   accuracy: 71, retention: 70, attempts: 6, status: '🟢', statusColor: COLORS.green  },
+    { chapter: 'Number Systems',     accuracy: 82, retention: 80, attempts: 4, status: '🟢', statusColor: COLORS.green  },
+    { chapter: 'Polynomials',        accuracy: 42, retention: 48, attempts: 3, status: '🔴', statusColor: COLORS.amber  },
+  ],
+  '🔬 Science': [
+    { chapter: 'Chemical Reactions', accuracy: 42, retention: 38, attempts: 3, status: '🔴', statusColor: COLORS.amber  },
+    { chapter: 'Acids & Bases',      accuracy: 58, retention: 60, attempts: 4, status: '🟡', statusColor: COLORS.yellow },
+    { chapter: 'Life Processes',     accuracy: 67, retention: 70, attempts: 5, status: '🟢', statusColor: COLORS.green  },
+  ],
+  '📖 English': [
+    { chapter: 'Grammar Rules',      accuracy: 72, retention: 78, attempts: 4, status: '🟢', statusColor: COLORS.green  },
+    { chapter: 'Reading Comp.',      accuracy: 80, retention: 82, attempts: 3, status: '🟢', statusColor: COLORS.green  },
+  ],
+  '🌍 Social': [
+    { chapter: 'History - WW2',      accuracy: 65, retention: 60, attempts: 3, status: '🟡', statusColor: COLORS.yellow },
+    { chapter: 'Geography - Maps',   accuracy: 55, retention: 50, attempts: 2, status: '🟡', statusColor: COLORS.yellow },
+  ],
+};
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+function AccuracyBar({ value, color }) {
   return (
-    <Box>
-      <Typography variant="overline" sx={{ display: 'block', mb: 1.5 }}>Bloom's Taxonomy Level</Typography>
-      <Box sx={{ display: 'flex', flexDirection: 'column-reverse', gap: 0.6 }}>
-        {bloomLevels.map((level, i) => {
-          const isCurrent = level.label === current;
-          return (
-            <Box key={i} sx={{
-              display: 'flex', alignItems: 'center', gap: 1.5,
-              p: '7px 12px',
-              borderRadius: '8px',
-              background: level.active ? `${level.color}14` : 'transparent',
-              border: `1px solid ${level.active ? level.color + '35' : COLORS.border}`,
-              opacity: level.active ? 1 : 0.4,
-              position: 'relative',
-              transition: 'all 0.2s',
+    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+      <Box sx={{ flex: 1, height: 6, borderRadius: 8, background: COLORS.divider, overflow: 'hidden', minWidth: 80 }}>
+        <Box sx={{
+          height: '100%', width: `${value}%`,
+          background: `linear-gradient(90deg, ${color}80, ${color})`,
+          borderRadius: 8,
+        }} />
+      </Box>
+      <Typography sx={{ fontWeight: 700, fontSize: '0.8rem', color, fontFamily: "'DM Sans'", minWidth: 32 }}>
+        {value}%
+      </Typography>
+    </Box>
+  );
+}
+
+function practiceChip(level) {
+  const map = {
+    High:   { bg: `${COLORS.green}15`,  color: COLORS.green  },
+    Medium: { bg: `${COLORS.yellow}15`, color: COLORS.yellowDark },
+    Low:    { bg: `${COLORS.amber}15`,  color: COLORS.amberDark  },
+  };
+  const s = map[level] || {};
+  return (
+    <Chip
+      label={level} size="small"
+      sx={{ height: 20, fontSize: '0.68rem', fontWeight: 600, background: s.bg, color: s.color, '& .MuiChip-label': { px: 1 } }}
+    />
+  );
+}
+
+const colHeader = {
+  fontWeight: 700, fontSize: '0.7rem', color: COLORS.textMuted,
+  textTransform: 'uppercase', letterSpacing: '0.08em', border: 'none', pb: 1.5,
+};
+
+// ─── Section 1: Student Snapshot ──────────────────────────────────────────────
+function StudentSnapshot() {
+  return (
+    <Card elevation={0} sx={{ background: COLORS.bgDark, border: 'none', mb: 0 }}>
+      <CardContent>
+        <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 3, flexWrap: 'wrap' }}>
+          {/* Avatar + identity */}
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <Box sx={{
+              width: 56, height: 56, borderRadius: '16px',
+              background: `linear-gradient(135deg, ${COLORS.purple}60, ${COLORS.purpleDark})`,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              border: `2px solid ${COLORS.purple}40`,
             }}>
-              <Box sx={{
-                width: 10, height: 10, borderRadius: '50%',
-                background: level.active ? level.color : COLORS.border,
-                flexShrink: 0,
-                boxShadow: isCurrent ? `0 0 0 3px ${level.color}30` : 'none',
-              }} />
-              <Typography sx={{
-                fontSize: '0.8rem',
-                fontWeight: isCurrent ? 700 : 500,
-                color: level.active ? COLORS.textPrimary : COLORS.textMuted,
-                fontFamily: "'Inter'",
-              }}>{level.label}</Typography>
-              {isCurrent && (
-                <Chip
-                  label="Current"
-                  size="small"
-                  sx={{
-                    ml: 'auto', height: 20, fontSize: '0.65rem',
-                    background: `${level.color}20`, color: level.color,
-                    fontWeight: 700, '& .MuiChip-label': { px: 1 },
-                  }}
-                />
-              )}
+              <Typography sx={{ fontWeight: 900, fontSize: '1.4rem', color: '#fff', fontFamily: "'DM Sans'" }}>
+                R
+              </Typography>
             </Box>
-          );
-        })}
-      </Box>
-    </Box>
+            <Box>
+              <Typography sx={{ fontWeight: 800, fontSize: '1.15rem', color: '#fff', fontFamily: "'DM Sans'" }}>
+                {student.name}
+              </Typography>
+              <Typography sx={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.75rem' }}>
+                {student.grade} · {student.rollNo}
+              </Typography>
+              <Chip
+                label={`⚠️ ${student.status}`}
+                size="small"
+                sx={{
+                  mt: 0.8, height: 22, fontSize: '0.7rem', fontWeight: 700,
+                  background: `${COLORS.amber}25`, color: COLORS.amber,
+                  border: `1px solid ${COLORS.amber}50`,
+                  '& .MuiChip-label': { px: 1 },
+                }}
+              />
+            </Box>
+          </Box>
+
+          {/* KPIs */}
+          <Box sx={{ display: 'flex', gap: 3, ml: { xs: 0, md: 'auto' }, flexWrap: 'wrap' }}>
+            {[
+              { label: 'Overall Accuracy', value: `${student.accuracy}%`, color: COLORS.yellow },
+              { label: 'Practice Level',   value: student.practice,        color: COLORS.blue   },
+              { label: 'Retention Rate',   value: `${student.retention}%`, color: COLORS.purple },
+            ].map(k => (
+              <Box key={k.label} sx={{ textAlign: 'center' }}>
+                <Typography sx={{ fontWeight: 900, fontSize: '1.8rem', color: k.color, fontFamily: "'DM Sans'", lineHeight: 1 }}>
+                  {k.value}
+                </Typography>
+                <Typography sx={{ color: 'rgba(255,255,255,0.45)', fontSize: '0.7rem', mt: 0.3 }}>
+                  {k.label}
+                </Typography>
+              </Box>
+            ))}
+          </Box>
+        </Box>
+      </CardContent>
+    </Card>
   );
 }
 
-// ─── Sparkline ────────────────────────────────────────────────────────────────
-function Sparkline({ data, color }) {
-  const max = Math.max(...data);
-  const min = Math.min(...data);
-  const h = 60, w = 240;
-  const pts = data.map((v, i) => {
-    const x = (i / (data.length - 1)) * w;
-    const y = h - ((v - min) / (max - min + 1)) * h;
-    return `${x},${y}`;
-  }).join(' ');
+// ─── Section 2: Subject-wise Performance ─────────────────────────────────────
+function SubjectTable() {
+  return (
+    <Card elevation={0}>
+      <CardContent>
+        <Typography variant="overline" sx={{ display: 'block', mb: 2 }}>📊 Section 2 · Subject-wise Performance</Typography>
+        <Box sx={{ overflowX: 'auto' }}>
+          <Table size="small">
+            <TableHead>
+              <TableRow sx={{ '& th': colHeader }}>
+                <TableCell>Subject</TableCell>
+                <TableCell>Accuracy</TableCell>
+                <TableCell align="center">Practice</TableCell>
+                <TableCell>Retention</TableCell>
+                <TableCell align="center">Status</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {subjectData.map(s => (
+                <TableRow key={s.subject} sx={{
+                  '& td': { border: 'none', py: 1.4 },
+                  '&:hover td': { background: COLORS.divider },
+                  transition: 'all 0.15s',
+                }}>
+                  <TableCell>
+                    <Typography sx={{ fontWeight: 700, fontSize: '0.85rem', color: COLORS.textPrimary }}>{s.subject}</Typography>
+                  </TableCell>
+                  <TableCell sx={{ minWidth: 160 }}><AccuracyBar value={s.accuracy} color={s.statusColor} /></TableCell>
+                  <TableCell align="center">{practiceChip(s.practice)}</TableCell>
+                  <TableCell>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <LinearProgress
+                        variant="determinate"
+                        value={s.retention}
+                        sx={{
+                          flex: 1, height: 6, borderRadius: 8,
+                          background: COLORS.divider,
+                          '& .MuiLinearProgress-bar': { background: s.statusColor },
+                        }}
+                      />
+                      <Typography sx={{ fontSize: '0.78rem', fontWeight: 700, color: s.statusColor, minWidth: 32 }}>
+                        {s.retention}%
+                      </Typography>
+                    </Box>
+                  </TableCell>
+                  <TableCell align="center">
+                    <Typography sx={{ fontSize: '1.2rem' }}>{s.status}</Typography>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </Box>
+      </CardContent>
+    </Card>
+  );
+}
+
+// ─── Section 3: Chapter-wise Performance ─────────────────────────────────────
+function ChapterTable() {
+  const [openSubject, setOpenSubject] = useState('📐 Math');
 
   return (
-    <Box>
-      <svg width={w} height={h + 10} viewBox={`0 0 ${w} ${h + 10}`}>
-        <polyline
-          points={pts}
-          fill="none"
-          stroke={color}
-          strokeWidth="2.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-        {data.map((v, i) => {
-          const x = (i / (data.length - 1)) * w;
-          const y = h - ((v - min) / (max - min + 1)) * h;
-          return <circle key={i} cx={x} cy={y} r={i === data.length - 1 ? 5 : 3} fill={color} />;
-        })}
-      </svg>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 0.5 }}>
-        {['Wk1','Wk2','Wk3','Wk4','Wk5','Wk6','Wk7','Wk8'].map(w => (
-          <Typography key={w} variant="caption" sx={{ color: COLORS.textMuted, fontSize: '0.65rem' }}>{w}</Typography>
+    <Card elevation={0}>
+      <CardContent>
+        <Typography variant="overline" sx={{ display: 'block', mb: 2 }}>📚 Section 3 · Chapter-wise Performance</Typography>
+
+        {/* Subject tabs */}
+        <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mb: 2 }}>
+          {Object.keys(chapterData).map(subj => {
+            const isOpen = openSubject === subj;
+            const subjectInfo = subjectData.find(s => s.subject === subj);
+            return (
+              <Chip
+                key={subj}
+                label={subj}
+                onClick={() => setOpenSubject(isOpen ? null : subj)}
+                sx={{
+                  fontWeight: isOpen ? 700 : 500,
+                  background: isOpen ? `${subjectInfo?.statusColor}20` : COLORS.divider,
+                  color: isOpen ? subjectInfo?.statusColor : COLORS.textSecondary,
+                  border: `1px solid ${isOpen ? subjectInfo?.statusColor + '50' : 'transparent'}`,
+                  cursor: 'pointer',
+                  transition: 'all 0.2s',
+                  '&:hover': { background: `${subjectInfo?.statusColor}15` },
+                }}
+              />
+            );
+          })}
+        </Box>
+
+        {/* Chapter rows */}
+        {Object.entries(chapterData).map(([subj, chapters]) => (
+          <Collapse key={subj} in={openSubject === subj}>
+            <Box sx={{ overflowX: 'auto' }}>
+              <Table size="small">
+                <TableHead>
+                  <TableRow sx={{ '& th': colHeader }}>
+                    <TableCell>Chapter</TableCell>
+                    <TableCell>Accuracy</TableCell>
+                    <TableCell>Retention</TableCell>
+                    <TableCell align="center">Attempts</TableCell>
+                    <TableCell align="center">Status</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {chapters.map(c => (
+                    <TableRow key={c.chapter} sx={{
+                      '& td': { border: 'none', py: 1.2 },
+                      '&:hover td': { background: COLORS.divider },
+                      transition: 'all 0.15s',
+                    }}>
+                      <TableCell>
+                        <Typography sx={{ fontWeight: 600, fontSize: '0.82rem', color: COLORS.textPrimary }}>{c.chapter}</Typography>
+                      </TableCell>
+                      <TableCell sx={{ minWidth: 140 }}><AccuracyBar value={c.accuracy} color={c.statusColor} /></TableCell>
+                      <TableCell>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                          <LinearProgress
+                            variant="determinate"
+                            value={c.retention}
+                            sx={{
+                              width: 80, height: 5, borderRadius: 8,
+                              background: COLORS.divider,
+                              '& .MuiLinearProgress-bar': { background: `${c.statusColor}80` },
+                            }}
+                          />
+                          <Typography sx={{ fontSize: '0.75rem', color: COLORS.textSecondary }}>{c.retention}%</Typography>
+                        </Box>
+                      </TableCell>
+                      <TableCell align="center">
+                        <Box sx={{
+                          display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                          width: 26, height: 26, borderRadius: '8px',
+                          background: COLORS.divider,
+                        }}>
+                          <Typography sx={{ fontWeight: 700, fontSize: '0.78rem', color: COLORS.textSecondary }}>{c.attempts}</Typography>
+                        </Box>
+                      </TableCell>
+                      <TableCell align="center">
+                        <Typography sx={{ fontSize: '1.1rem' }}>{c.status}</Typography>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </Box>
+          </Collapse>
         ))}
-      </Box>
-    </Box>
+      </CardContent>
+    </Card>
   );
 }
 
-// ─── Quick KPI box ────────────────────────────────────────────────────────────
-function KPI({ label, value, color, sub }) {
-  return (
-    <Box sx={{
-      p: 2, borderRadius: '12px',
-      background: `${color}10`,
-      border: `1px solid ${color}28`,
-      textAlign: 'center',
-    }}>
-      <Typography sx={{ fontWeight: 800, fontSize: '1.6rem', color, fontFamily: "'DM Sans'", lineHeight: 1 }}>{value}</Typography>
-      <Typography sx={{ fontWeight: 500, fontSize: '0.75rem', color: COLORS.textSecondary, mt: 0.5 }}>{label}</Typography>
-      {sub && <Typography variant="caption" sx={{ color: COLORS.textMuted }}>{sub}</Typography>}
-    </Box>
-  );
-}
-
+// ─── Main screen ──────────────────────────────────────────────────────────────
 export default function E1_StudentOverview() {
-  const sparkData = [55, 58, 53, 61, 59, 64, 67, 68];
-
   return (
     <Layout
       role="educator"
-      title="Student: Aarav Mehta"
-      subtitle="Grade 10 · Roll No. 2024NIOS1047 · Joined Jan 2024"
+      title="Student Deep Dive"
+      subtitle="Mode 2: Individual performance analysis"
     >
       <Grid container spacing={2.5}>
-
-        {/* ── Accuracy hero ── */}
-        <Grid item xs={12} md={4}>
-          <Card elevation={0} sx={{ height: '100%' }}>
-            <CardContent>
-              <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', mb: 1 }}>
-                <Typography variant="overline">Overall Accuracy</Typography>
-                <Chip label="Developing" size="small" sx={{ background: `${COLORS.yellow}18`, color: COLORS.yellowDark, fontWeight: 700, fontSize: '0.7rem', border: `1px solid ${COLORS.yellow}35` }} />
-              </Box>
-
-              <Box sx={{ textAlign: 'center', py: 2 }}>
-                {/* Big accuracy ring */}
-                <Box sx={{ position: 'relative', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', mb: 1 }}>
-                  <svg width="130" height="130" viewBox="0 0 130 130">
-                    <circle cx="65" cy="65" r="52" fill="none" stroke={`${COLORS.green}18`} strokeWidth="12" />
-                    <circle
-                      cx="65" cy="65" r="52" fill="none"
-                      stroke={COLORS.green} strokeWidth="12"
-                      strokeLinecap="round"
-                      strokeDasharray={`${2 * Math.PI * 52}`}
-                      strokeDashoffset={`${2 * Math.PI * 52 * (1 - 0.68)}`}
-                      transform="rotate(-90 65 65)"
-                    />
-                  </svg>
-                  <Box sx={{ position: 'absolute', textAlign: 'center' }}>
-                    <Typography sx={{ fontWeight: 900, fontSize: '2rem', color: COLORS.green, fontFamily: "'DM Sans'", lineHeight: 1 }}>68%</Typography>
-                    <Typography variant="caption" sx={{ color: COLORS.textMuted }}>accuracy</Typography>
-                  </Box>
-                </Box>
-              </Box>
-
-              <Divider sx={{ mb: 2 }} />
-              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <Typography variant="body2" sx={{ color: COLORS.textSecondary }}>Questions attempted</Typography>
-                  <Typography variant="body2" sx={{ fontWeight: 700 }}>146</Typography>
-                </Box>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <Typography variant="body2" sx={{ color: COLORS.textSecondary }}>Correct answers</Typography>
-                  <Typography variant="body2" sx={{ fontWeight: 700, color: COLORS.green }}>99</Typography>
-                </Box>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <Typography variant="body2" sx={{ color: COLORS.textSecondary }}>Incorrect</Typography>
-                  <Typography variant="body2" sx={{ fontWeight: 700, color: COLORS.amber }}>47</Typography>
-                </Box>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <Typography variant="body2" sx={{ color: COLORS.textSecondary }}>Avg time/question</Typography>
-                  <Typography variant="body2" sx={{ fontWeight: 700 }}>2m 18s</Typography>
-                </Box>
-              </Box>
-            </CardContent>
-          </Card>
-        </Grid>
-
-        {/* ── Bloom's + trend ── */}
-        <Grid item xs={12} md={4}>
-          <Card elevation={0} sx={{ height: '100%' }}>
-            <CardContent>
-              <BloomLadder current="Apply" />
-            </CardContent>
-          </Card>
-        </Grid>
-
-        {/* ── KPIs + sparkline ── */}
-        <Grid item xs={12} md={4}>
-          <Card elevation={0} sx={{ height: '100%' }}>
-            <CardContent>
-              <Typography variant="overline" sx={{ display: 'block', mb: 2 }}>8-Week Performance Trend</Typography>
-              <Sparkline data={sparkData} color={COLORS.blue} />
-
-              <Divider sx={{ my: 2.5 }} />
-
-              <Grid container spacing={1.5}>
-                <Grid item xs={6}><KPI label="Study Streak"  value="12d"  color={COLORS.yellow} /></Grid>
-                <Grid item xs={6}><KPI label="Completion"    value="82%"  color={COLORS.green}  /></Grid>
-                <Grid item xs={6}><KPI label="Concepts Done" value="38"   color={COLORS.blue}   /></Grid>
-                <Grid item xs={6}><KPI label="Gaps Found"    value="6"    color={COLORS.amber}  /></Grid>
-              </Grid>
-            </CardContent>
-          </Card>
-        </Grid>
-
-        {/* ── Alert bar ── */}
+        {/* Student snapshot – full width dark hero */}
         <Grid item xs={12}>
-          <Card elevation={0} sx={{ background: `${COLORS.amber}10`, border: `1px solid ${COLORS.amber}28` }}>
+          <StudentSnapshot />
+        </Grid>
+
+        {/* Subject table */}
+        <Grid item xs={12} lg={5}>
+          <SubjectTable />
+        </Grid>
+
+        {/* Chapter table */}
+        <Grid item xs={12} lg={7}>
+          <ChapterTable />
+        </Grid>
+
+        {/* Quick nav to diagnosis */}
+        <Grid item xs={12}>
+          <Card elevation={0} sx={{ background: `${COLORS.purple}08`, border: `1px solid ${COLORS.purple}22` }}>
             <CardContent sx={{ py: '14px !important' }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                <Typography sx={{ fontSize: '1.2rem' }}>⚠️</Typography>
-                <Typography variant="body2" sx={{ color: COLORS.textPrimary }}>
-                  <strong>Intervention suggested:</strong> Aarav has attempted Polynomial questions 5 times with &lt;40% accuracy. A concept-level gap likely exists. See Diagnosis tab for root cause.
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap' }}>
+                <Typography sx={{ fontSize: '1.1rem' }}>🧠</Typography>
+                <Typography variant="body2" sx={{ flexGrow: 1 }}>
+                  <strong>Deep analysis available:</strong> Rahul shows high effort in Math but low accuracy — a concept gap pattern. View full learning diagnosis for root cause breakdown.
                 </Typography>
-                <Chip label="View Diagnosis →" size="small" clickable sx={{ ml: 'auto', background: `${COLORS.amber}20`, color: COLORS.amberDark, fontWeight: 600, fontSize: '0.72rem', border: `1px solid ${COLORS.amber}40`, whiteSpace: 'nowrap' }} />
+                <Button
+                  size="small"
+                  sx={{
+                    py: 0.6, px: 2,
+                    background: `linear-gradient(135deg, ${COLORS.purple}, ${COLORS.purpleDark})`,
+                    color: '#fff', fontSize: '0.75rem',
+                    boxShadow: `0 3px 8px ${COLORS.purple}35`,
+                  }}
+                >
+                  View Diagnosis →
+                </Button>
               </Box>
             </CardContent>
           </Card>
         </Grid>
-
       </Grid>
     </Layout>
   );
