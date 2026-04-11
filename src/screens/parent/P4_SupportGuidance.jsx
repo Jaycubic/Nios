@@ -1,114 +1,92 @@
 // src/screens/parent/P4_SupportGuidance.jsx
 import React from 'react';
-import { Box, Typography, Card, CardContent, Grid, Button } from '@mui/material';
+import { Box, Typography, Card, CardContent, Grid } from '@mui/material';
 import Layout from '../../components/Layout';
 import { COLORS } from '../../theme';
 
-// ─── Data Map (Wireframe) ────────────────────────────────────────────────────
-const supportData = {
-  needsHelp: [
-    { id: 1, issue: "Math revision consistency", action: "Encourage revision" },
-    { id: 2, issue: "Daily study habits", action: "Help maintain routine" },
-    { id: 3, issue: "Science problem-solving", action: "Focus on specific topics" }
-  ],
-  howToHelp: [
-    { id: 1, text: "Encourage 15–20 minutes of daily practice", icon: "⏱️" },
-    { id: 2, text: "Ask your child to explain what they learned", icon: "🗣️" },
-    { id: 3, text: "Appreciate small improvements", icon: "🌟" }
-  ]
-};
-
-// ─── 5. WHERE SUPPORT IS NEEDED ──────────────────────────────────────────────
-function WhereSupportNeeded() {
+function SectionLabel({ children }) {
   return (
-    <Box sx={{ mb: 5 }}>
-      <Typography variant="h6" sx={{ fontWeight: 800, mb: 1.5, color: COLORS.textPrimary }}>
-        Where Support is Needed
+    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+      <Typography sx={{ fontWeight: 700, fontSize: '0.75rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: COLORS.textMuted, fontFamily: "'Inter'" }}>
+        {children}
       </Typography>
-      <Typography variant="body1" sx={{ color: COLORS.textSecondary, mb: 3 }}>
-        Action-oriented suggestions mapped directly to Aarav's recent learning patterns.
-      </Typography>
-
-      <Grid container spacing={2.5}>
-        {supportData.needsHelp.map(item => (
-          <Grid item xs={12} md={4} key={item.id}>
-            <Card elevation={0} sx={{ height: '100%', border: `1px solid ${COLORS.amber}30`, background: `${COLORS.amber}05`, borderRadius: '12px' }}>
-              <CardContent sx={{ p: 3, display: 'flex', flexDirection: 'column', height: '100%' }}>
-                <Typography variant="overline" sx={{ color: COLORS.amberDark, fontWeight: 700, mb: 1, display: 'block', letterSpacing: 0.5 }}>
-                  What they need help with
-                </Typography>
-                <Typography variant="body1" sx={{ fontWeight: 700, color: COLORS.textPrimary, mb: 2, flexGrow: 1 }}>
-                  {item.issue}
-                </Typography>
-                
-                <Box sx={{ background: '#fff', p: 2, borderRadius: '8px', border: `1px solid ${COLORS.divider}` }}>
-                  <Typography variant="caption" sx={{ color: COLORS.textMuted, fontWeight: 600, display: 'block', mb: 0.5, textTransform: 'uppercase' }}>
-                    How you can support
-                  </Typography>
-                  <Typography variant="body2" sx={{ fontWeight: 600, color: COLORS.textPrimary }}>
-                    {item.action}
-                  </Typography>
-                </Box>
-              </CardContent>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
     </Box>
   );
 }
 
-// ─── 6. HOW PARENTS CAN HELP ──────────────────────────────────────────────────
-function HowParentsCanHelp() {
-  return (
-    <Box>
-      <Typography variant="h6" sx={{ fontWeight: 800, mb: 1.5, color: COLORS.textPrimary }}>
-        How You Can Help at Home
-      </Typography>
-      <Typography variant="body1" sx={{ color: COLORS.textSecondary, mb: 3 }}>
-        Small, practical ways to create a positive learning environment.
-      </Typography>
-
-      <Card elevation={0} sx={{ border: `1px solid ${COLORS.blue}20`, background: `${COLORS.blue}03`, borderRadius: '16px' }}>
-        <CardContent sx={{ p: { xs: 3, md: 4 } }}>
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-            {supportData.howToHelp.map((item) => (
-              <Box key={item.id} sx={{ 
-                display: 'flex', alignItems: 'center', gap: 2, 
-                p: '16px 20px', background: '#fff', 
-                borderRadius: '12px', border: `1px solid ${COLORS.divider}`,
-                boxShadow: '0 2px 8px rgba(0,0,0,0.02)'
-              }}>
-                <Box sx={{ 
-                  width: 44, height: 44, borderRadius: '10px', background: `${COLORS.blue}10`, 
-                  display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.4rem' 
-                }}>
-                  {item.icon}
-                </Box>
-                <Typography sx={{ fontWeight: 600, color: COLORS.textPrimary, fontSize: '1.05rem' }}>
-                  {item.text}
-                </Typography>
-              </Box>
-            ))}
-          </Box>
-        </CardContent>
-      </Card>
-    </Box>
-  );
-}
-
-// ─── Main Screen ─────────────────────────────────────────────────────────────
 export default function P4_SupportGuidance() {
+  const supportNeeds = [
+    { issue: 'Needs more practice in Math', action: 'Encourage revision of specific topics.' },
+    { issue: 'Inconsistent study schedule', action: 'Help maintain a daily routine.' },
+    { issue: 'Science concepts are confusing', action: 'Focus on recent textbook chapters.' }
+  ];
+
+  const parentTips = [
+    { icon: '⏱️', text: 'Encourage 15–20 minutes of daily practice' },
+    { icon: '🗣️', text: 'Ask your child to explain what they learned' },
+    { icon: '🌟', text: 'Appreciate small improvements' }
+  ];
+
   return (
-    <Layout
-      role="parent"
-      title="Guidance & Support"
-      subtitle="How you can practically support Aarav."
-    >
-      <Box sx={{ maxWidth: 900, mx: 'auto', py: 2 }}>
-        <WhereSupportNeeded />
-        <HowParentsCanHelp />
-      </Box>
+    <Layout role="parent" title="Support Guidance" subtitle="How you can support Aarav at home">
+      <Grid container spacing={3}>
+        
+        {/* WHERE SUPPORT IS NEEDED */}
+        <Grid item xs={12} md={6}>
+          <Card elevation={0} sx={{ height: '100%' }}>
+            <CardContent>
+              <SectionLabel>Where Support Is Needed</SectionLabel>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                {supportNeeds.map((item, i) => (
+                  <Box key={i} sx={{ p: 2.5, borderRadius: '12px', background: COLORS.bgWarm, border: `1px solid ${COLORS.border}` }}>
+                    <Box sx={{ mb: 1.5 }}>
+                      <Typography sx={{ fontWeight: 700, fontSize: '0.75rem', color: COLORS.textMuted, textTransform: 'uppercase', mb: 0.5 }}>What your child needs help with</Typography>
+                      <Typography sx={{ fontWeight: 600, fontSize: '0.9rem', color: COLORS.textPrimary }}>
+                        {item.issue}
+                      </Typography>
+                    </Box>
+                    <Box sx={{ p: 1.5, background: `${COLORS.amber}10`, borderRadius: '8px', border: `1px solid ${COLORS.amber}25` }}>
+                      <Typography sx={{ fontWeight: 700, fontSize: '0.75rem', color: COLORS.amberDark, textTransform: 'uppercase', mb: 0.5 }}>How you can support</Typography>
+                      <Typography sx={{ fontWeight: 600, fontSize: '0.85rem', color: COLORS.textPrimary, display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <span style={{ fontSize: '1.1rem'}}>💡</span> {item.action}
+                      </Typography>
+                    </Box>
+                  </Box>
+                ))}
+              </Box>
+            </CardContent>
+          </Card>
+        </Grid>
+
+        {/* HOW PARENTS CAN HELP */}
+        <Grid item xs={12} md={6}>
+          <Card elevation={0} sx={{ height: '100%', background: `${COLORS.purple}08`, border: `1px solid ${COLORS.purple}20` }}>
+            <CardContent>
+              <SectionLabel>How Parents Can Help Today</SectionLabel>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+                {parentTips.map((tip, i) => (
+                   <Box key={i} sx={{ 
+                     display: 'flex', alignItems: 'center', gap: 2, p: 2, 
+                     borderRadius: '12px', background: COLORS.bgCard, border: `1px solid ${COLORS.divider}` 
+                   }}>
+                      <Box sx={{ 
+                        width: 44, height: 44, borderRadius: '12px', 
+                        background: `${COLORS.purple}15`, display: 'flex', alignItems: 'center', justifyContent: 'center', 
+                        fontSize: '1.2rem', flexShrink: 0 
+                      }}>
+                        {tip.icon}
+                      </Box>
+                      <Typography sx={{ fontWeight: 700, fontSize: '0.9rem', color: COLORS.textPrimary }}>
+                        {tip.text}
+                      </Typography>
+                   </Box>
+                ))}
+              </Box>
+            </CardContent>
+          </Card>
+        </Grid>
+
+      </Grid>
     </Layout>
   );
 }
