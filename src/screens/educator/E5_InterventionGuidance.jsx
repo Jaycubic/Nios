@@ -120,7 +120,7 @@ function PracticeRecCard({ id, label, type, est, icon, color, onSend, sent }) {
 function TeachingStrategy() {
   const [copied, setCopied] = useState(false);
   return (
-    <Card elevation={0}>
+    <Card elevation={0} sx={{ height: '100%' }}>
       <CardContent>
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -175,6 +175,21 @@ function TeachingStrategy() {
             </Box>
           ))}
         </Box>
+
+        <Divider sx={{ my: 2.5 }} />
+
+        <Box sx={{
+          p: 2, borderRadius: '12px',
+          background: `${COLORS.green}08`, border: `1px solid ${COLORS.green}22`,
+        }}>
+          <Typography sx={{ fontWeight: 700, fontSize: '0.82rem', color: COLORS.greenDark, mb: 0.5 }}>
+            📈 Expected Impact
+          </Typography>
+          <Typography variant="body2" sx={{ color: COLORS.textSecondary, lineHeight: 1.6 }}>
+            Completing concept tasks + practice sets is projected to improve accuracy by{' '}
+            <strong>8–12%</strong> within 2 weeks, based on similar student patterns.
+          </Typography>
+        </Box>
       </CardContent>
     </Card>
   );
@@ -194,41 +209,46 @@ export default function E5_InterventionGuidance() {
     setSent(p => ({ ...p, [id]: !p[id] }));
     setSnack(sent[id] ? null : 'Practice questions sent to Rahul\'s dashboard!');
   };
+  const assignAll = () => { const s = {}; conceptRecs.forEach(r => s[r.id] = true); setAssigned(s); setSnack('All concept tasks assigned!'); };
+  const sendAll = () => { const s = {}; practiceRecs.forEach(r => s[r.id] = true); setSent(s); setSnack('All practice sets sent!'); };
 
   return (
     <Layout
       role="educator"
       title="Intervention Guidance — Rahul Sharma"
-      subtitle="Mode 2 §5: Concept · Practice · Teaching strategy"
+      subtitle="Concept · Practice · Teaching strategy"
     >
       <Grid container spacing={2.5}>
 
         {/* §5A: Concept Recommendations */}
         <Grid item xs={12} lg={4}>
-          <Card elevation={0}>
+          <Card elevation={0} sx={{ height: '100%' }}>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                   <Typography sx={{ fontSize: '1.1rem' }}>🔬</Typography>
-                  <Typography variant="h6">Concept Recs</Typography>
+                  <Typography variant="h6">Concept Recommendations</Typography>
                 </Box>
                 <Chip label="Revisit" size="small" sx={{ background: `${COLORS.purple}12`, color: COLORS.purpleDark, fontWeight: 600, fontSize: '0.68rem', border: `1px solid ${COLORS.purple}28` }} />
               </Box>
               {conceptRecs.map(r => (
                 <ConceptRecCard key={r.id} {...r} onAssign={handleAssign} assigned={!!assigned[r.id]} />
               ))}
+              <Typography variant="caption" sx={{ color: COLORS.textSecondary, lineHeight: 1.6, display: 'block', mt: 1 }}>
+                💡 Assigns concept task to Rahul's revision panel with linked material.
+              </Typography>
             </CardContent>
           </Card>
         </Grid>
 
         {/* §5B: Practice Recommendations */}
         <Grid item xs={12} lg={4}>
-          <Card elevation={0}>
+          <Card elevation={0} sx={{ height: '100%' }}>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                   <Typography sx={{ fontSize: '1.1rem' }}>📋</Typography>
-                  <Typography variant="h6">Practice Recs</Typography>
+                  <Typography variant="h6">Practice Recommendations</Typography>
                 </Box>
                 <Chip label="Assign" size="small" sx={{ background: `${COLORS.green}12`, color: COLORS.greenDark, fontWeight: 600, fontSize: '0.68rem', border: `1px solid ${COLORS.green}28` }} />
               </Box>
@@ -238,7 +258,7 @@ export default function E5_InterventionGuidance() {
               <Divider sx={{ my: 2 }} />
               <Box sx={{ p: 1.5, borderRadius: '10px', background: `${COLORS.blue}08`, border: `1px solid ${COLORS.blue}20` }}>
                 <Typography variant="caption" sx={{ color: COLORS.textSecondary, lineHeight: 1.6 }}>
-                  📬 Sent questions appear directly in Rahul's student practice panel for next session.
+                  📬 Sent questions appear directly in Rahul's practice panel for next session.
                 </Typography>
               </Box>
             </CardContent>
