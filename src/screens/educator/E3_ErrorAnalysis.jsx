@@ -398,7 +398,7 @@ export default function E3_ErrorAnalysis() {
 
         {/* §4A: Error analysis (left) + §4B: Concept gaps (right top) + §4C Gap Map (right bottom) */}
         <Grid item xs={12} md={6}>
-          <Card elevation={0} sx={{ height: '100%' }}>
+          <Card elevation={0}>
             <CardContent>
               <ErrorAnalysisSection />
             </CardContent>
