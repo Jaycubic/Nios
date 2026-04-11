@@ -120,7 +120,7 @@ function PracticeRecCard({ id, label, type, est, icon, color, onSend, sent }) {
 function TeachingStrategy() {
   const [copied, setCopied] = useState(false);
   return (
-    <Card elevation={0} sx={{ height: '100%' }}>
+    <Card elevation={0}>
       <CardContent>
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -175,21 +175,6 @@ function TeachingStrategy() {
             </Box>
           ))}
         </Box>
-
-        <Divider sx={{ my: 2.5 }} />
-
-        <Box sx={{
-          p: 2, borderRadius: '12px',
-          background: `${COLORS.green}08`, border: `1px solid ${COLORS.green}22`,
-        }}>
-          <Typography sx={{ fontWeight: 700, fontSize: '0.82rem', color: COLORS.greenDark, mb: 0.5 }}>
-            📈 Expected Impact
-          </Typography>
-          <Typography variant="body2" sx={{ color: COLORS.textSecondary, lineHeight: 1.6 }}>
-            Completing concept tasks + practice sets is projected to improve accuracy by{' '}
-            <strong>8–12%</strong> within 2 weeks, based on similar student patterns.
-          </Typography>
-        </Box>
       </CardContent>
     </Card>
   );
@@ -222,7 +207,7 @@ export default function E5_InterventionGuidance() {
 
         {/* §5A: Concept Recommendations */}
         <Grid item xs={12} lg={4}>
-          <Card elevation={0} sx={{ height: '100%' }}>
+          <Card elevation={0}>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -234,16 +219,13 @@ export default function E5_InterventionGuidance() {
               {conceptRecs.map(r => (
                 <ConceptRecCard key={r.id} {...r} onAssign={handleAssign} assigned={!!assigned[r.id]} />
               ))}
-              <Typography variant="caption" sx={{ color: COLORS.textSecondary, lineHeight: 1.6, display: 'block', mt: 1 }}>
-                💡 Assigns concept task to Rahul's revision panel with linked material.
-              </Typography>
             </CardContent>
           </Card>
         </Grid>
 
         {/* §5B: Practice Recommendations */}
         <Grid item xs={12} lg={4}>
-          <Card elevation={0} sx={{ height: '100%' }}>
+          <Card elevation={0}>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
