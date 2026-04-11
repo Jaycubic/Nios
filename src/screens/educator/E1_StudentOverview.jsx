@@ -125,17 +125,26 @@ function StudentSnapshot() {
           </Box>
 
           {/* KPIs */}
-          <Box sx={{ display: 'flex', gap: 3, ml: { xs: 0, md: 'auto' }, flexWrap: 'wrap' }}>
+          <Box sx={{ display: 'flex', gap: 2, ml: { xs: 0, md: 'auto' }, flexWrap: 'wrap' }}>
             {[
-              { label: 'Overall Accuracy', value: `${student.accuracy}%`, color: COLORS.amberDark },
-              { label: 'Practice Level', value: student.practice, color: COLORS.blue },
-              { label: 'Retention Rate', value: `${student.retention}%`, color: COLORS.purple },
+              { label: 'Overall Accuracy', value: `${student.accuracy}%`, color: COLORS.amberDark, bg: `${COLORS.amber}12`, border: `${COLORS.amber}30` },
+              { label: 'Practice Level', value: student.practice, color: COLORS.blue, bg: `${COLORS.blue}12`, border: `${COLORS.blue}30` },
+              { label: 'Retention Rate', value: `${student.retention}%`, color: COLORS.purple, bg: `${COLORS.purple}12`, border: `${COLORS.purple}30` },
             ].map(k => (
-              <Box key={k.label} sx={{ textAlign: 'center' }}>
-                <Typography sx={{ fontWeight: 900, fontSize: '1.8rem', color: k.color, fontFamily: "'DM Sans'", lineHeight: 1 }}>
+              <Box key={k.label} sx={{ 
+                textAlign: 'center',
+                background: COLORS.bgWarm,
+                px: 2.5, py: 1.5,
+                borderRadius: '16px',
+                border: `1px solid ${COLORS.border}`,
+                boxShadow: '0 4px 12px rgba(0,0,0,0.02)',
+                display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                minWidth: '110px'
+              }}>
+                <Typography sx={{ fontWeight: 900, fontSize: '1.6rem', color: k.color, fontFamily: "'DM Sans'", lineHeight: 1 }}>
                   {k.value}
                 </Typography>
-                <Typography sx={{ color: COLORS.textMuted, fontSize: '0.7rem', mt: 0.3 }}>
+                <Typography sx={{ color: COLORS.textMuted, fontSize: '0.65rem', mt: 0.6, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                   {k.label}
                 </Typography>
               </Box>
