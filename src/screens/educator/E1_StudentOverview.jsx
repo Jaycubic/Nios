@@ -1,3 +1,4 @@
+// src/screens/educator/E1_StudentOverview.jsx
 import React, { useState } from 'react';
 import {
   Box, Typography, Card, CardContent, Chip, Grid, Divider, Button,
@@ -18,32 +19,32 @@ const student = {
 };
 
 const subjectData = [
-  { subject: '📐 Math',    accuracy: 45, practice: 'High',   retention: 50, status: '🔴', statusColor: COLORS.amber  },
+  { subject: '📐 Math', accuracy: 45, practice: 'High', retention: 50, status: '🔴', statusColor: COLORS.amber },
   { subject: '🔬 Science', accuracy: 58, practice: 'Medium', retention: 62, status: '🟡', statusColor: COLORS.yellow },
-  { subject: '📖 English', accuracy: 72, practice: 'High',   retention: 78, status: '🟢', statusColor: COLORS.green  },
-  { subject: '🌍 Social',  accuracy: 61, practice: 'Low',    retention: 55, status: '🟡', statusColor: COLORS.yellow },
+  { subject: '📖 English', accuracy: 72, practice: 'High', retention: 78, status: '🟢', statusColor: COLORS.green },
+  { subject: '🌍 Social', accuracy: 61, practice: 'Low', retention: 55, status: '🟡', statusColor: COLORS.yellow },
 ];
 
 const chapterData = {
   '📐 Math': [
-    { chapter: 'Trigonometry',       accuracy: 38, retention: 45, attempts: 4, status: '🔴', statusColor: COLORS.amber  },
-    { chapter: 'Algebra',            accuracy: 60, retention: 65, attempts: 5, status: '🟡', statusColor: COLORS.yellow },
-    { chapter: 'Linear Equations',   accuracy: 71, retention: 70, attempts: 6, status: '🟢', statusColor: COLORS.green  },
-    { chapter: 'Number Systems',     accuracy: 82, retention: 80, attempts: 4, status: '🟢', statusColor: COLORS.green  },
-    { chapter: 'Polynomials',        accuracy: 42, retention: 48, attempts: 3, status: '🔴', statusColor: COLORS.amber  },
+    { chapter: 'Trigonometry', accuracy: 38, retention: 45, attempts: 4, status: '🔴', statusColor: COLORS.amber },
+    { chapter: 'Algebra', accuracy: 60, retention: 65, attempts: 5, status: '🟡', statusColor: COLORS.yellow },
+    { chapter: 'Linear Equations', accuracy: 71, retention: 70, attempts: 6, status: '🟢', statusColor: COLORS.green },
+    { chapter: 'Number Systems', accuracy: 82, retention: 80, attempts: 4, status: '🟢', statusColor: COLORS.green },
+    { chapter: 'Polynomials', accuracy: 42, retention: 48, attempts: 3, status: '🔴', statusColor: COLORS.amber },
   ],
   '🔬 Science': [
-    { chapter: 'Chemical Reactions', accuracy: 42, retention: 38, attempts: 3, status: '🔴', statusColor: COLORS.amber  },
-    { chapter: 'Acids & Bases',      accuracy: 58, retention: 60, attempts: 4, status: '🟡', statusColor: COLORS.yellow },
-    { chapter: 'Life Processes',     accuracy: 67, retention: 70, attempts: 5, status: '🟢', statusColor: COLORS.green  },
+    { chapter: 'Chemical Reactions', accuracy: 42, retention: 38, attempts: 3, status: '🔴', statusColor: COLORS.amber },
+    { chapter: 'Acids & Bases', accuracy: 58, retention: 60, attempts: 4, status: '🟡', statusColor: COLORS.yellow },
+    { chapter: 'Life Processes', accuracy: 67, retention: 70, attempts: 5, status: '🟢', statusColor: COLORS.green },
   ],
   '📖 English': [
-    { chapter: 'Grammar Rules',      accuracy: 72, retention: 78, attempts: 4, status: '🟢', statusColor: COLORS.green  },
-    { chapter: 'Reading Comp.',      accuracy: 80, retention: 82, attempts: 3, status: '🟢', statusColor: COLORS.green  },
+    { chapter: 'Grammar Rules', accuracy: 72, retention: 78, attempts: 4, status: '🟢', statusColor: COLORS.green },
+    { chapter: 'Reading Comp.', accuracy: 80, retention: 82, attempts: 3, status: '🟢', statusColor: COLORS.green },
   ],
   '🌍 Social': [
-    { chapter: 'History - WW2',      accuracy: 65, retention: 60, attempts: 3, status: '🟡', statusColor: COLORS.yellow },
-    { chapter: 'Geography - Maps',   accuracy: 55, retention: 50, attempts: 2, status: '🟡', statusColor: COLORS.yellow },
+    { chapter: 'History - WW2', accuracy: 65, retention: 60, attempts: 3, status: '🟡', statusColor: COLORS.yellow },
+    { chapter: 'Geography - Maps', accuracy: 55, retention: 50, attempts: 2, status: '🟡', statusColor: COLORS.yellow },
   ],
 };
 
@@ -67,9 +68,9 @@ function AccuracyBar({ value, color }) {
 
 function practiceChip(level) {
   const map = {
-    High:   { bg: `${COLORS.green}15`,  color: COLORS.green  },
+    High: { bg: `${COLORS.green}15`, color: COLORS.green },
     Medium: { bg: `${COLORS.yellow}15`, color: COLORS.yellowDark },
-    Low:    { bg: `${COLORS.amber}15`,  color: COLORS.amberDark  },
+    Low: { bg: `${COLORS.amber}15`, color: COLORS.amberDark },
   };
   const s = map[level] || {};
   return (
@@ -88,7 +89,7 @@ const colHeader = {
 // ─── Section 1: Student Snapshot ──────────────────────────────────────────────
 function StudentSnapshot() {
   return (
-    <Card elevation={0} sx={{ background: COLORS.bgDark, border: 'none', mb: 0 }}>
+    <Card elevation={0}>
       <CardContent>
         <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 3, flexWrap: 'wrap' }}>
           {/* Avatar + identity */}
@@ -104,10 +105,10 @@ function StudentSnapshot() {
               </Typography>
             </Box>
             <Box>
-              <Typography sx={{ fontWeight: 800, fontSize: '1.15rem', color: '#fff', fontFamily: "'DM Sans'" }}>
+              <Typography sx={{ fontWeight: 800, fontSize: '1.15rem', color: COLORS.textPrimary, fontFamily: "'DM Sans'" }}>
                 {student.name}
               </Typography>
-              <Typography sx={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.75rem' }}>
+              <Typography sx={{ color: COLORS.textSecondary, fontSize: '0.75rem' }}>
                 {student.grade} · {student.rollNo}
               </Typography>
               <Chip
@@ -115,8 +116,8 @@ function StudentSnapshot() {
                 size="small"
                 sx={{
                   mt: 0.8, height: 22, fontSize: '0.7rem', fontWeight: 700,
-                  background: `${COLORS.amber}25`, color: COLORS.amber,
-                  border: `1px solid ${COLORS.amber}50`,
+                  background: `${COLORS.amber}15`, color: COLORS.amberDark,
+                  border: `1px solid ${COLORS.amber}30`,
                   '& .MuiChip-label': { px: 1 },
                 }}
               />
@@ -126,15 +127,15 @@ function StudentSnapshot() {
           {/* KPIs */}
           <Box sx={{ display: 'flex', gap: 3, ml: { xs: 0, md: 'auto' }, flexWrap: 'wrap' }}>
             {[
-              { label: 'Overall Accuracy', value: `${student.accuracy}%`, color: COLORS.yellow },
-              { label: 'Practice Level',   value: student.practice,        color: COLORS.blue   },
-              { label: 'Retention Rate',   value: `${student.retention}%`, color: COLORS.purple },
+              { label: 'Overall Accuracy', value: `${student.accuracy}%`, color: COLORS.amberDark },
+              { label: 'Practice Level', value: student.practice, color: COLORS.blue },
+              { label: 'Retention Rate', value: `${student.retention}%`, color: COLORS.purple },
             ].map(k => (
               <Box key={k.label} sx={{ textAlign: 'center' }}>
                 <Typography sx={{ fontWeight: 900, fontSize: '1.8rem', color: k.color, fontFamily: "'DM Sans'", lineHeight: 1 }}>
                   {k.value}
                 </Typography>
-                <Typography sx={{ color: 'rgba(255,255,255,0.45)', fontSize: '0.7rem', mt: 0.3 }}>
+                <Typography sx={{ color: COLORS.textMuted, fontSize: '0.7rem', mt: 0.3 }}>
                   {k.label}
                 </Typography>
               </Box>
@@ -315,38 +316,13 @@ export default function E1_StudentOverview() {
         </Grid>
 
         {/* Subject table */}
-        <Grid item xs={12} lg={5}>
+        <Grid item xs={12} lg={6}>
           <SubjectTable />
         </Grid>
 
         {/* Chapter table */}
-        <Grid item xs={12} lg={7}>
+        <Grid item xs={12} lg={6}>
           <ChapterTable />
-        </Grid>
-
-        {/* Quick nav to diagnosis */}
-        <Grid item xs={12}>
-          <Card elevation={0} sx={{ background: `${COLORS.purple}08`, border: `1px solid ${COLORS.purple}22` }}>
-            <CardContent sx={{ py: '14px !important' }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap' }}>
-                <Typography sx={{ fontSize: '1.1rem' }}>🧠</Typography>
-                <Typography variant="body2" sx={{ flexGrow: 1 }}>
-                  <strong>Deep analysis available:</strong> Rahul shows high effort in Math but low accuracy — a concept gap pattern. View full learning diagnosis for root cause breakdown.
-                </Typography>
-                <Button
-                  size="small"
-                  sx={{
-                    py: 0.6, px: 2,
-                    background: `linear-gradient(135deg, ${COLORS.purple}, ${COLORS.purpleDark})`,
-                    color: '#fff', fontSize: '0.75rem',
-                    boxShadow: `0 3px 8px ${COLORS.purple}35`,
-                  }}
-                >
-                  View Diagnosis →
-                </Button>
-              </Box>
-            </CardContent>
-          </Card>
         </Grid>
       </Grid>
     </Layout>
