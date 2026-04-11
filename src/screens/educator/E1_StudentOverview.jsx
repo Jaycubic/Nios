@@ -151,7 +151,7 @@ function SubjectTable() {
   return (
     <Card elevation={0}>
       <CardContent>
-        <Typography variant="overline" sx={{ display: 'block', mb: 2 }}>📊 Section 2 · Subject-wise Performance</Typography>
+        <Typography variant="overline" sx={{ display: 'block', mb: 2 }}>📊 Subject-wise Performance</Typography>
         <Box sx={{ overflowX: 'auto' }}>
           <Table size="small">
             <TableHead>
@@ -211,7 +211,7 @@ function ChapterTable() {
   return (
     <Card elevation={0}>
       <CardContent>
-        <Typography variant="overline" sx={{ display: 'block', mb: 2 }}>📚 Section 3 · Chapter-wise Performance</Typography>
+        <Typography variant="overline" sx={{ display: 'block', mb: 2 }}>📚 Chapter-wise Performance</Typography>
 
         {/* Subject tabs */}
         <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mb: 2 }}>

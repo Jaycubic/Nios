@@ -308,7 +308,7 @@ function ErrorAnalysisSection() {
   const [expanded, setExpanded] = useState('Q1');
   return (
     <Box>
-      <Typography variant="overline" sx={{ display: 'block', mb: 2 }}>🔹 A. Step-wise Error Analysis</Typography>
+      <Typography variant="overline" sx={{ display: 'block', mb: 2 }}>🔹 Step-wise Error Analysis</Typography>
       {questions.map(q => {
         const isOpen = expanded === q.id;
         const errors = q.steps.filter(s => s.status === 'error').length;
@@ -359,7 +359,7 @@ function ConceptGapsSection() {
   };
   return (
     <Box>
-      <Typography variant="overline" sx={{ display: 'block', mb: 2 }}>🔹 B. Concept-Level Gaps</Typography>
+      <Typography variant="overline" sx={{ display: 'block', mb: 2 }}>🔹 Concept-Level Gaps</Typography>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
         {conceptGaps.map(g => {
           const s = sevStyle[g.severity];
@@ -400,7 +400,7 @@ export default function E3_ErrorAnalysis() {
           <Card elevation={0} sx={{ background: COLORS.bgDark, border: 'none' }}>
             <CardContent sx={{ py: '16px !important' }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 3, flexWrap: 'wrap' }}>
-                <Typography sx={{ color: '#fff', fontWeight: 700, fontFamily: "'DM Sans'" }}>🧠 Section 4: Learning Diagnosis</Typography>
+                <Typography sx={{ color: '#fff', fontWeight: 700, fontFamily: "'DM Sans'" }}>🧠 Learning Diagnosis</Typography>
                 {[
                   { label: 'Questions analysed', value: '2',  color: COLORS.blue   },
                   { label: 'Steps checked',       value: '6',  color: COLORS.purple },

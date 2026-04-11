@@ -226,7 +226,7 @@ export default function E5_InterventionGuidance() {
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 3, flexWrap: 'wrap' }}>
                 <Box>
                   <Typography sx={{ color: '#fff', fontWeight: 700, fontFamily: "'DM Sans'", fontSize: '1rem' }}>
-                    🎯 Section 5: Intervention Plan for Rahul Sharma
+                    🎯 Intervention Plan for Rahul Sharma
                   </Typography>
                   <Typography sx={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.78rem', mt: 0.3 }}>
                     Based on 4 concept gaps · 2 blocked topics · personalised recommendations below
@@ -256,7 +256,7 @@ export default function E5_InterventionGuidance() {
                   <Typography sx={{ fontSize: '1.1rem' }}>🔬</Typography>
                   <Typography variant="h6">Concept Recs</Typography>
                 </Box>
-                <Chip label="§5A — Revisit" size="small" sx={{ background: `${COLORS.purple}12`, color: COLORS.purpleDark, fontWeight: 600, fontSize: '0.68rem', border: `1px solid ${COLORS.purple}28` }} />
+                <Chip label="Revisit" size="small" sx={{ background: `${COLORS.purple}12`, color: COLORS.purpleDark, fontWeight: 600, fontSize: '0.68rem', border: `1px solid ${COLORS.purple}28` }} />
               </Box>
               {conceptRecs.map(r => (
                 <ConceptRecCard key={r.id} {...r} onAssign={handleAssign} assigned={!!assigned[r.id]} />
@@ -277,7 +277,7 @@ export default function E5_InterventionGuidance() {
                   <Typography sx={{ fontSize: '1.1rem' }}>📋</Typography>
                   <Typography variant="h6">Practice Recs</Typography>
                 </Box>
-                <Chip label="§5B — Assign" size="small" sx={{ background: `${COLORS.green}12`, color: COLORS.greenDark, fontWeight: 600, fontSize: '0.68rem', border: `1px solid ${COLORS.green}28` }} />
+                <Chip label="Assign" size="small" sx={{ background: `${COLORS.green}12`, color: COLORS.greenDark, fontWeight: 600, fontSize: '0.68rem', border: `1px solid ${COLORS.green}28` }} />
               </Box>
               {practiceRecs.map(r => (
                 <PracticeRecCard key={r.id} {...r} onSend={handleSend} sent={!!sent[r.id]} />
