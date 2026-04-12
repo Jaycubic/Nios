@@ -5,16 +5,15 @@ import Layout from '../../components/Layout';
 import { COLORS } from '../../theme';
 
 const needs = [
-  { topic: 'Polynomials', note: 'Needs more practice — attempted 3 times, still struggling', icon: '📐', color: COLORS.yellow },
-  { topic: 'Coordinate Geometry', note: "Hasn't started yet — this is coming up in exams soon", icon: '📊', color: COLORS.amber },
-  { topic: 'Chemical Reactions', note: 'Completing questions but making conceptual errors', icon: '🔬', color: COLORS.yellow },
+  { topic: 'Encourage revision', note: 'Consistent revision helps reinforce concepts and overcome struggles.', icon: '📚', color: COLORS.yellow },
+  { topic: 'Help maintain routine', note: 'A daily routine keeps learning on track and builds momentum.', icon: '🗓️', color: COLORS.blue },
+  { topic: 'Focus on specific topics', note: 'Targeted practice on weak areas yields the best improvements.', icon: '🎯', color: COLORS.purple },
 ];
 
 const actions = [
-  { icon: '📚', title: 'Encourage 20 min revision daily', detail: 'Even short focused sessions compound into big improvements over time. Help Aarav set a fixed study time each evening.', color: COLORS.green },
-  { icon: '🗓️', title: 'Help maintain a study routine', detail: 'Consistency matters more than intensity. A daily routine — even on weekends — keeps momentum going.', color: COLORS.blue },
-  { icon: '🎯', title: 'Focus on Algebra this week', detail: 'Polynomials and Algebra are linked. A few targeted sessions this week can unlock a lot of progress.', color: COLORS.purple },
-  { icon: '💬', title: 'Celebrate small wins', detail: 'A word of encouragement when Aarav completes a chapter or hits a streak milestone goes a long way.', color: COLORS.yellow },
+  { icon: '⏱️', title: 'Encourage 15–20 minutes of daily practice', detail: 'Short daily sessions are highly effective for long-term retention compared to cramming.', color: COLORS.green },
+  { icon: '🗣️', title: 'Ask your child to explain what they learned', detail: 'Teaching back concepts solidifies understanding and naturally exposes any learning gaps.', color: COLORS.blue },
+  { icon: '👏', title: 'Appreciate small improvements', detail: 'Positive reinforcement boosts confidence, keeping motivation high through challenges.', color: COLORS.yellow },
 ];
 
 function NeedCard({ topic, note, icon, color }) {
@@ -86,72 +85,36 @@ export default function P4_SupportGuidance() {
   return (
     <Layout
       role="parent"
-      title="How to Support Aarav"
-      subtitle="Practical, friendly guidance for parents"
+      title="Guidance for Parents"
+      subtitle="Action-oriented suggestions to support learning"
     >
       <Grid container spacing={2.5}>
 
-        {/* ── Header card ── */}
-        <Grid item xs={12}>
-          <Card elevation={0} sx={{
-            background: `linear-gradient(135deg, ${COLORS.bgDark} 0%, #3d3858 100%)`,
-            border: 'none',
-          }}>
-            <CardContent>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
-                <Typography sx={{ fontSize: '2.5rem' }}>🧭</Typography>
-                <Box>
-                  <Typography sx={{ color: '#fff', fontWeight: 700, fontSize: '1.1rem', mb: 0.5, fontFamily: "'DM Sans'" }}>
-                    You're a key part of Aarav's learning journey
-                  </Typography>
-                  <Typography sx={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.85rem', lineHeight: 1.6 }}>
-                    Small, consistent encouragement from you has a huge impact. Here's how you can help right now.
-                  </Typography>
-                </Box>
-                <Box sx={{ ml: 'auto', textAlign: 'right' }}>
-                  <Chip label="GPS Rerouting: On track 🗺️" sx={{ background: `${COLORS.green}30`, color: COLORS.green, fontWeight: 600, fontSize: '0.78rem', border: `1px solid ${COLORS.green}50` }} />
-                </Box>
-              </Box>
-            </CardContent>
-          </Card>
-        </Grid>
-
-        {/* ── What Aarav needs ── */}
+        {/* ── 5. Where Support Is Needed ── */}
         <Grid item xs={12} md={6}>
           <Card elevation={0} sx={{ height: '100%' }}>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2.5 }}>
                 <Typography sx={{ fontSize: '1.2rem' }}>🔍</Typography>
-                <Typography variant="h6">What Aarav Needs Help With</Typography>
+                <Typography variant="h6">Where Support Is Needed</Typography>
               </Box>
               <Typography variant="body2" sx={{ color: COLORS.textSecondary, mb: 2.5, lineHeight: 1.6 }}>
-                These are areas where extra attention — either practice time or encouragement — will make the biggest difference right now.
+                What your child needs help with and how you can support.
               </Typography>
 
               {needs.map(n => <NeedCard key={n.topic} {...n} />)}
 
-              <Box sx={{
-                mt: 2,
-                p: 2,
-                background: `${COLORS.blue}08`,
-                border: `1px solid ${COLORS.blue}20`,
-                borderRadius: '10px',
-              }}>
-                <Typography variant="body2" sx={{ color: COLORS.textSecondary, lineHeight: 1.6 }}>
-                  💡 <strong>Remember:</strong> Framing matters. Say <em>"Let's work on this together"</em> rather than <em>"Why don't you know this?"</em> — it keeps motivation high.
-                </Typography>
-              </Box>
             </CardContent>
           </Card>
         </Grid>
 
-        {/* ── Action chips ── */}
+        {/* ── 6. How Parents Can Help ── */}
         <Grid item xs={12} md={6}>
           <Card elevation={0} sx={{ height: '100%' }}>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2.5 }}>
                 <Typography sx={{ fontSize: '1.2rem' }}>🚀</Typography>
-                <Typography variant="h6">How You Can Support</Typography>
+                <Typography variant="h6">How Parents Can Help</Typography>
                 <Chip label="Tap to expand" size="small" sx={{ ml: 'auto', background: COLORS.divider, color: COLORS.textMuted, fontSize: '0.68rem' }} />
               </Box>
 
@@ -171,27 +134,7 @@ export default function P4_SupportGuidance() {
                     '&:hover': { boxShadow: `0 6px 20px ${COLORS.green}55` },
                   }}
                 >
-                  📨 Send Aarav an Encouragement Note
-                </Button>
-              </Box>
-            </CardContent>
-          </Card>
-        </Grid>
-
-        {/* ── Next check-in ── */}
-        <Grid item xs={12}>
-          <Card elevation={0} sx={{ border: `1px solid ${COLORS.green}30`, background: `${COLORS.green}06` }}>
-            <CardContent sx={{ py: '14px !important' }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap' }}>
-                <Typography sx={{ fontSize: '1.2rem' }}>📅</Typography>
-                <Typography variant="body1" sx={{ fontWeight: 600 }}>
-                  Next progress check-in suggested: <strong>April 14, 2026</strong>
-                </Typography>
-                <Typography variant="body2" sx={{ color: COLORS.textSecondary }}>
-                  Check back after 1 week to see Aarav's improvement in Polynomials and Science.
-                </Typography>
-                <Button variant="outlined" size="small" sx={{ ml: 'auto', borderColor: COLORS.green, color: COLORS.greenDark }}>
-                  Set Reminder
+                  📨 Send an Encouragement Note
                 </Button>
               </Box>
             </CardContent>
