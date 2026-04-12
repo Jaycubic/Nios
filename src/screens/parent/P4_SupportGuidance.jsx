@@ -1,3 +1,4 @@
+// src/screens/parent/P4_SupportGuidance.jsx
 import React, { useState } from 'react';
 import { Box, Typography, Card, CardContent, Chip, Button, Grid, Divider, Collapse } from '@mui/material';
 import Layout from '../../components/Layout';
