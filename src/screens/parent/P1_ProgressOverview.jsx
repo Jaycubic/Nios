@@ -145,7 +145,6 @@ export default function P1_ProgressOverview() {
 
         {/* ── 2. EFFORT & STUDY HABITS ── */}
         <Grid item xs={12} md={7}>
-          <Typography variant="h6" sx={{ fontWeight: 800, fontFamily: "'DM Sans'", mb: 2, mt: 1 }}>Effort & Study Habits</Typography>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
               <MetricCard
@@ -172,8 +171,7 @@ export default function P1_ProgressOverview() {
 
         {/* ── 3. SUBJECT-WISE SUMMARY ── */}
         <Grid item xs={12} md={5}>
-          <Typography variant="h6" sx={{ fontWeight: 800, fontFamily: "'DM Sans'", mb: 2, mt: 1 }}>Subject Summary</Typography>
-          <Card elevation={0} sx={{ border: `1px solid ${COLORS.divider}` }}>
+          <Card elevation={0} sx={{ border: `1px solid ${COLORS.divider}`, height: '100%' }}>
             <CardContent sx={{ p: 2 }}>
               <SubjectRow subject="Math" statusText="Needs Support (Improving)" statusType="support" />
               <SubjectRow subject="Science" statusText="Needs Attention (Low recent practice)" statusType="attention" />
