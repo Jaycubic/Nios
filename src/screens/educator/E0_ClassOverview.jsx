@@ -10,26 +10,28 @@ import { COLORS } from '../../theme';
 
 // ─── Data ────────────────────────────────────────────────────────────────────
 const healthMetrics = [
-  { label: 'Overall Accuracy', value: '58%', icon: '🎯', color: COLORS.yellow, sub: 'Class average' },
+  { label: 'Overall Score', value: '58%', icon: '🎯', color: COLORS.yellow, sub: 'Class average' },
   { label: 'Practice Task Completion', value: '46%', icon: '📝', color: COLORS.blue, sub: 'Regular tasks' },
-  { label: 'Mock Readiness', value: '40%', icon: '📋', color: COLORS.amber, sub: 'Exam simulations' },
+  { label: 'Retention Rate', value: '40%', icon: '📋', color: COLORS.amber, sub: 'Exam simulations' },
 ];
 
 const alerts = [
-  { text: '12 students need immediate accuracy support', color: COLORS.amber },
+  { text: '12 students need immediate score support', color: COLORS.amber },
   { text: '8 students show low practice consistency', color: COLORS.yellow },
 ];
 
 const subjects = [
-  { name: '📐 Math', accuracy: 48, practice: 'Low', readiness: 'Low', risk: '🔴 High Risk', riskColor: COLORS.amber },
-  { name: '🔬 Science', accuracy: 55, practice: 'Medium', readiness: 'Medium', risk: '🟡 Monitor', riskColor: COLORS.yellow },
-  { name: '📖 English', accuracy: 72, practice: 'High', readiness: 'High', risk: '🟢 Stable', riskColor: COLORS.green },
+  { name: '📐 Math', score: 48, practice: 'Low', retention: 'Low', risk: '🔴 High Risk', riskColor: COLORS.amber },
+  { name: '🔬 Science', score: 55, practice: 'Medium', retention: 'Medium', risk: '🟡 Monitor', riskColor: COLORS.yellow },
+  { name: '📖 English', score: 72, practice: 'High', retention: 'High', risk: '🟢 Stable', riskColor: COLORS.green },
+  { name: '🌍 Social Science', score: 65, practice: 'Medium', retention: 'Medium', risk: '🟡 Monitor', riskColor: COLORS.yellow },
+  { name: '✍️ Hindi', score: 80, practice: 'High', retention: 'High', risk: '🟢 Stable', riskColor: COLORS.green },
 ];
 
 const segments = [
-  { label: 'High Performers', count: 8, color: COLORS.green, icon: '🏆', desc: '≥75% accuracy & consistent practice' },
-  { label: 'Mid Performers', count: 14, color: COLORS.yellow, icon: '📈', desc: '50–74% accuracy, moderate engagement' },
-  { label: 'At Risk', count: 10, color: COLORS.amber, icon: '⚠️', desc: 'Below 50% accuracy or inactive > 7 days' },
+  { label: 'High Performers', count: 8, color: COLORS.green, icon: '🏆', desc: '≥75% score & consistent practice' },
+  { label: 'Mid Performers', count: 14, color: COLORS.yellow, icon: '📈', desc: '50–74% score, moderate engagement' },
+  { label: 'At Risk', count: 10, color: COLORS.amber, icon: '⚠️', desc: 'Below 50% score or inactive > 7 days' },
 ];
 
 const atRiskStudents = [
@@ -182,23 +184,23 @@ function SubjectTable() {
   const colHeader = { fontWeight: 700, fontSize: '0.72rem', color: COLORS.textMuted, textTransform: 'uppercase', letterSpacing: '0.08em' };
   return (
     <Card elevation={0} sx={{ height: '100%' }}>
-      <CardContent>
+      <CardContent sx={{ pb: '16px !important' }}>
         <SectionLabel>Subject-wise Performance</SectionLabel>
         <Box sx={{ overflowX: 'auto' }}>
           <Table size="small" sx={{ minWidth: 540 }}>
             <TableHead>
-              <TableRow sx={{ '& th': { border: 'none', pb: 1.5 } }}>
+              <TableRow sx={{ '& th': { border: 'none', pb: 1, pt: 0 } }}>
                 <TableCell sx={colHeader}>Subject</TableCell>
-                <TableCell sx={colHeader} align="left">Avg Accuracy</TableCell>
+                <TableCell sx={colHeader} align="left">Avg Score</TableCell>
                 <TableCell sx={colHeader} align="center">Practice Level</TableCell>
-                <TableCell sx={colHeader} align="center">Mock Readiness</TableCell>
+                <TableCell sx={colHeader} align="center">Retention Rate</TableCell>
                 <TableCell sx={colHeader} align="center">Risk</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {subjects.map(s => (
                 <TableRow key={s.name} sx={{
-                  '& td': { border: 'none', py: 1.5 },
+                  '& td': { border: 'none', py: 0.8 },
                   borderRadius: '12px',
                   '&:hover td': { background: COLORS.divider },
                   transition: 'all 0.15s',
@@ -210,7 +212,7 @@ function SubjectTable() {
                   </TableCell>
                   <TableCell>
                     <Box sx={{ minWidth: 140 }}>
-                      <AccuracyBar value={s.accuracy} color={s.riskColor} />
+                      <AccuracyBar value={s.score} color={s.riskColor} />
                     </Box>
                   </TableCell>
                   <TableCell align="center">
@@ -227,19 +229,21 @@ function SubjectTable() {
                   </TableCell>
                   <TableCell align="center">
                     <Chip
-                      label={s.readiness}
+                      label={s.retention}
                       size="small"
                       sx={{
                         height: 22, fontSize: '0.7rem', fontWeight: 600,
-                        background: s.readiness === 'High' ? `${COLORS.green}15` : s.readiness === 'Medium' ? `${COLORS.yellow}15` : `${COLORS.amber}15`,
-                        color: s.readiness === 'High' ? COLORS.green : s.readiness === 'Medium' ? COLORS.yellowDark : COLORS.amberDark,
-                        border: `1px solid ${s.readiness === 'High' ? COLORS.green : s.readiness === 'Medium' ? COLORS.yellow : COLORS.amber}30`,
+                        background: s.retention === 'High' ? `${COLORS.green}15` : s.retention === 'Medium' ? `${COLORS.yellow}15` : `${COLORS.amber}15`,
+                        color: s.retention === 'High' ? COLORS.green : s.retention === 'Medium' ? COLORS.yellowDark : COLORS.amberDark,
+                        border: `1px solid ${s.retention === 'High' ? COLORS.green : s.retention === 'Medium' ? COLORS.yellow : COLORS.amber}30`,
                       }}
                     />
                   </TableCell>
-                  <TableCell align="center" sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                    <Typography sx={{ fontSize: '1.2rem', mb: -0.3 }}>{s.risk.split(' ')[0]}</Typography>
-                    <Typography sx={{ fontSize: '0.65rem', fontWeight: 600, color: s.riskColor }}>{s.risk.substring(2)}</Typography>
+                  <TableCell align="center">
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 0.5 }}>
+                      <Typography sx={{ fontSize: '1rem' }}>{s.risk.split(' ')[0]}</Typography>
+                      <Typography sx={{ fontSize: '0.7rem', fontWeight: 700, color: s.riskColor }}>{s.risk.substring(2)}</Typography>
+                    </Box>
                   </TableCell>
                 </TableRow>
               ))}
@@ -368,7 +372,7 @@ function StudentSegmentation() {
                 </Box>
                 <Typography variant="body2" sx={{ color: COLORS.textSecondary, lineHeight: 1.5 }}>
                   {active === 'High Performers'
-                    ? '8 students performing above 75% accuracy with consistent engagement. Consider assigning enrichment challenges.'
+                    ? '8 students performing above 75% score with consistent engagement. Consider assigning enrichment challenges.'
                     : '14 students in developing range (50–74%). Regular check-ins recommended. Assign targeted chapter drills to accelerate progress.'}
                 </Typography>
               </Box>
@@ -439,7 +443,7 @@ function StudentSegmentation() {
 // ─── Section 5: Class Diagnosis ───────────────────────────────────────────────
 function ClassDiagnosis() {
   return (
-    <Card elevation={0}>
+    <Card elevation={0} sx={{ height: '100%' }}>
       <CardContent>
         <SectionLabel>Class-Level Diagnosis</SectionLabel>
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
@@ -476,32 +480,10 @@ function ClassDiagnosis() {
 
 // ─── Section 6: Class Intervention Guidance ───────────────────────────────────
 function ClassIntervention() {
-  const [done, setDone] = useState({});
-
   return (
-    <Card elevation={0}>
+    <Card elevation={0} sx={{ height: '100%' }}>
       <CardContent>
-        <SectionLabel
-          action={
-            <Button
-              size="small"
-              sx={{
-                fontSize: '0.72rem', py: 0.4,
-                background: `${COLORS.green}12`,
-                color: COLORS.greenDark,
-                border: `1px solid ${COLORS.green}30`,
-                '&:hover': { background: `${COLORS.green}22` },
-              }}
-              onClick={() => {
-                const all = {};
-                interventions.forEach((_, i) => { all[i] = true; });
-                setDone(all);
-              }}
-            >
-              Schedule All →
-            </Button>
-          }
-        >
+        <SectionLabel>
           Class Intervention Guidance
         </SectionLabel>
 
@@ -510,8 +492,8 @@ function ClassIntervention() {
             <Box key={i} sx={{
               display: 'flex', alignItems: 'flex-start', gap: 2,
               p: '16px 18px', borderRadius: '14px',
-              background: done[i] ? `${COLORS.green}08` : COLORS.bgWarm,
-              border: `1px solid ${done[i] ? COLORS.green + '40' : COLORS.border}`,
+              background: COLORS.bgWarm,
+              border: `1px solid ${COLORS.border}`,
               transition: 'all 0.2s',
             }}>
               <Box sx={{
@@ -532,20 +514,6 @@ function ClassIntervention() {
                   />
                 </Box>
               </Box>
-              <Button
-                size="small"
-                variant={done[i] ? 'outlined' : 'contained'}
-                onClick={() => setDone(d => ({ ...d, [i]: !d[i] }))}
-                sx={{
-                  flexShrink: 0, fontSize: '0.72rem', py: 0.5, minWidth: 90,
-                  background: done[i] ? 'transparent' : `linear-gradient(135deg, ${COLORS.purple}, ${COLORS.purpleDark})`,
-                  color: done[i] ? COLORS.greenDark : '#fff',
-                  borderColor: done[i] ? COLORS.green : 'transparent',
-                  boxShadow: done[i] ? 'none' : `0 3px 8px ${COLORS.purple}35`,
-                }}
-              >
-                {done[i] ? '✓ Scheduled' : 'Schedule →'}
-              </Button>
             </Box>
           ))}
         </Box>
@@ -562,7 +530,7 @@ export default function E0_ClassOverview() {
       title="Class Performance Dashboard — Grade 10 NIOS"
       subtitle="Track class health, identify risk clusters, and drill into student groups"
     >
-      <Grid container spacing={2.5}>
+      <Grid container spacing={2.5} alignItems="stretch">
         {/* ROW 1: 2 Columns */}
         <Grid item xs={12} lg={6}>
           <ClassHealthSummary />

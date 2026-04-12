@@ -3,41 +3,41 @@ import React, { useState } from 'react';
 import {
   Box, Typography, Card, CardContent, Chip, Grid, Divider, Button, Tooltip,
 } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import Layout from '../../components/Layout';
 import { COLORS } from '../../theme';
 
 // ─── §4A: Step-wise error data ────────────────────────────────────────────────
 const questions = [
   {
-    id: 'Q1', topic: 'Quadratic Equations',
-    question: 'Solve: x² - 5x + 6 = 0',
+    id: 'Q1', topic: 'Trigonometry - Heights & Distances',
+    question: 'A kite is flying at a height of 60m. The string makes an angle of 60° with the ground. Find the length of the string.',
     steps: [
-      { step: 1, label: 'Formula recall', status: 'correct', note: 'Correctly recalled quadratic formula' },
-      { step: 2, label: 'Substitution', status: 'error', note: 'Substituted wrong values for b and c' },
-      { step: 3, label: 'Calculation', status: 'error', note: 'Arithmetic error in discriminant computation' },
+      { step: 1, label: 'Identify Ratio', status: 'correct', note: 'Correctly identified sin(60°) = opposite/hypotenuse' },
+      { step: 2, label: 'Substitute Values', status: 'error', note: 'Wrote sin(60°) = 1/2 instead of √3/2' },
+      { step: 3, label: 'Calculation', status: 'skipped', note: 'Incorrect value led to wrong string length calculation' },
     ],
-    insight: 'Student understands formula but fails in execution',
-    rootCause: 'Procedural gap: knows the method but makes substitution errors under pressure',
+    insight: 'Student correctly identifies the right trigonometric ratio to use but struggles to recall standard angle values.',
+    rootCause: 'Memory gap for standard trigonometric values (30°, 45°, 60°).',
   },
   {
-    id: 'Q2', topic: 'Trigonometry',
-    question: 'Find sin(30°) + cos(60°)',
+    id: 'Q2', topic: 'Trigonometric Identities',
+    question: 'Prove that (sin A + cosec A)² + (cos A + sec A)² = 7 + tan² A + cot² A',
     steps: [
-      { step: 1, label: 'Recall sin(30°)', status: 'correct', note: 'Correctly recalled as 1/2' },
-      { step: 2, label: 'Recall cos(60°)', status: 'error', note: 'Confused with cos(30°) = √3/2' },
-      { step: 3, label: 'Addition', status: 'skipped', note: 'Not attempted — error in step 2' },
+      { step: 1, label: 'Expand Squares', status: 'correct', note: 'Correctly expanded (a+b)²' },
+      { step: 2, label: 'Apply Identities', status: 'error', note: 'Failed to substitute sin²A + cos²A = 1' },
+      { step: 3, label: 'Simplify', status: 'skipped', note: 'Unable to proceed without fundamental identity substitution' },
     ],
-    insight: 'Trigonometric table recall is inconsistent — confuses 30° and 60° values',
-    rootCause: 'Memory gap in trig value table, especially complementary angles',
+    insight: 'Expansion is solid, but recognition of basic squared identities forms a bottleneck.',
+    rootCause: 'Procedural application gap: does not recognize when to substitute fundamental identities.',
   },
 ];
 
 // ─── §4B: Concept gap data ────────────────────────────────────────────────────
 const conceptGaps = [
-  { label: 'Quadratic Formula application', subject: 'Math', attempts: 5, severity: 'high' },
-  { label: 'Trigonometric identities', subject: 'Math', attempts: 4, severity: 'high' },
-  { label: 'Chemical Reactions balance', subject: 'Science', attempts: 3, severity: 'medium' },
-  { label: 'BODMAS — order of operations', subject: 'Math', attempts: 2, severity: 'medium' },
+  { label: 'Standard Angle Values (0°-90°)', subject: 'Math', attempts: 5, severity: 'high' },
+  { label: 'Fundamental Identities (sin²θ + cos²θ = 1)', subject: 'Math', attempts: 4, severity: 'high' },
+  { label: 'Reciprocal Ratios (sec, cosec, cot)', subject: 'Math', attempts: 2, severity: 'medium' },
 ];
 
 // ─── §4C: Prerequisite gap map nodes/edges ────────────────────────────────────
@@ -46,28 +46,25 @@ const conceptGaps = [
 const mapNodes = [
   // Level 0: Foundation
   { id: 'n1', label: 'Basic\nArithmetic', x: 80, y: 60, status: 'mastered' },
-  { id: 'n2', label: 'Fractions', x: 80, y: 160, status: 'gap' },
-  { id: 'n3', label: 'BODMAS', x: 80, y: 260, status: 'gap' },
+  { id: 'n2', label: 'Algebraic\nExpansion', x: 80, y: 160, status: 'proficient' },
+  { id: 'n3', label: 'Right\nTriangles', x: 80, y: 260, status: 'mastered' },
   // Level 1: Intermediate
-  { id: 'n4', label: 'Algebra\nBasics', x: 260, y: 100, status: 'developing' },
-  { id: 'n5', label: 'Exponents &\nRoots', x: 260, y: 210, status: 'developing' },
-  { id: 'n6', label: 'Linear\nEquations', x: 260, y: 300, status: 'proficient' },
+  { id: 'n4', label: 'Pythagorean\nTheorem', x: 260, y: 100, status: 'mastered' },
+  { id: 'n5', label: 'Basic Trig\nRatios', x: 260, y: 210, status: 'developing' },
+  { id: 'n6', label: 'Standard\nAngles', x: 260, y: 300, status: 'gap' },
   // Level 2: Advanced
-  { id: 'n7', label: 'Quadratic\nFormula', x: 450, y: 80, status: 'blocked' },
-  { id: 'n8', label: 'Trigonometry', x: 450, y: 200, status: 'blocked' },
-  { id: 'n9', label: 'Polynomials', x: 450, y: 310, status: 'gap' },
+  { id: 'n7', label: 'Heights &\nDistances', x: 450, y: 100, status: 'blocked' },
+  { id: 'n8', label: 'Trig\nIdentities', x: 450, y: 250, status: 'blocked' },
 ];
 
 const mapEdges = [
-  { from: 'n1', to: 'n4' },
-  { from: 'n2', to: 'n4' },
-  { from: 'n2', to: 'n5' },
-  { from: 'n3', to: 'n6' },
-  { from: 'n4', to: 'n7' },
-  { from: 'n4', to: 'n9' },
-  { from: 'n5', to: 'n7' },
+  { from: 'n1', to: 'n2' },
+  { from: 'n3', to: 'n4' },
+  { from: 'n4', to: 'n5' },
+  { from: 'n5', to: 'n6' },
+  { from: 'n6', to: 'n7' },
+  { from: 'n2', to: 'n8' },
   { from: 'n5', to: 'n8' },
-  { from: 'n6', to: 'n9' },
 ];
 
 const levelLabels = [
@@ -388,12 +385,28 @@ function ConceptGapsSection() {
 
 // ─── Main screen ──────────────────────────────────────────────────────────────
 export default function E3_ErrorAnalysis() {
+  const navigate = useNavigate();
+
   return (
     <Layout
       role="educator"
-      title="Learning Diagnosis — Rahul Sharma"
+      title="Chapter Diagnosis — Trigonometry"
       subtitle="Step-wise errors · Concept gaps · Prerequisite gap map"
     >
+      <Box sx={{ mb: 3 }}>
+        <Button 
+          onClick={() => navigate('/educator/overview')} 
+          sx={{ 
+            color: COLORS.textSecondary, fontWeight: 700, fontSize: '0.85rem',
+            background: `${COLORS.bgNav}`, borderRadius: '8px', px: 2, py: 1,
+            border: `1px solid ${COLORS.border}`,
+            '&:hover': { background: COLORS.divider }
+          }}
+        >
+          ← Back to Student View
+        </Button>
+      </Box>
+
       <Grid container spacing={2.5}>
 
         {/* §4A: Error analysis (left) + §4B: Concept gaps (right top) + §4C Gap Map (right bottom) */}
