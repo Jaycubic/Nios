@@ -11,14 +11,20 @@ import E0_ClassOverview       from './screens/educator/E0_ClassOverview';
 import E1_StudentOverview     from './screens/educator/E1_StudentOverview';
 import E3_ErrorAnalysis       from './screens/educator/E3_ErrorAnalysis';
 
+// Student screens
+import S1_Dashboard           from './screens/student/S1_Dashboard';
+
+// Role selection
+import RoleSelect             from './screens/RoleSelect';
+
 export default function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <BrowserRouter>
         <Routes>
-          {/* Default */}
-          <Route path="/" element={<Navigate to="/parent/overview" replace />} />
+          {/* Role selection landing */}
+          <Route path="/" element={<RoleSelect />} />
 
           {/* Parent */}
           <Route path="/parent/overview"    element={<P1_ProgressOverview />} />
@@ -29,6 +35,9 @@ export default function App() {
           {/* Educator — Mode 2: Student Deep Dive */}
           <Route path="/educator/overview"  element={<E1_StudentOverview />} />
           <Route path="/educator/diagnosis" element={<E3_ErrorAnalysis />} />
+
+          {/* Student */}
+          <Route path="/student/dashboard"  element={<S1_Dashboard />} />
 
           {/* 404 fallback */}
           <Route path="*" element={<Navigate to="/" replace />} />
