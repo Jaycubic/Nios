@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import {
   Box, Typography, Card, CardContent, Grid, Chip, LinearProgress,
-  Divider, Button,
+  Divider, Button, Collapse,
 } from '@mui/material';
 import Layout from '../../components/Layout';
 import { COLORS } from '../../theme';
@@ -25,16 +25,6 @@ const todayGoals = [
   { id: 5, text: 'Attempt 1 mock test section (Math)', done: false },
 ];
 
-// Streak days: true = completed, false = not yet (today onwards)
-const streakDays = [
-  { day: 'WED', done: true  },
-  { day: 'THU', done: true  },
-  { day: 'FRI', done: true  },
-  { day: 'SAT', done: true  },
-  { day: 'SUN', done: true  },
-  { day: 'MON', done: true  },
-  { day: 'TUE', done: false },
-];
 const streakCount = 6;
 
 const improvementAreas = [
@@ -97,25 +87,49 @@ function DonutRing({ pct, size = 110, stroke = 10, color = COLORS.green }) {
 }
 
 // ─── Streak circle ────────────────────────────────────────────────────────────
-function StreakCircle({ day, done }) {
+function StreakCircle({ day, done, isToday, goalPct = 0 }) {
+  const size = isToday ? 42 : 36;
+  const stroke = 3;
+  const r = (size - stroke) / 2;
+  const circ = 2 * Math.PI * r;
+  const dash = (goalPct / 100) * circ;
+
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0.5 }}>
       <Box sx={{
-        width: 36, height: 36, borderRadius: '50%',
-        border: `2px solid ${done ? COLORS.green : COLORS.border}`,
-        background: done ? `${COLORS.green}18` : 'transparent',
+        width: size, height: size, borderRadius: '50%',
+        position: 'relative',
+        border: (done && !isToday) ? `2px solid ${COLORS.green}` : (!isToday) ? `2px solid ${COLORS.border}` : 'none',
+        background: done && !isToday ? `${COLORS.green}18` : isToday && goalPct === 100 ? `${COLORS.green}18` : isToday ? `${COLORS.green}08` : 'transparent',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         transition: 'all 0.2s',
       }}>
-        {done ? (
-          <svg width="16" height="16" viewBox="0 0 24 24" fill={COLORS.green}>
+        {isToday && (
+          <svg width={size} height={size} style={{ position: 'absolute', top: 0, left: 0, transform: 'rotate(-90deg)' }}>
+            <circle cx={size/2} cy={size/2} r={r} fill="none" stroke={COLORS.border} strokeWidth={stroke} />
+            <circle
+              cx={size/2} cy={size/2} r={r} fill="none"
+              stroke={COLORS.green} strokeWidth={stroke}
+              strokeDasharray={`${dash} ${circ}`}
+              strokeLinecap="round"
+              style={{ transition: 'stroke-dasharray 0.6s ease' }}
+            />
+          </svg>
+        )}
+
+        {done || (isToday && goalPct === 100) ? (
+          <svg width={isToday ? "18" : "16"} height={isToday ? "18" : "16"} viewBox="0 0 24 24" fill={COLORS.green} style={{ zIndex: 1 }}>
             <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
           </svg>
         ) : (
-          <Box sx={{ width: 8, height: 8, borderRadius: '50%', background: COLORS.border }} />
+          <Box sx={{ width: 8, height: 8, borderRadius: '50%', background: isToday ? COLORS.textSecondary : COLORS.border, zIndex: 1 }} />
         )}
       </Box>
-      <Typography sx={{ fontSize: '0.6rem', fontWeight: 600, color: done ? COLORS.textSecondary : COLORS.textMuted, letterSpacing: 0.5 }}>
+      <Typography sx={{ 
+        fontSize: '0.6rem', fontWeight: isToday ? 800 : 600, 
+        color: isToday ? COLORS.textPrimary : done ? COLORS.textSecondary : COLORS.textMuted, 
+        letterSpacing: 0.5 
+      }}>
         {day}
       </Typography>
     </Box>
@@ -123,7 +137,7 @@ function StreakCircle({ day, done }) {
 }
 
 // ─── Goal Row ─────────────────────────────────────────────────────────────────
-function GoalRow({ text, done, index, totalDone }) {
+function GoalRow({ text, done }) {
   return (
     <Box sx={{
       display: 'flex', alignItems: 'flex-start', gap: 1.5,
@@ -156,107 +170,155 @@ function GoalRow({ text, done, index, totalDone }) {
   );
 }
 
-// ─── Learning Path Row ────────────────────────────────────────────────────────
+// ─── Learning Path Row (Horizontal Expandable Flow) ───────────────────────────
 function LearningPathRow({ subject, needsAttention, strengthen, practice, color }) {
-  const stages = [
+  const [activeStep, setActiveStep] = useState(0); 
+
+  const handleNext = () => setActiveStep(prev => prev + 1);
+  const isAllDone = activeStep === 3;
+
+  const steps = [
     {
-      label: '① Needs Attention',
-      bg: `${COLORS.amber}15`, border: `${COLORS.amber}35`,
-      labelColor: COLORS.amberDark,
+      title: 'Needs Attention',
+      subtitle: 'Review weak concepts',
+      btnLabel: 'Mark Reviewed',
+      color: COLORS.amber,
       items: needsAttention,
-      dotColor: COLORS.amber,
     },
     {
-      label: '② Strengthen Foundation',
-      bg: `${COLORS.yellow}12`, border: `${COLORS.yellow}35`,
-      labelColor: COLORS.yellowDark,
+      title: 'Strengthen Foundation',
+      subtitle: 'Recap core concepts',
+      btnLabel: 'Continue',
+      color: COLORS.yellow,
       items: strengthen,
-      dotColor: COLORS.yellow,
     },
     {
-      label: '③ Apply & Practice',
-      bg: `${COLORS.green}12`, border: `${COLORS.green}35`,
-      labelColor: COLORS.greenDark,
+      title: 'Apply & Practice',
+      subtitle: 'Ready to test skills',
+      btnLabel: 'Start Practice →',
+      color: COLORS.green,
       items: null,
-      dotColor: COLORS.green,
-    },
+    }
   ];
 
   return (
-    <Box sx={{
-      borderRadius: '14px', overflow: 'hidden',
-      border: `1px solid ${COLORS.border}`,
-      mb: 2,
-      '&:last-child': { mb: 0 },
-    }}>
+    <Box sx={{ mb: 3.5 }}>
       {/* Subject header */}
-      <Box sx={{
-        px: 2.5, py: 1.5,
-        background: `${color}08`,
-        borderBottom: `1px solid ${COLORS.border}`,
-        display: 'flex', alignItems: 'center', gap: 1.5,
-      }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1.5 }}>
         <Box sx={{ width: 10, height: 10, borderRadius: '3px', background: color, flexShrink: 0 }} />
         <Typography sx={{ fontWeight: 700, fontSize: '0.9rem', color: COLORS.textPrimary }}>{subject}</Typography>
+        {isAllDone && <Chip label="All Steps Completed" size="small" sx={{ ml: 'auto', background: `${COLORS.green}15`, color: COLORS.greenDark, fontWeight: 700, height: 22, fontSize: '0.7rem' }} />}
       </Box>
 
-      {/* Three stage columns */}
-      <Grid container sx={{ minHeight: 100 }}>
-        {stages.map((stage, i) => (
-          <Grid item xs={12} sm={4} key={stage.label} sx={{
-            borderRight: i < 2 ? `1px solid ${COLORS.border}` : 'none',
-            '&:last-child': { borderRight: 'none' },
-          }}>
-            <Box sx={{
-              p: 2, height: '100%',
-              background: stage.bg,
-              borderTop: `2px solid ${stage.border.replace('35', '60')}`,
+      {/* Horizontal Expandable Steps */}
+      <Box sx={{ 
+        display: 'flex', gap: 1.5, alignItems: 'stretch',
+        flexDirection: { xs: 'column', md: 'row' },
+        minHeight: { md: 200 }
+      }}>
+        {steps.map((step, index) => {
+          const isLocked = activeStep < index;
+          const isCompleted = activeStep > index;
+          const isActive = activeStep === index;
+
+          // Width expansion logic
+          // Active step gets most space, but we preserve space (flex: 1) for locked/completed to show content
+          const flexAmt = isAllDone ? 1 : isActive ? 1.5 : 1;
+
+          return (
+            <Box key={step.title} sx={{
+              flex: { xs: 'none', md: flexAmt },
+              borderRadius: '12px',
+              border: `1px solid ${isActive ? step.color : isCompleted || isAllDone ? `${step.color}30` : isLocked ? `${COLORS.border}50` : 'transparent'}`,
+              background: isAllDone ? `${step.color}06` : isActive ? `${step.color}08` : isCompleted ? `${step.color}04` : `${COLORS.divider}20`,
+              p: 2,
+              display: 'flex',
+              flexDirection: 'column',
+              transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+              overflow: 'hidden',
+              opacity: isLocked ? 0.6 : 1,
             }}>
-              <Typography sx={{
-                fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.04em',
-                textTransform: 'uppercase', color: stage.labelColor, mb: 1.2,
-              }}>
-                {stage.label}
-              </Typography>
-              {stage.items ? (
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.8 }}>
-                  {stage.items.map(item => (
-                    <Box key={item} sx={{ display: 'flex', alignItems: 'flex-start', gap: 1 }}>
-                      <Box sx={{ width: 6, height: 6, borderRadius: '50%', background: stage.dotColor, mt: 0.55, flexShrink: 0 }} />
-                      <Typography sx={{ fontSize: '0.78rem', color: COLORS.textPrimary, lineHeight: 1.4 }}>{item}</Typography>
-                    </Box>
-                  ))}
+              
+              {/* Header Box (Icon + Title) */}
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1.5 }}>
+                <Box sx={{
+                  width: 24, height: 24, flexShrink: 0, borderRadius: '50%',
+                  background: isCompleted || isAllDone ? step.color : isActive ? step.color : COLORS.divider,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  color: isCompleted || isAllDone || isActive ? '#fff' : COLORS.textMuted,
+                  fontSize: '0.75rem', fontWeight: 700
+                }}>
+                  {isCompleted || isAllDone ? '✓' : isLocked ? '🔒' : index + 1}
                 </Box>
-              ) : (
-                <Box>
-                  <Typography sx={{ fontSize: '0.78rem', color: COLORS.textSecondary, mb: 1.2 }}>
-                    {practice.count} {practice.label}
+                
+                <Typography noWrap sx={{ 
+                  fontWeight: 700, fontSize: '0.85rem', 
+                  color: isActive ? step.color : isCompleted || isAllDone ? COLORS.textPrimary : COLORS.textSecondary,
+                  transition: 'all 0.3s',
+                }}>
+                  {step.title}
+                </Typography>
+              </Box>
+
+              {/* Main Content Area (Shown for Active, Locked, and Completed) */}
+              {!isAllDone && (
+                <Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1, animation: 'fadeIn 0.5s ease', opacity: !isActive ? 0.6 : 1, transition: 'opacity 0.3s' }}>
+                  <Typography sx={{ fontSize: '0.78rem', color: COLORS.textSecondary, mb: 1.5 }}>
+                    {step.subtitle}
                   </Typography>
-                  <Button
-                    variant="contained"
-                    size="small"
-                    sx={{
-                      background: `linear-gradient(135deg, ${COLORS.green} 0%, ${COLORS.greenDark} 100%)`,
-                      color: '#fff', fontSize: '0.75rem', py: 0.6, px: 2,
-                      boxShadow: `0 3px 8px ${COLORS.green}35`,
-                      '&:hover': { boxShadow: `0 5px 14px ${COLORS.green}55` },
-                    }}
-                  >
-                    Start Practice →
-                  </Button>
+                  
+                  {step.items ? (
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.8, mb: 2, flexGrow: 1 }}>
+                      {step.items.map(item => (
+                        <Box key={item} sx={{ display: 'flex', alignItems: 'flex-start', gap: 1 }}>
+                          <Box sx={{ width: 5, height: 5, borderRadius: '50%', background: !isActive ? COLORS.textMuted : step.color, mt: 0.55, flexShrink: 0 }} />
+                          <Typography sx={{ fontSize: '0.78rem', color: !isActive ? COLORS.textSecondary : COLORS.textPrimary, lineHeight: 1.3 }}>{item}</Typography>
+                        </Box>
+                      ))}
+                    </Box>
+                  ) : (
+                    <Box sx={{ mb: 2, display: 'flex', alignItems: 'center', gap: 1.5, flexGrow: 1 }}>
+                      <Box sx={{ width: 40, height: 40, borderRadius: '10px', background: !isActive ? COLORS.border : `${COLORS.green}15`, display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '1.2rem', flexShrink: 0}}>🎯</Box>
+                      <Box>
+                        <Typography sx={{ fontSize: '0.85rem', color: !isActive ? COLORS.textSecondary : COLORS.textPrimary, fontWeight: 700 }}>
+                          {practice.count} {practice.label}
+                        </Typography>
+                        <Typography sx={{ fontSize: '0.7rem', color: COLORS.textMuted }}>Adaptive difficulty</Typography>
+                      </Box>
+                    </Box>
+                  )}
+
+                  <Box sx={{ mt: 'auto', display: 'flex', justifyContent: !isActive ? 'flex-start' : 'flex-end', pt: 1 }}>
+                    {isActive && (
+                      <Button
+                        variant={index === 2 ? "contained" : "outlined"}
+                        size="small"
+                        onClick={handleNext}
+                        sx={{
+                          ... (index === 2 ? {
+                            background: `linear-gradient(135deg, ${COLORS.green} 0%, ${COLORS.greenDark} 100%)`,
+                            color: '#fff', boxShadow: `0 3px 10px ${COLORS.green}35`,
+                          } : {
+                            color: step.color, borderColor: `${step.color}50`,
+                          }),
+                          textTransform: 'none', fontWeight: 600, fontSize: '0.75rem', py: 0.6, px: 2,
+                        }}
+                      >
+                        {step.btnLabel}
+                      </Button>
+                    )}
+                    {!isActive && (
+                      <Typography sx={{ fontSize: '0.7rem', color: isCompleted ? COLORS.green : COLORS.textMuted, fontStyle: 'italic', fontWeight: 600, p: '4px 8px', background: isCompleted ? `${COLORS.green}10` : `${COLORS.border}30`, borderRadius: '6px' }}>
+                        {isCompleted ? '✓ Completed' : '🔒 Locked'}
+                      </Typography>
+                    )}
+                  </Box>
                 </Box>
               )}
             </Box>
-            {/* Arrow connector (except last) */}
-            {i < 2 && (
-              <Box sx={{
-                position: 'relative',
-                display: { xs: 'none', sm: 'block' },
-              }} />
-            )}
-          </Grid>
-        ))}
-      </Grid>
+          );
+        })}
+      </Box>
     </Box>
   );
 }
@@ -266,6 +328,20 @@ export default function S1_Dashboard() {
   const [goals, setGoals] = useState(todayGoals);
   const doneCnt = goals.filter(g => g.done).length;
   const goalPct = Math.round((doneCnt / goals.length) * 100);
+
+  // Dynamic 7 day streak calculation
+  const todayDate = new Date();
+  const dynamicStreakDays = Array.from({ length: 7 }).map((_, i) => {
+    const d = new Date(todayDate);
+    d.setDate(d.getDate() - (6 - i));
+    const dayStr = d.toLocaleDateString('en-US', { weekday: 'short' }).toUpperCase();
+    const isToday = i === 6;
+    return {
+      day: dayStr,
+      done: isToday ? false : true, // all past days mock completed
+      isToday
+    };
+  });
 
   const toggleGoal = (id) => {
     setGoals(prev => prev.map(g => g.id === id ? { ...g, done: !g.done } : g));
@@ -363,13 +439,13 @@ export default function S1_Dashboard() {
 
               {/* Goal list */}
               <Box sx={{ flexGrow: 1 }}>
-                {goals.map((g, i) => (
+                {goals.map(g => (
                   <Box
                     key={g.id}
                     onClick={() => toggleGoal(g.id)}
                     sx={{ cursor: 'pointer', '&:hover': { opacity: 0.85 } }}
                   >
-                    <GoalRow text={g.text} done={g.done} index={i} totalDone={doneCnt} />
+                    <GoalRow text={g.text} done={g.done} />
                   </Box>
                 ))}
               </Box>
@@ -418,10 +494,10 @@ export default function S1_Dashboard() {
               {/* Circle row */}
               <Box sx={{
                 display: 'flex', justifyContent: 'space-between',
-                gap: 0.5, mb: 2,
+                gap: 0.5, mb: 2, alignItems: 'center'
               }}>
-                {streakDays.map(d => (
-                  <StreakCircle key={d.day} day={d.day} done={d.done} />
+                {dynamicStreakDays.map(d => (
+                  <StreakCircle key={d.day} day={d.day} done={d.done} isToday={d.isToday} goalPct={goalPct} />
                 ))}
               </Box>
 
@@ -560,30 +636,9 @@ export default function S1_Dashboard() {
                 <Typography sx={{ fontSize: '1.1rem' }}>🗺️</Typography>
                 <Typography variant="overline" sx={{ fontSize: '0.72rem' }}>Recommended Learning Path</Typography>
               </Box>
-              <Typography sx={{ fontSize: '0.78rem', color: COLORS.textSecondary, mb: 2.5, lineHeight: 1.6 }}>
-                Follow each path from left to right — address gaps first, build your foundation, then apply with practice.
+              <Typography sx={{ fontSize: '0.78rem', color: COLORS.textSecondary, mb: 3, lineHeight: 1.6 }}>
+                Follow each path step-by-step. Address gaps first, build your foundation, then unlock practice.
               </Typography>
-
-              {/* Column header labels */}
-              <Grid container sx={{ mb: 1.5, px: 0.5 }}>
-                {[
-                  { label: '① Needs Attention',      color: COLORS.amberDark  },
-                  { label: '② Strengthen Foundation', color: COLORS.yellowDark },
-                  { label: '③ Apply & Practice',      color: COLORS.greenDark  },
-                ].map(h => (
-                  <Grid item xs={12} sm={4} key={h.label}>
-                    <Box sx={{
-                      display: 'flex', alignItems: 'center', gap: 0.8,
-                      px: 2, py: 0.8,
-                    }}>
-                      <Box sx={{ width: 8, height: 8, borderRadius: '50%', background: h.color }} />
-                      <Typography sx={{ fontSize: '0.7rem', fontWeight: 700, color: h.color, letterSpacing: '0.04em', textTransform: 'uppercase' }}>
-                        {h.label}
-                      </Typography>
-                    </Box>
-                  </Grid>
-                ))}
-              </Grid>
 
               {learningPaths.map(lp => (
                 <LearningPathRow key={lp.subject} {...lp} />
