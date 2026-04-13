@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import {
   Box, Typography, Card, CardContent, Chip, Grid, Divider, Button,
   Table, TableBody, TableCell, TableHead, TableRow, Collapse, LinearProgress,
-  Dialog, DialogTitle, DialogContent, IconButton
+  Dialog, DialogTitle, DialogContent, IconButton, Tooltip
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import Layout from '../../components/Layout';
@@ -212,202 +212,207 @@ function StudentSnapshot() {
   );
 }
 
-// ─── Section 2: Subject-wise Performance ─────────────────────────────────────
-function SubjectTable() {
-  return (
-    <Card elevation={0} sx={{ height: '100%' }}>
-      <CardContent>
-        <Typography variant="overline" sx={{ display: 'block', mb: 2 }}>📊 Subject-wise Performance</Typography>
-        <Box sx={{ overflowX: 'auto' }}>
-          <Table size="small">
-            <TableHead>
-              <TableRow sx={{ '& th': colHeader }}>
-                <TableCell>Subject</TableCell>
-                <TableCell>Score</TableCell>
-                <TableCell align="center">Practice</TableCell>
-                <TableCell>Retention</TableCell>
-                <TableCell align="center">Status</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {subjectData.map(s => (
-                <TableRow key={s.subject} sx={{
-                  '& td': { border: 'none', py: 1.4 },
-                  '&:hover td': { background: COLORS.divider },
-                  transition: 'all 0.15s',
-                }}>
-                  <TableCell>
-                    <Typography sx={{ fontWeight: 700, fontSize: '0.85rem', color: COLORS.textPrimary }}>{s.subject}</Typography>
-                  </TableCell>
-                  <TableCell sx={{ minWidth: 160 }}><AccuracyBar value={s.score} color={s.statusColor} /></TableCell>
-                  <TableCell align="center">{practiceChip(s.practice)}</TableCell>
-                  <TableCell>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <LinearProgress
-                        variant="determinate"
-                        value={s.retention}
-                        sx={{
-                          flex: 1, height: 6, borderRadius: 8,
-                          background: COLORS.divider,
-                          '& .MuiLinearProgress-bar': { background: s.statusColor },
-                        }}
-                      />
-                      <Typography sx={{ fontSize: '0.78rem', fontWeight: 700, color: s.statusColor, minWidth: 32 }}>
-                        {s.retention}%
-                      </Typography>
-                    </Box>
-                  </TableCell>
-                  <TableCell align="center">
-                    <Typography sx={{ fontSize: '1.2rem' }}>{s.status}</Typography>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </Box>
-      </CardContent>
-    </Card>
-  );
-}
-
-// ─── Section 3: Chapter-wise Performance ─────────────────────────────────────
-function ChapterTable() {
+// ─── Section 2: Performance Explorer ─────────────────────────────────────────
+// ─── Section 2: Performance Explorer ─────────────────────────────────────────
+function PerformanceDrilldown() {
   const navigate = useNavigate();
-  const [openSubject, setOpenSubject] = useState('📐 Math');
+  const [activeSubj, setActiveSubj] = useState('📐 Math');
+  const [isAnimating, setIsAnimating] = useState(false);
   const [viewAllSubject, setViewAllSubject] = useState(null);
 
+  // Handle click with gentle fade transition
+  const handleSubjectClick = (subj) => {
+    if (subj !== activeSubj) {
+      setIsAnimating(true);
+      setTimeout(() => {
+        setActiveSubj(subj);
+        setIsAnimating(false);
+      }, 150); // fast fade
+    }
+  };
+  const activeSubjData = subjectData.find(s => s.subject === activeSubj);
+  const activeChapters = [...(chapterData[activeSubj] || [])].sort((a, b) => a.score - b.score);
+  const weakChaptersCount = activeChapters.filter(c => c.status === '🔴' || c.status === '🟡').length;
+  
+  const weakestChapter = activeChapters.length > 0 
+    ? activeChapters.reduce((prev, curr) => (prev.score < curr.score ? prev : curr), activeChapters[0]) 
+    : { chapter: 'general topics' };
+  const insightText = `Main issue detected in ${weakestChapter.chapter}. Targeted revision recommended to improve retention and accuracy.`;
+
   return (
-    <Card elevation={0} sx={{ height: '100%' }}>
-      <CardContent sx={{ pb: '16px !important' }}>
-        <Typography variant="overline" sx={{ display: 'block', mb: 1.5 }}>📚 Chapter-wise Performance</Typography>
+    <Card elevation={0} sx={{ overflow: 'hidden', position: 'relative' }}>
+      <Grid container>
+        {/* LEFT RAIL: Subject Navigator */}
+        <Grid item xs={12} lg={4} sx={{ borderRight: { lg: `1px solid ${COLORS.divider}` }, background: COLORS.bgWarm, p: 2 }}>
+          <Typography variant="overline" sx={{ display: 'block', mb: 2, px: 1 }}>Performance Explorer</Typography>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+            {subjectData.map(s => {
+              const isActive = activeSubj === s.subject;
+              return (
+                <Box
+                  key={s.subject}
+                  onClick={() => handleSubjectClick(s.subject)}
+                  sx={{
+                    p: 1.5, borderRadius: '12px', cursor: 'pointer',
+                    background: isActive ? `${s.statusColor}08` : 'transparent',
+                    border: `1px solid ${isActive ? s.statusColor + '50' : 'transparent'}`,
+                    transition: 'all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+                    position: 'relative',
+                    transform: isActive ? 'scale(1.02)' : 'scale(1)',
+                    boxShadow: isActive ? `0 8px 24px ${s.statusColor}15` : 'none',
+                    opacity: isActive ? 1 : 0.65,
+                    filter: isActive ? 'none' : 'grayscale(40%)',
+                    '&:hover': { opacity: 1, filter: 'none', background: isActive ? `${s.statusColor}08` : COLORS.divider },
+                  }}
+                >
+                  {/* Active highlight bar */}
+                  {isActive && (
+                    <Box sx={{ position: 'absolute', left: -2, top: '15%', height: '70%', width: 4, borderRadius: 2, background: s.statusColor }} />
+                  )}
+                  
+                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
+                    <Typography sx={{ fontWeight: isActive ? 800 : 600, fontSize: '0.9rem', color: COLORS.textPrimary }}>
+                      {s.subject}
+                    </Typography>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <Typography sx={{ fontWeight: 800, fontSize: '0.85rem', color: s.statusColor }}>{s.score}%</Typography>
+                      <Typography sx={{ fontSize: '1rem', lineHeight: 1 }}>{s.status}</Typography>
+                    </Box>
+                  </Box>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                    <LinearProgress variant="determinate" value={s.retention} sx={{ flex: 1, height: 4, borderRadius: 4, background: COLORS.divider, '& .MuiLinearProgress-bar': { background: `${s.statusColor}80` } }} />
+                    {practiceChip(s.practice)}
+                  </Box>
+                </Box>
+              )
+            })}
+          </Box>
+        </Grid>
 
-        {/* Subject tabs */}
-        <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mb: 1.5 }}>
-          {Object.keys(chapterData).map(subj => {
-            const isOpen = openSubject === subj;
-            const subjectInfo = subjectData.find(s => s.subject === subj);
-            return (
-              <Chip
-                key={subj}
-                label={subj}
-                onClick={() => setOpenSubject(isOpen ? null : subj)}
-                sx={{
-                  fontWeight: isOpen ? 700 : 500,
-                  background: isOpen ? `${subjectInfo?.statusColor}20` : COLORS.divider,
-                  color: isOpen ? subjectInfo?.statusColor : COLORS.textSecondary,
-                  border: `1px solid ${isOpen ? subjectInfo?.statusColor + '50' : 'transparent'}`,
-                  cursor: 'pointer',
-                  transition: 'all 0.2s',
-                  '&:hover': { background: `${subjectInfo?.statusColor}15` },
-                }}
-              />
-            );
-          })}
-        </Box>
+        {/* RIGHT PANEL: Chapter Drilldown */}
+        <Grid item xs={12} lg={8} sx={{ p: 0, position: 'relative', background: '#fff' }}>
+          <Box sx={{ 
+            p: 3, 
+            opacity: isAnimating ? 0 : 1, 
+            transform: isAnimating ? 'translateY(10px)' : 'translateY(0)', 
+            transition: 'opacity 0.15s ease-out, transform 0.15s ease-out',
+            height: '100%',
+          }}>
+            {/* Insight Summary */}
+            <Box sx={{ mb: 3, p: 2, borderRadius: '12px', background: `${activeSubjData.statusColor}08`, border: `1px solid ${activeSubjData.statusColor}20`, display: 'flex', alignItems: 'center', gap: 2 }}>
+              <Box sx={{ width: 44, height: 44, borderRadius: '10px', background: `${activeSubjData.statusColor}15`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.4rem', flexShrink: 0 }}>
+                {activeSubjData.status}
+              </Box>
+              <Box>
+                <Typography sx={{ fontWeight: 700, color: COLORS.textPrimary, mb: 0.2 }}>
+                  {activeSubj.split(' ')[1] || activeSubj} requires attention in {weakChaptersCount} chapters
+                </Typography>
+                <Typography sx={{ fontSize: '0.8rem', color: COLORS.textSecondary }}>
+                  {insightText}
+                </Typography>
+              </Box>
+            </Box>
 
-        {/* Chapter rows */}
-        {Object.entries(chapterData).map(([subj, chapters]) => (
-          <Collapse key={subj} in={openSubject === subj}>
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1.5 }}>
+              <Typography variant="overline" sx={{ display: 'block' }}>Chapter detail</Typography>
+              <Button size="small" onClick={() => setViewAllSubject(activeSubj)} sx={{ textTransform: 'none', fontWeight: 600, fontSize: '0.75rem', color: COLORS.blue }}>
+                View all {activeChapters.length} chapters →
+              </Button>
+            </Box>
+            
             <Box sx={{ overflowX: 'auto' }}>
               <Table size="small">
                 <TableHead>
-                  <TableRow sx={{ '& th': colHeader }}>
+                  <TableRow sx={{ '& th': { ...colHeader, borderBottom: `1px solid ${COLORS.divider}` } }}>
                     <TableCell>Chapter</TableCell>
                     <TableCell>Score</TableCell>
                     <TableCell>Retention</TableCell>
-                    <TableCell align="center" sx={{ whiteSpace: 'nowrap' }}>Questions</TableCell>
-                    <TableCell align="center">Status</TableCell>
+                    <TableCell align="center">Activity</TableCell>
+                    <TableCell align="center">Risk</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {chapters.slice(0, 5).map(c => (
-                    <TableRow key={c.chapter}
-                      onClick={() => c.chapter === 'Trigonometry' ? navigate('/educator/diagnosis') : null}
-                      sx={{
-                        '& td': { border: 'none', py: 0.5 },
-                        '&:hover td': { background: COLORS.divider },
-                        transition: 'all 0.15s',
-                        cursor: c.chapter === 'Trigonometry' ? 'pointer' : 'default',
-                      }}>
-                      <TableCell>
-                        <Typography sx={{ fontWeight: 600, fontSize: '0.82rem', color: COLORS.textPrimary }}>{c.chapter}</Typography>
-                      </TableCell>
-                      <TableCell sx={{ minWidth: 140 }}><AccuracyBar value={c.score} color={c.statusColor} /></TableCell>
-                      <TableCell>
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                          <LinearProgress
-                            variant="determinate"
-                            value={c.retention}
-                            sx={{
-                              width: 80, height: 5, borderRadius: 8,
-                              background: COLORS.divider,
-                              '& .MuiLinearProgress-bar': { background: `${c.statusColor}80` },
-                            }}
-                          />
-                          <Typography sx={{ fontSize: '0.75rem', color: COLORS.textSecondary }}>{c.retention}%</Typography>
-                        </Box>
-                      </TableCell>
-                      <TableCell align="center">
-                        <Box sx={{
-                          display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-                          width: 26, height: 26, borderRadius: '8px',
-                          background: COLORS.divider,
-                        }}>
-                          <Typography sx={{ fontWeight: 700, fontSize: '0.78rem', color: COLORS.textSecondary }}>{c.attempts}</Typography>
-                        </Box>
-                      </TableCell>
-                      <TableCell align="center">
-                        <Typography sx={{ fontSize: '1.1rem' }}>{c.status}</Typography>
-                      </TableCell>
-                    </TableRow>
+                  {activeChapters.slice(0, 5).map(c => (
+                    <Tooltip 
+                      key={c.chapter} 
+                      title="Click to reveal deep-dive diagnostics on concept accuracy and learning gaps." 
+                      arrow 
+                      placement="left"
+                    >
+                      <TableRow
+                        onClick={() => c.chapter === 'Trigonometry' ? navigate('/educator/diagnosis') : null}
+                        sx={{
+                          '& td': { py: 1.5, borderBottom: `1px solid ${COLORS.divider}` },
+                          '&:hover td': { background: COLORS.bgWarm },
+                          transition: 'all 0.15s',
+                          cursor: c.chapter === 'Trigonometry' ? 'pointer' : 'default',
+                        }}
+                      >
+                        <TableCell>
+                          <Typography sx={{ fontWeight: 600, fontSize: '0.85rem', color: COLORS.textPrimary }}>{c.chapter}</Typography>
+                        </TableCell>
+                        <TableCell sx={{ minWidth: 140 }}><AccuracyBar value={c.score} color={c.statusColor} /></TableCell>
+                        <TableCell>
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                            <LinearProgress variant="determinate" value={c.retention} sx={{ width: 80, height: 6, borderRadius: 8, background: COLORS.divider, '& .MuiLinearProgress-bar': { background: `${c.statusColor}80` } }} />
+                            <Typography sx={{ fontSize: '0.8rem', fontWeight: 700, color: COLORS.textSecondary, minWidth: 32 }}>{c.retention}%</Typography>
+                          </Box>
+                        </TableCell>
+                        <TableCell align="center">
+                          <Box sx={{ display: 'inline-flex', width: 28, height: 28, borderRadius: '8px', background: COLORS.bgWarm, border: `1px solid ${COLORS.border}`, alignItems: 'center', justifyContent: 'center' }}>
+                            <Typography sx={{ fontWeight: 700, fontSize: '0.8rem', color: COLORS.textSecondary }}>{c.attempts}</Typography>
+                          </Box>
+                        </TableCell>
+                        <TableCell align="center">
+                          <Typography sx={{ fontSize: '1.2rem' }}>{c.status}</Typography>
+                        </TableCell>
+                      </TableRow>
+                    </Tooltip>
                   ))}
                 </TableBody>
               </Table>
             </Box>
-            {chapters.length > 5 && (
-              <Box sx={{ p: 1, textAlign: 'center', borderTop: `1px solid ${COLORS.divider}`, mt: 0.5 }}>
-                <Button
-                  size="small"
-                  sx={{ color: COLORS.blue, fontWeight: 700, fontSize: '0.75rem' }}
-                  onClick={() => setViewAllSubject(subj)}
-                >
-                  View All {chapters.length} Chapters →
-                </Button>
-              </Box>
-            )}
-          </Collapse>
-        ))}
 
-        {/* View All Dialog */}
-        <Dialog open={!!viewAllSubject} onClose={() => setViewAllSubject(null)} maxWidth="md" fullWidth PaperProps={{ sx: { borderRadius: '16px' } }}>
-          <DialogTitle sx={{
-            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-            background: COLORS.bgWarm, borderBottom: `1px solid ${COLORS.divider}`, p: 2, px: 3
-          }}>
-            <Box>
-              <Typography sx={{ fontWeight: 800, fontSize: '1.1rem', color: COLORS.textPrimary }}>
-                {viewAllSubject}
-              </Typography>
-              <Typography sx={{ fontSize: '0.8rem', color: COLORS.textSecondary }}>
-                All Chapters Performance
-              </Typography>
-            </Box>
-            <IconButton onClick={() => setViewAllSubject(null)} size="small" sx={{ color: COLORS.textMuted }}>✕</IconButton>
-          </DialogTitle>
-          <DialogContent sx={{ p: 0 }}>
-            <Table>
-              <TableHead>
-                <TableRow sx={{ '& th': { ...colHeader, px: 3, pt: 2, borderBottom: `1px solid ${COLORS.divider}` } }}>
-                  <TableCell>Chapter</TableCell>
-                  <TableCell>Score</TableCell>
-                  <TableCell>Retention</TableCell>
-                  <TableCell align="center" sx={{ whiteSpace: 'nowrap' }}>Questions</TableCell>
-                  <TableCell align="center">Status</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {viewAllSubject && chapterData[viewAllSubject].map(c => (
-                  <TableRow key={c.chapter}
+          </Box>
+        </Grid>
+      </Grid>
+      
+      {/* View All Dialog */}
+      <Dialog open={!!viewAllSubject} onClose={() => setViewAllSubject(null)} maxWidth="md" fullWidth PaperProps={{ sx: { borderRadius: '16px' } }}>
+        <DialogTitle sx={{
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          background: COLORS.bgWarm, borderBottom: `1px solid ${COLORS.divider}`, p: 2, px: 3
+        }}>
+          <Box>
+            <Typography sx={{ fontWeight: 800, fontSize: '1.1rem', color: COLORS.textPrimary }}>
+              {viewAllSubject}
+            </Typography>
+            <Typography sx={{ fontSize: '0.8rem', color: COLORS.textSecondary }}>
+              All Chapters Performance
+            </Typography>
+          </Box>
+          <IconButton onClick={() => setViewAllSubject(null)} size="small" sx={{ color: COLORS.textMuted }}>✕</IconButton>
+        </DialogTitle>
+        <DialogContent sx={{ p: 0 }}>
+          <Table>
+            <TableHead>
+              <TableRow sx={{ '& th': { ...colHeader, px: 3, pt: 2, borderBottom: `1px solid ${COLORS.divider}` } }}>
+                <TableCell>Chapter</TableCell>
+                <TableCell>Score</TableCell>
+                <TableCell>Retention</TableCell>
+                <TableCell align="center" sx={{ whiteSpace: 'nowrap' }}>Activity</TableCell>
+                <TableCell align="center">Risk</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {viewAllSubject && chapterData[viewAllSubject].map(c => (
+                <Tooltip 
+                  key={c.chapter} 
+                  title="Click to reveal deep-dive diagnostics on concept accuracy and learning gaps." 
+                  arrow 
+                  placement="top"
+                >
+                  <TableRow
                     onClick={() => {
                       if (c.chapter === 'Trigonometry') {
                         navigate('/educator/diagnosis');
@@ -450,13 +455,12 @@ function ChapterTable() {
                       <Typography sx={{ fontSize: '1.2rem' }}>{c.status}</Typography>
                     </TableCell>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </DialogContent>
-        </Dialog>
-
-      </CardContent>
+                </Tooltip>
+              ))}
+            </TableBody>
+          </Table>
+        </DialogContent>
+      </Dialog>
     </Card>
   );
 }
@@ -589,14 +593,9 @@ export default function E1_StudentOverview() {
           <StudentSnapshot />
         </Grid>
 
-        {/* Subject table */}
-        <Grid item xs={12} lg={6}>
-          <SubjectTable />
-        </Grid>
-
-        {/* Chapter table */}
-        <Grid item xs={12} lg={6}>
-          <ChapterTable />
+        {/* Unified Performance Explorer */}
+        <Grid item xs={12}>
+          <PerformanceDrilldown />
         </Grid>
 
         {/* Integrated Interventions */}

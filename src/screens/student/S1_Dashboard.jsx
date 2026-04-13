@@ -477,27 +477,53 @@ export default function S1_Dashboard() {
             <CardContent sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
               <Typography variant="overline" sx={{ display: 'block', mb: 0.5 }}>Study Streak</Typography>
 
-              {/* Flame + count */}
-              <Box sx={{ textAlign: 'center', mb: 2.5, mt: 1 }}>
-                <Typography sx={{ fontSize: '2.8rem', lineHeight: 1, mb: 0.5 }}>🔥</Typography>
-                <Typography sx={{
-                  fontWeight: 800, fontSize: '2rem', color: COLORS.yellow,
-                  fontFamily: "'DM Sans'", lineHeight: 1,
+              {/* Today & Streak sub-cards */}
+              <Box sx={{ display: 'flex', gap: 1.5, mb: 2.5, mt: 1 }}>
+                <Box sx={{
+                  flex: 1, p: 1.5, borderRadius: '12px',
+                  background: COLORS.bgWarm, border: `1px solid ${COLORS.border}`,
+                  display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'
                 }}>
-                  {streakCount}
-                </Typography>
-                <Typography sx={{ fontSize: '0.72rem', color: COLORS.textSecondary, fontWeight: 500, mt: 0.3 }}>
-                  days streak
-                </Typography>
+                  <Typography sx={{ fontSize: '0.75rem', fontWeight: 700, color: COLORS.textPrimary, mb: 1, textTransform: 'uppercase', letterSpacing: 0.5 }}>
+                    {dynamicStreakDays.find(d => d.isToday).day}
+                  </Typography>
+                  <Box sx={{ position: 'relative', width: 56, height: 56 }}>
+                    <DonutRing pct={goalPct} size={56} stroke={6} color={COLORS.green} />
+                    <Typography sx={{
+                      position: 'absolute', top: '50%', left: '50%',
+                      transform: 'translate(-50%, -50%)',
+                      fontSize: '0.8rem', fontWeight: 800, color: COLORS.green,
+                    }}>
+                      {goalPct}%
+                    </Typography>
+                  </Box>
+                </Box>
+
+                <Box sx={{
+                  flex: 1, p: 1.5, borderRadius: '12px',
+                  background: `${COLORS.yellow}08`, border: `1px solid ${COLORS.yellow}30`,
+                  display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'
+                }}>
+                  <Typography sx={{ fontSize: '2.2rem', lineHeight: 1, mb: 0.5 }}>🔥</Typography>
+                  <Typography sx={{
+                    fontWeight: 800, fontSize: '1.6rem', color: COLORS.yellow,
+                    fontFamily: "'DM Sans'", lineHeight: 1,
+                  }}>
+                    {streakCount}
+                  </Typography>
+                  <Typography sx={{ fontSize: '0.62rem', color: COLORS.yellowDark, fontWeight: 700, mt: 0.3, letterSpacing: 0.5, textTransform: 'uppercase' }}>
+                    Day Streak
+                  </Typography>
+                </Box>
               </Box>
 
-              {/* Circle row */}
+              {/* Circle row (past days only) */}
               <Box sx={{
                 display: 'flex', justifyContent: 'space-between',
                 gap: 0.5, mb: 2, alignItems: 'center'
               }}>
-                {dynamicStreakDays.map(d => (
-                  <StreakCircle key={d.day} day={d.day} done={d.done} isToday={d.isToday} goalPct={goalPct} />
+                {dynamicStreakDays.filter(d => !d.isToday).map(d => (
+                  <StreakCircle key={d.day} day={d.day} done={d.done} isToday={false} goalPct={0} />
                 ))}
               </Box>
 
@@ -526,22 +552,6 @@ export default function S1_Dashboard() {
                 <Typography sx={{ fontSize: '0.7rem', color: COLORS.textSecondary, lineHeight: 1.5 }}>
                   Complete all today's goals to fill the circle fully.
                 </Typography>
-                {/* Mini goal completion ring */}
-                <Box sx={{ mt: 1.5, display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                  <Box sx={{ position: 'relative', width: 38, height: 38, flexShrink: 0 }}>
-                    <DonutRing pct={goalPct} size={38} stroke={4} color={COLORS.green} />
-                    <Typography sx={{
-                      position: 'absolute', top: '50%', left: '50%',
-                      transform: 'translate(-50%, -50%)',
-                      fontSize: '0.58rem', fontWeight: 800, color: COLORS.green,
-                    }}>
-                      {goalPct}%
-                    </Typography>
-                  </Box>
-                  <Typography sx={{ fontSize: '0.72rem', color: COLORS.textSecondary, lineHeight: 1.4 }}>
-                    Today's goal progress — circle fills as you complete tasks.
-                  </Typography>
-                </Box>
               </Box>
 
               {/* Encouragement */}

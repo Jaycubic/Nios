@@ -47,27 +47,64 @@ const atRiskStudents = [
   { name: 'Amit', subjectIssue: 'Science', chapterIssue: 'Evolution' },
 ];
 
-const classIssues = [
-  { icon: '📐', text: 'High practice but low accuracy in Math → concept gaps exist at class level' },
-  { icon: '🔬', text: 'Low retention across Science chapters — students forget within 48 hrs' },
-  { icon: '⏱️', text: 'Students struggle after 6–8 questions — attention/fatigue pattern detected' },
+const highPerformersList = [
+  { name: 'Aditi',  subject: 'Math', details: 'Consistent 90%+' },
+  { name: 'Vikram', subject: 'Science', details: 'Top in class' },
+  { name: 'Sanya',  subject: 'English', details: 'Perfect assignments' },
+  { name: 'Kabir',  subject: 'Hindi', details: 'Excellent writing' },
+  { name: 'Ananya', subject: 'Social Science', details: 'Active participant' },
+  { name: 'Riya',   subject: 'Math', details: 'Fast problem solver' },
+  { name: 'Arjun',  subject: 'Science', details: 'High practical score' },
+  { name: 'Shruti', subject: 'English', details: 'Strong vocabulary' },
 ];
 
-const interventions = [
+const midPerformersList = [
+  { name: 'Yash',   subject: 'Math', details: 'Needs speed practice' },
+  { name: 'Pooja',  subject: 'Science', details: 'Conceptual clarity good' },
+  { name: 'Ravi',   subject: 'English', details: 'Average grammar' },
+  { name: 'Sneha',  subject: 'Hindi', details: 'Good spelling' },
+  { name: 'Tarun',  subject: 'Social Science', details: 'Needs more reading' },
+  { name: 'Isha',   subject: 'Math', details: 'Calculation errors' },
+  { name: 'Varun',  subject: 'Science', details: 'Forgets formulas' },
+  { name: 'Gargi',  subject: 'English', details: 'Moderate vocabulary' },
+  { name: 'Naman',  subject: 'Hindi', details: 'Average reading speed' },
+  { name: 'Mitali', subject: 'Social Science', details: 'Needs map practice' },
+  { name: 'Aakash', subject: 'Math', details: 'Good at algebra' },
+  { name: 'Kavya',  subject: 'Science', details: 'Loves biology' },
+  { name: 'Harsh',  subject: 'English', details: 'Good speaking skills' },
+  { name: 'Tanya',  subject: 'Hindi', details: 'Needs writing practice' },
+];
+
+const unifiedInsights = [
   {
-    icon: '📐', action: 'Re-teach Trigonometry basics',
-    reason: 'Concept gap present across 7 students in class',
-    tag: 'Concept Gap', tagColor: COLORS.amber,
+    icon: '📐',
+    title: 'Math concept gap detected',
+    evidence: 'High practice but low accuracy in Math',
+    impact: 'Affects 7 students',
+    urgency: 'High Priority',
+    actionText: 'Re-teach Trigonometry basics',
+    cta: 'Schedule Session',
+    color: COLORS.amber,
   },
   {
-    icon: '⏱️', action: 'Conduct timed practice session',
-    reason: 'Speed issue detected — students slow after Q6',
-    tag: 'Speed', tagColor: COLORS.yellow,
+    icon: '🔬',
+    title: 'Retention drop in Science',
+    evidence: 'Students forget within 48 hrs',
+    impact: 'Class-wide (< 40%)',
+    urgency: 'Medium Priority',
+    actionText: 'Assign Chemical Reactions revision',
+    cta: 'Assign Revision',
+    color: COLORS.blue,
   },
   {
-    icon: '🔬', action: 'Assign Chemical Reactions revision',
-    reason: 'Low retention (< 40%) across Science chapter',
-    tag: 'Retention', tagColor: COLORS.blue,
+    icon: '⏱️',
+    title: 'Fatigue pattern after Q6',
+    evidence: 'Attention drops after 6–8 questions',
+    impact: 'Speed issue',
+    urgency: 'Medium Priority',
+    actionText: 'Conduct timed practice drill',
+    cta: 'Schedule Drill',
+    color: COLORS.yellow,
   },
 ];
 
@@ -257,160 +294,131 @@ function SubjectTable() {
 
 // ─── Section 3: Student Segmentation ─────────────────────────────────────────
 function StudentSegmentation() {
-  const [active, setActive] = useState(null);
-  const [showAllModal, setShowAllModal] = useState(false);
+  const [modalCategory, setModalCategory] = useState(null);
+  const studentsListMap = {
+    'At Risk': atRiskStudents.map(s => ({ name: s.name, col1: s.subjectIssue, col2: s.chapterIssue })),
+    'High Performers': highPerformersList.map(s => ({ name: s.name, col1: s.subject, col2: s.details })),
+    'Mid Performers': midPerformersList.map(s => ({ name: s.name, col1: s.subject, col2: s.details })),
+  };
+
+  const currentList = modalCategory ? studentsListMap[modalCategory] : [];
+  const currentSeg = segments.find(s => s.label === modalCategory);
+  const darkColors = {
+    'High Performers': COLORS.greenDark,
+    'Mid Performers': COLORS.yellowDark,
+    'At Risk': COLORS.amberDark,
+  };
 
   return (
-    <Card elevation={0} sx={{ position: 'relative', overflow: 'visible' }}>
+    <Card elevation={0}>
       <CardContent>
         <SectionLabel>Student Segmentation</SectionLabel>
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
           {segments.map(seg => {
-            const isActive = active === seg.label;
             return (
               <Box
                 key={seg.label}
-                onClick={() => setActive(isActive ? null : seg.label)}
+                onClick={() => setModalCategory(seg.label)}
                 sx={{
-                  p: 2, borderRadius: '16px', cursor: 'pointer',
-                  background: isActive ? `${seg.color}15` : COLORS.bgWarm,
-                  border: `2px solid ${isActive ? seg.color : COLORS.border}`,
-                  transition: 'all 0.25s ease',
-                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                  borderRadius: '16px', cursor: 'pointer',
+                  background: `${seg.color}05`,
+                  border: `1px solid ${COLORS.border}`,
+                  transition: 'all 0.3s ease',
+                  overflow: 'hidden',
+                  display: 'flex',
+                  flexDirection: 'column',
                   '&:hover': {
-                    background: `${seg.color}10`,
-                    border: `2px solid ${seg.color}60`,
-                    transform: 'translateX(2px)',
-                    boxShadow: `0 4px 12px ${seg.color}20`,
+                    background: `${seg.color}08`,
+                    borderColor: `${seg.color}50`,
+                    boxShadow: `0 4px 12px ${seg.color}15`,
                   },
                 }}
               >
-                <Box>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.3 }}>
-                    <Typography sx={{ fontSize: '1.2rem' }}>{seg.icon}</Typography>
-                    <Typography sx={{ fontWeight: 700, fontSize: '0.85rem', color: COLORS.textPrimary }}>
+                {/* Header Row */}
+                <Box sx={{ p: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <Box sx={{ fontSize: '1.2rem', filter: 'none' }}>{seg.icon}</Box>
+                    <Typography sx={{ fontWeight: 800, fontSize: '0.88rem', color: COLORS.textPrimary }}>
                       {seg.label}
                     </Typography>
                   </Box>
-                  <Typography variant="caption" sx={{ color: COLORS.textMuted, lineHeight: 1.2, display: 'block' }}>
+                  <Box sx={{
+                    px: 1.2, py: 0.3, borderRadius: '20px',
+                    background: `${seg.color}15`, border: `1px solid ${seg.color}30`,
+                  }}>
+                    <Typography sx={{ fontWeight: 900, fontSize: '1rem', color: seg.color, fontFamily: "'DM Sans'", lineHeight: 1 }}>
+                      {seg.count}
+                    </Typography>
+                  </Box>
+                </Box>
+                
+                {/* Body Content */}
+                <Box sx={{ px: 2, pb: 1, textAlign: 'center' }}>
+                  <Typography variant="caption" sx={{ color: COLORS.textSecondary, fontWeight: 600, fontSize: '0.72rem', display: 'block', mb: 1.5 }}>
                     {seg.desc}
                   </Typography>
-                </Box>
-                <Box sx={{
-                  px: 1.5, py: 0.4, borderRadius: '20px',
-                  background: `${seg.color}20`, ml: 2, flexShrink: 0,
-                }}>
-                  <Typography sx={{ fontWeight: 900, fontSize: '1.1rem', color: seg.color, fontFamily: "'DM Sans'", lineHeight: 1 }}>
-                    {seg.count}
-                  </Typography>
+                  
+                  <Box sx={{ display: 'flex', justifyContent: 'center', pb: 1 }}>
+                    <Button
+                      variant="text"
+                      size="small"
+                      onClick={(e) => { e.stopPropagation(); setModalCategory(seg.label); }}
+                      sx={{ 
+                        textTransform: 'none', 
+                        fontWeight: 800, 
+                        color: COLORS.textSecondary, 
+                        fontSize: '0.72rem',
+                        background: COLORS.divider,
+                        px: 2,
+                        borderRadius: '20px',
+                        '&:hover': { 
+                          background: `${seg.color}20`,
+                          color: seg.color,
+                        } 
+                      }}
+                    >
+                      View All {seg.count} Students →
+                    </Button>
+                  </Box>
                 </Box>
               </Box>
             );
           })}
         </Box>
 
-        {/* Absolute positioning for expanded popovers to avoid breaking layout */}
-        {active && (
-          <Box sx={{
-            position: 'absolute', top: '20%', left: '105%',
-            width: active === 'At Risk' ? 360 : 300,
-            zIndex: 10,
-            background: COLORS.bgCard,
-            borderRadius: '16px',
-            boxShadow: '0 12px 40px rgba(0,0,0,0.15)',
-            border: `1px solid ${COLORS.border}`,
-            p: 0,
-            overflow: 'hidden',
-          }}>
-            {active === 'At Risk' ? (
-              <Box>
-                <Box sx={{
-                  px: 2, py: 1.5,
-                  background: `${COLORS.amber}12`,
-                  borderBottom: `1px solid ${COLORS.amber}20`,
-                  display: 'flex', alignItems: 'center', gap: 1,
-                }}>
-                  <Typography sx={{ fontSize: '1rem' }}>⚠️</Typography>
-                  <Typography sx={{ fontWeight: 700, fontSize: '0.82rem', color: COLORS.amberDark }}>
-                    Requires Immediate Attention
-                  </Typography>
-                  <Button size="small" onClick={() => setActive(null)} sx={{ ml: 'auto', minWidth: 0, p: 0.5, color: COLORS.textMuted }}>✕</Button>
-                </Box>
-                <Table size="small">
-                  <TableHead>
-                    <TableRow sx={{ '& th': { border: 'none', py: 1 } }}>
-                      <TableCell sx={{ fontWeight: 700, fontSize: '0.7rem', color: COLORS.textMuted, textTransform: 'uppercase' }}>Student</TableCell>
-                      <TableCell sx={{ fontWeight: 700, fontSize: '0.7rem', color: COLORS.textMuted, textTransform: 'uppercase' }}>Issue</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {atRiskStudents.slice(0, 4).map((s, i) => (
-                      <TableRow key={i} sx={{ '& td': { border: 'none', py: 1 }, '&:hover td': { background: `${COLORS.amber}05` } }}>
-                        <TableCell>
-                          <Typography sx={{ fontWeight: 600, fontSize: '0.83rem', color: COLORS.textPrimary }}>
-                            {s.name}
-                          </Typography>
-                        </TableCell>
-                        <TableCell>
-                          <Typography sx={{ fontSize: '0.75rem', color: COLORS.textSecondary, lineHeight: 1.2 }}>
-                            {s.subjectIssue}: {s.chapterIssue}
-                          </Typography>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-                <Box sx={{ p: 1, textAlign: 'center', background: COLORS.bgWarm, borderTop: `1px solid ${COLORS.border}` }}>
-                  <Typography onClick={() => setShowAllModal(true)} sx={{ fontSize: '0.7rem', color: COLORS.blue, fontWeight: 700, cursor: 'pointer' }}>View all 10 students →</Typography>
-                </Box>
-              </Box>
-            ) : (
-              <Box sx={{ p: 2.5 }}>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1 }}>
-                  <Typography sx={{ fontWeight: 700, fontSize: '0.85rem' }}>{active}</Typography>
-                  <Button size="small" onClick={() => setActive(null)} sx={{ minWidth: 0, p: 0, color: COLORS.textMuted }}>✕</Button>
-                </Box>
-                <Typography variant="body2" sx={{ color: COLORS.textSecondary, lineHeight: 1.5 }}>
-                  {active === 'High Performers'
-                    ? '8 students performing above 75% score with consistent engagement. Consider assigning enrichment challenges.'
-                    : '14 students in developing range (50–74%). Regular check-ins recommended. Assign targeted chapter drills to accelerate progress.'}
-                </Typography>
-              </Box>
-            )}
-          </Box>
-        )}
-
-        {/* Dialog for All Students */}
-        <Dialog open={showAllModal} onClose={() => setShowAllModal(false)} maxWidth="sm" fullWidth PaperProps={{ sx: { borderRadius: '16px' } }}>
-          <DialogTitle sx={{ background: `${COLORS.amber}12`, borderBottom: `1px solid ${COLORS.amber}20`, display: 'flex', alignItems: 'center', gap: 1, p: 2 }}>
-            <Typography sx={{ fontSize: '1.2rem' }}>⚠️</Typography>
-            <Typography sx={{ fontWeight: 700, fontSize: '1rem', color: COLORS.amberDark }}>
-              All At Risk Students
-            </Typography>
-            <IconButton onClick={() => setShowAllModal(false)} sx={{ ml: 'auto' }} size="small">
-              <Typography sx={{ fontSize: '1rem', color: COLORS.textMuted }}>✕</Typography>
-            </IconButton>
-          </DialogTitle>
+        {/* Dynamic Dialog for Students */}
+        <Dialog open={!!modalCategory} onClose={() => setModalCategory(null)} maxWidth="sm" fullWidth PaperProps={{ sx: { borderRadius: '16px' } }}>
+          {currentSeg && (
+            <DialogTitle sx={{ background: `${currentSeg.color}12`, borderBottom: `1px solid ${currentSeg.color}20`, display: 'flex', alignItems: 'center', gap: 1, p: 2 }}>
+              <Typography sx={{ fontSize: '1.2rem' }}>{currentSeg.icon}</Typography>
+              <Typography sx={{ fontWeight: 700, fontSize: '1rem', color: darkColors[modalCategory] || currentSeg.color }}>
+                {modalCategory === 'At Risk' ? 'All At Risk Students' : `All ${modalCategory}`}
+              </Typography>
+              <IconButton onClick={() => setModalCategory(null)} sx={{ ml: 'auto' }} size="small">
+                <Typography sx={{ fontSize: '1rem', color: COLORS.textMuted }}>✕</Typography>
+              </IconButton>
+            </DialogTitle>
+          )}
           <DialogContent sx={{ p: 0 }}>
             <Table>
               <TableHead>
                 <TableRow sx={{ '& th': { borderBottom: `1px solid ${COLORS.border}`, py: 1.5, px: 3 } }}>
                   <TableCell sx={{ fontWeight: 700, fontSize: '0.75rem', color: COLORS.textMuted, textTransform: 'uppercase' }}>Student</TableCell>
-                  <TableCell sx={{ fontWeight: 700, fontSize: '0.75rem', color: COLORS.textMuted, textTransform: 'uppercase' }}>Subject Issue</TableCell>
-                  <TableCell sx={{ fontWeight: 700, fontSize: '0.75rem', color: COLORS.textMuted, textTransform: 'uppercase' }}>Chapter Issue</TableCell>
+                  <TableCell sx={{ fontWeight: 700, fontSize: '0.75rem', color: COLORS.textMuted, textTransform: 'uppercase' }}>{modalCategory === 'At Risk' ? 'Subject Issue' : 'Subject'}</TableCell>
+                  <TableCell sx={{ fontWeight: 700, fontSize: '0.75rem', color: COLORS.textMuted, textTransform: 'uppercase' }}>{modalCategory === 'At Risk' ? 'Chapter Issue' : 'Details'}</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {atRiskStudents.map((s, i) => (
-                  <TableRow key={i} sx={{ '& td': { borderBottom: `1px solid ${COLORS.divider}`, py: 1.5, px: 3 }, '&:hover td': { background: `${COLORS.amber}05` } }}>
+                {currentList.map((s, i) => (
+                  <TableRow key={i} sx={{ '& td': { borderBottom: `1px solid ${COLORS.divider}`, py: 1.5, px: 3 }, '&:hover td': { background: currentSeg ? `${currentSeg.color}05` : COLORS.divider } }}>
                     <TableCell>
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
                         <Box sx={{
                           width: 32, height: 32, borderRadius: '50%',
-                          background: `${COLORS.amber}20`,
+                          background: currentSeg ? `${currentSeg.color}20` : COLORS.divider,
                           display: 'flex', alignItems: 'center', justifyContent: 'center',
                         }}>
-                          <Typography sx={{ fontWeight: 700, fontSize: '0.8rem', color: COLORS.amberDark }}>
+                          <Typography sx={{ fontWeight: 700, fontSize: '0.8rem', color: currentSeg ? darkColors[modalCategory] || currentSeg.color : COLORS.textPrimary }}>
                             {s.name[0]}
                           </Typography>
                         </Box>
@@ -421,13 +429,13 @@ function StudentSegmentation() {
                     </TableCell>
                     <TableCell>
                       <Chip
-                        label={s.subjectIssue}
+                        label={s.col1}
                         size="small"
                         sx={{ height: 24, fontSize: '0.75rem', fontWeight: 600, background: `${COLORS.blue}12`, color: COLORS.blue, '& .MuiChip-label': { px: 1.5 } }}
                       />
                     </TableCell>
                     <TableCell>
-                      <Typography sx={{ fontSize: '0.85rem', color: COLORS.textSecondary }}>{s.chapterIssue}</Typography>
+                      <Typography sx={{ fontSize: '0.85rem', color: COLORS.textSecondary }}>{s.col2}</Typography>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -440,79 +448,78 @@ function StudentSegmentation() {
   );
 }
 
-// ─── Section 5: Class Diagnosis ───────────────────────────────────────────────
-function ClassDiagnosis() {
+// ─── Section 5: Class Insights & Actions ──────────────────────────────────────
+function ClassInsightsAndActions() {
   return (
     <Card elevation={0} sx={{ height: '100%' }}>
       <CardContent>
-        <SectionLabel>Class-Level Diagnosis</SectionLabel>
+        <SectionLabel>Class Insights & Actions</SectionLabel>
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
-          {classIssues.map((issue, i) => (
+          {unifiedInsights.map((item, i) => (
             <Box key={i} sx={{
-              display: 'flex', alignItems: 'flex-start', gap: 2,
-              p: '14px 18px', borderRadius: '12px',
-              background: COLORS.bgWarm,
+              display: 'flex', alignItems: 'stretch', justifyContent: 'space-between',
+              p: '16px 20px', borderRadius: '12px', background: COLORS.bgWarm,
               border: `1px solid ${COLORS.border}`,
-              transition: 'all 0.15s',
-              '&:hover': {
-                border: `1px solid ${COLORS.blue}30`,
-                background: `${COLORS.blue}04`,
-              },
+              flexDirection: { xs: 'column', lg: 'row' },
+              gap: 2,
             }}>
-              <Box sx={{
-                width: 36, height: 36, borderRadius: '10px',
-                background: `${COLORS.blue}12`,
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: '1.1rem', flexShrink: 0,
-              }}>{issue.icon}</Box>
-              <Box>
-                <Typography sx={{ fontSize: '0.85rem', color: COLORS.textPrimary, lineHeight: 1.6 }}>
-                  {issue.text}
-                </Typography>
-              </Box>
-            </Box>
-          ))}
-        </Box>
-      </CardContent>
-    </Card>
-  );
-}
-
-// ─── Section 6: Class Intervention Guidance ───────────────────────────────────
-function ClassIntervention() {
-  return (
-    <Card elevation={0} sx={{ height: '100%' }}>
-      <CardContent>
-        <SectionLabel>
-          Class Intervention Guidance
-        </SectionLabel>
-
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
-          {interventions.map((item, i) => (
-            <Box key={i} sx={{
-              display: 'flex', alignItems: 'flex-start', gap: 2,
-              p: '16px 18px', borderRadius: '14px',
-              background: COLORS.bgWarm,
-              border: `1px solid ${COLORS.border}`,
-              transition: 'all 0.2s',
-            }}>
-              <Box sx={{
-                width: 38, height: 38, borderRadius: '10px',
-                background: `${item.tagColor}12`,
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: '1.1rem', flexShrink: 0,
-              }}>{item.icon}</Box>
-              <Box sx={{ flexGrow: 1 }}>
-                <Typography sx={{ fontWeight: 700, fontSize: '0.88rem', color: COLORS.textPrimary, mb: 0.4 }}>
-                  {item.action}
-                </Typography>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <Typography variant="caption" sx={{ color: COLORS.textSecondary }}>{item.reason}</Typography>
-                  <Chip
-                    label={item.tag} size="small"
-                    sx={{ height: 18, fontSize: '0.62rem', fontWeight: 600, background: `${item.tagColor}15`, color: item.tagColor, '& .MuiChip-label': { px: 0.8 } }}
-                  />
+              {/* Left side: Diagnosis */}
+              <Box sx={{ display: 'flex', gap: 2, flex: 1, alignItems: 'center' }}>
+                <Box sx={{
+                  width: 44, height: 44, borderRadius: '10px', background: `${item.color}15`,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.4rem',
+                  flexShrink: 0
+                }}>{item.icon}</Box>
+                <Box>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5, flexWrap: 'wrap' }}>
+                    <Typography sx={{ fontWeight: 700, fontSize: '0.95rem', color: COLORS.textPrimary }}>
+                      {item.title}
+                    </Typography>
+                    {item.impact && <Chip label={item.impact} size="small" sx={{ height: 20, fontSize: '0.65rem', background: COLORS.divider, color: COLORS.textSecondary, fontWeight: 700 }} />}
+                    {item.urgency && <Chip label={item.urgency} size="small" sx={{ height: 20, fontSize: '0.65rem', background: `${item.color}15`, color: item.color, border: `1px solid ${item.color}30`, fontWeight: 700 }} />}
+                  </Box>
+                  <Typography sx={{ fontSize: '0.8rem', color: COLORS.textSecondary }}>
+                    {item.evidence}
+                  </Typography>
                 </Box>
+              </Box>
+
+              {/* Right side: Action */}
+              <Box sx={{
+                display: 'flex', alignItems: 'flex-start', flexDirection: 'column', justifyContent: 'center',
+                minWidth: { xs: '100%', lg: 280 }, p: 1.5, background: `${item.color}08`, borderRadius: '10px',
+                border: `1px solid ${item.color}25`,
+              }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.8, mb: 0.5 }}>
+                  <Typography sx={{ fontSize: '0.68rem', color: COLORS.textMuted, fontWeight: 800, textTransform: 'uppercase', letterSpacing: 0.5 }}>
+                    → Recommended Action
+                  </Typography>
+                </Box>
+                <Typography sx={{ fontSize: '0.88rem', fontWeight: 700, color: COLORS.textPrimary, mb: 1.2 }}>
+                  {item.actionText}
+                </Typography>
+                <Button 
+                  variant="outlined" 
+                  size="small" 
+                  sx={{
+                    borderColor: COLORS.border,
+                    color: COLORS.textPrimary,
+                    background: COLORS.bgWarm,
+                    textTransform: 'none', 
+                    fontWeight: 700, 
+                    fontSize: '0.75rem', 
+                    py: 0.6, 
+                    width: '100%',
+                    boxShadow: 'none',
+                    '&:hover': { 
+                      background: COLORS.divider, 
+                      borderColor: COLORS.textMuted,
+                      boxShadow: 'none'
+                    }
+                  }}
+                >
+                  {item.cta}
+                </Button>
               </Box>
             </Box>
           ))}
@@ -539,15 +546,12 @@ export default function E0_ClassOverview() {
           <SubjectTable />
         </Grid>
 
-        {/* ROW 2: 3 Columns (3 - 4 - 5 breakdown) */}
+        {/* ROW 2: 2 Columns (3 - 9 breakdown) */}
         <Grid item xs={12} lg={3}>
           <StudentSegmentation />
         </Grid>
-        <Grid item xs={12} lg={4}>
-          <ClassDiagnosis />
-        </Grid>
-        <Grid item xs={12} lg={5}>
-          <ClassIntervention />
+        <Grid item xs={12} lg={9}>
+          <ClassInsightsAndActions />
         </Grid>
       </Grid>
     </Layout>
