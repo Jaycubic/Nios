@@ -13,6 +13,7 @@ import E3_ErrorAnalysis       from './screens/educator/E3_ErrorAnalysis';
 
 // Student screens
 import S1_Dashboard           from './screens/student/S1_Dashboard';
+import S2_SubjectMatrix       from './screens/student/S2_SubjectMatrix';
 
 // Role selection
 import RoleSelect             from './screens/RoleSelect';
@@ -38,6 +39,7 @@ export default function App() {
 
           {/* Student */}
           <Route path="/student/dashboard"  element={<S1_Dashboard />} />
+          <Route path="/student/matrix"     element={<S2_SubjectMatrix />} />
 
           {/* 404 fallback */}
           <Route path="*" element={<Navigate to="/" replace />} />
