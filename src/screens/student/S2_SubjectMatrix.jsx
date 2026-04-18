@@ -463,7 +463,7 @@ function PracticeModal({ chapter, subjectColor, open, onClose }) {
 
 // ─── Mock Test Modal ──────────────────────────────────────────────────────────
 
-function MockTestModal({ chapter, subjectColor, open, onClose }) {
+function MockTestModal({ chapter, subjectColor, open, onClose, onComplete }) {
     if (!chapter) return null;
     const mockAttempts = [{ label: 'Test 1', pct: 62 }, { label: 'Test 2', pct: 68 }, { label: 'Test 3', pct: chapter.mockScore || 72 }].slice(0, Math.max(chapter.mockAttempts, 1));
     const avgTime = 2.5; const retentionScore = 70;
@@ -540,8 +540,9 @@ function MockTestModal({ chapter, subjectColor, open, onClose }) {
                     <Typography sx={{ fontSize: '0.78rem', color: COLORS.textPrimary, fontWeight: 600, mb: 0.6 }}>Suggested: Improve weak topics before retaking</Typography>
                     <Typography sx={{ fontSize: '0.72rem', color: COLORS.textSecondary, lineHeight: 1.5, mb: 1.5 }}>Address Quadratic Formula and Word Problems first. Your trend is positive — one focused attempt should push you above 75%.</Typography>
                     <Button variant="contained" size="small" fullWidth
+                        onClick={chapter.status !== 'completed' ? () => onComplete(chapter.id) : onClose}
                         sx={{ background: `linear-gradient(135deg,${subjectColor},${subjectColor}CC)`, color: '#fff', textTransform: 'none', fontWeight: 700, borderRadius: '10px', boxShadow: `0 4px 12px ${subjectColor}35` }}>
-                        Retake Mock Test
+                        {chapter.status !== 'completed' ? 'Pass Mock Test & Complete Chapter' : 'Retake Mock Test'}
                     </Button>
                 </Box>
             </Box>
@@ -671,9 +672,9 @@ function ChapterDetailPanel({ chapter, subjectColor, onPracticeOpen, onMockOpen,
                             </Box>
                         )}
                     </Box>
-                    <Button variant="outlined" size="small" fullWidth onClick={onMockOpen} disabled={chapter.mockAttempts === 0}
-                        sx={{ mt: 1, color: subjectColor, borderColor: `${subjectColor}50`, textTransform: 'none', fontWeight: 700, fontSize: '0.72rem', borderRadius: '8px', '&:hover': { borderColor: subjectColor, background: `${subjectColor}08` } }}>
-                        {chapter.mockAttempts > 0 ? 'Analysis →' : 'No attempts'}
+                    <Button variant="outlined" size="small" fullWidth onClick={onMockOpen} disabled={chapter.status === 'not-started'}
+                        sx={{ mt: 1, color: subjectColor, borderColor: `${subjectColor}50`, textTransform: 'none', fontWeight: 700, fontSize: '0.72rem', borderRadius: '8px', '&:hover': { borderColor: subjectColor, background: `${subjectColor}08` }, ...(chapter.status !== 'completed' && { background: `${subjectColor}15` }) }}>
+                        {chapter.status === 'completed' ? 'Analysis →' : 'Take Mock Test'}
                     </Button>
                 </Box>
             </Box>
@@ -961,6 +962,30 @@ function RoadmapView({ subjectId, onBack }) {
     const [practiceModalOpen, setPracticeModalOpen] = useState(false);
     const [mockModalOpen, setMockModalOpen] = useState(false);
 
+    const handleCompleteChapter = (chapterId) => {
+        let nextChapter = null;
+        const newChapters = chapters.map(c => {
+            if (c.id === chapterId) {
+                return { ...c, status: 'completed', mockScore: c.mockScore || 85, mockAttempts: Math.max(c.mockAttempts, 1) };
+            }
+            return c;
+        });
+        
+        const idx = chapters.findIndex(c => c.id === chapterId);
+        if (idx !== -1 && idx + 1 < chapters.length) {
+            if (newChapters[idx + 1].status === 'not-started') {
+                newChapters[idx + 1] = { ...newChapters[idx + 1], status: 'in-progress' };
+            }
+            nextChapter = newChapters[idx + 1];
+        } else if (idx !== -1) {
+            nextChapter = newChapters[idx];
+        }
+
+        setChapters(newChapters);
+        setSelectedChapter(nextChapter);
+        setMockModalOpen(false);
+    };
+
     const moveChapter = (index, direction) => {
         const swap = index + direction;
         if (swap < 0 || swap >= chapters.length) return;
@@ -1071,7 +1096,7 @@ function RoadmapView({ subjectId, onBack }) {
             </Box>
 
             <PracticeModal chapter={selectedChapter} subjectColor={subject.color} open={practiceModalOpen} onClose={() => setPracticeModalOpen(false)} />
-            <MockTestModal chapter={selectedChapter} subjectColor={subject.color} open={mockModalOpen} onClose={() => setMockModalOpen(false)} />
+            <MockTestModal chapter={selectedChapter} subjectColor={subject.color} open={mockModalOpen} onClose={() => setMockModalOpen(false)} onComplete={handleCompleteChapter} />
         </Box>
     );
 }
