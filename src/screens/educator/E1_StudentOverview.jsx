@@ -3,21 +3,20 @@ import React, { useState } from 'react';
 import {
   Box, Typography, Card, CardContent, Chip, Grid, Divider, Button,
   Table, TableBody, TableCell, TableHead, TableRow, Collapse, LinearProgress,
-  Dialog, DialogTitle, DialogContent, IconButton, Tooltip
+  Dialog, DialogTitle, DialogContent, IconButton, Tooltip, Menu, MenuItem
 } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Layout from '../../components/Layout';
 import { COLORS } from '../../theme';
 
 // ─── Student data ─────────────────────────────────────────────────────────────
-const student = {
-  name: 'Rahul Sharma',
-  grade: 'Grade 10 · NIOS',
-  rollNo: '2024NIOS1048',
-  score: 52,
-  practice: 'Medium',
-  retention: 60,
-  status: 'Needs Support',
+const studentsDb = {
+  '1': { name: 'Rahul Sharma', grade: 'Grade 10 · NIOS', rollNo: '2024NIOS1048', score: 52, practice: 'Medium', retention: 60, status: 'Needs Support' },
+  '2': { name: 'Aisha Khan', grade: 'Grade 10 · NIOS', rollNo: '2024NIOS1049', score: 65, practice: 'High', retention: 68, status: 'Improving' },
+  '3': { name: 'Priya Patel', grade: 'Grade 10 · NIOS', rollNo: '2024NIOS1050', score: 85, practice: 'High', retention: 88, status: 'On Track' },
+  '4': { name: 'Dev Joshi', grade: 'Grade 10 · NIOS', rollNo: '2024NIOS1051', score: 48, practice: 'Low', retention: 55, status: 'Needs Support' },
+  '5': { name: 'Meera Reddy', grade: 'Grade 10 · NIOS', rollNo: '2024NIOS1052', score: 72, practice: 'Medium', retention: 70, status: 'Improving' },
+  '6': { name: 'Rohan Gupta', grade: 'Grade 10 · NIOS', rollNo: '2024NIOS1053', score: 82, practice: 'High', retention: 85, status: 'On Track' },
 };
 
 const subjectData = [
@@ -84,7 +83,7 @@ const chapterData = {
 // ─── E5 Data: Recommendations & Strategies ──────────────────────────────────
 const conceptRecs = [
   { id: 'C1', topic: 'Trigonometry Basics', reason: 'Confusing complementary angle values — needs table review', priority: 'high', icon: '📐', subject: 'Math' },
-  { id: 'C2', topic: 'Fundamental Identities', reason: 'Core gap — substitution error pattern confirmed in 4 Qs', priority: 'high', icon: '🔢', subject: 'Math' },
+  { id: 'C2', topic: 'Fundamental Identities', reason: 'Not Started — substitution error pattern confirmed in 4 Qs', priority: 'high', icon: '🔢', subject: 'Math', isNotStarted: true },
 ];
 
 const practiceRecs = [
@@ -143,7 +142,7 @@ const colHeader = {
 };
 
 // ─── Section 1: Student Snapshot ──────────────────────────────────────────────
-function StudentSnapshot() {
+function StudentSnapshot({ student }) {
   return (
     <Card elevation={0}>
       <CardContent>
@@ -157,7 +156,7 @@ function StudentSnapshot() {
               border: `2px solid ${COLORS.purple}40`,
             }}>
               <Typography sx={{ fontWeight: 900, fontSize: '1.4rem', color: '#fff', fontFamily: "'DM Sans'" }}>
-                R
+                {student.name[0]}
               </Typography>
             </Box>
             <Box>
@@ -327,7 +326,6 @@ function PerformanceDrilldown() {
                     <TableCell>Chapter</TableCell>
                     <TableCell>Score</TableCell>
                     <TableCell>Retention</TableCell>
-                    <TableCell align="center">Activity</TableCell>
                     <TableCell align="center">Risk</TableCell>
                   </TableRow>
                 </TableHead>
@@ -356,11 +354,6 @@ function PerformanceDrilldown() {
                           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                             <LinearProgress variant="determinate" value={c.retention} sx={{ width: 80, height: 6, borderRadius: 8, background: COLORS.divider, '& .MuiLinearProgress-bar': { background: `${c.statusColor}80` } }} />
                             <Typography sx={{ fontSize: '0.8rem', fontWeight: 700, color: COLORS.textSecondary, minWidth: 32 }}>{c.retention}%</Typography>
-                          </Box>
-                        </TableCell>
-                        <TableCell align="center">
-                          <Box sx={{ display: 'inline-flex', width: 28, height: 28, borderRadius: '8px', background: COLORS.bgWarm, border: `1px solid ${COLORS.border}`, alignItems: 'center', justifyContent: 'center' }}>
-                            <Typography sx={{ fontWeight: 700, fontSize: '0.8rem', color: COLORS.textSecondary }}>{c.attempts}</Typography>
                           </Box>
                         </TableCell>
                         <TableCell align="center">
@@ -400,7 +393,6 @@ function PerformanceDrilldown() {
                 <TableCell>Chapter</TableCell>
                 <TableCell>Score</TableCell>
                 <TableCell>Retention</TableCell>
-                <TableCell align="center" sx={{ whiteSpace: 'nowrap' }}>Activity</TableCell>
                 <TableCell align="center">Risk</TableCell>
               </TableRow>
             </TableHead>
@@ -443,15 +435,6 @@ function PerformanceDrilldown() {
                       </Box>
                     </TableCell>
                     <TableCell align="center">
-                      <Box sx={{
-                        display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-                        width: 28, height: 28, borderRadius: '8px',
-                        background: COLORS.bgCard, border: `1px solid ${COLORS.border}`
-                      }}>
-                        <Typography sx={{ fontWeight: 700, fontSize: '0.8rem', color: COLORS.textSecondary }}>{c.attempts}</Typography>
-                      </Box>
-                    </TableCell>
-                    <TableCell align="center">
                       <Typography sx={{ fontSize: '1.2rem' }}>{c.status}</Typography>
                     </TableCell>
                   </TableRow>
@@ -467,6 +450,31 @@ function PerformanceDrilldown() {
 
 // ─── Section 4: Integrated Interventions ──────────────────────────────────────
 function ActionableInterventions() {
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [selectedTopic, setSelectedTopic] = useState(null);
+  const [assignModalOpen, setAssignModalOpen] = useState(false);
+  const [assignType, setAssignType] = useState(null);
+  const [assignedTopics, setAssignedTopics] = useState(new Set());
+
+  const handleClick = (event, topic) => {
+    setAnchorEl(event.currentTarget);
+    setSelectedTopic(topic);
+  };
+  const handleCloseMenu = () => {
+    setAnchorEl(null);
+  };
+  const handleSelectAssignType = (type) => {
+    setAssignType(type);
+    setAnchorEl(null);
+    setAssignModalOpen(true);
+  };
+  const handleConfirmAssign = () => {
+    if (selectedTopic) {
+        setAssignedTopics(prev => new Set(prev).add(selectedTopic));
+    }
+    setAssignModalOpen(false);
+  };
+
   return (
     <Card elevation={0} sx={{ height: '100%' }}>
       <CardContent>
@@ -492,10 +500,21 @@ function ActionableInterventions() {
                   fontSize: '1rem', flexShrink: 0,
                 }}>{r.icon}</Box>
                 <Box sx={{ flexGrow: 1 }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.3 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 0.3 }}>
                     <Typography sx={{ fontWeight: 700, fontSize: '0.85rem', color: COLORS.textPrimary }}>{r.topic}</Typography>
+                    {assignedTopics.has(r.topic) ? (
+                        <Chip label="Assigned ✓" size="small" sx={{ background: `${COLORS.green}15`, color: COLORS.greenDark, fontWeight: 700, fontSize: '0.65rem', height: 22 }} />
+                    ) : (
+                        <Button size="small" onClick={(e) => handleClick(e, r.topic)} sx={{ minWidth: 0, p: 0.5, px: 1, borderRadius: '8px', color: COLORS.blue, border: `1px solid ${COLORS.blue}30`, textTransform: 'none', fontWeight: 600 }}>+ Assign</Button>
+                    )}
                   </Box>
-                  <Typography variant="caption" sx={{ color: COLORS.textSecondary, lineHeight: 1.4, display: 'block', mb: 0.5 }}>{r.reason}</Typography>
+                  {r.isNotStarted ? (
+                    <Tooltip title="Prerequisite knowledge is missing or not started for this concept." placement="top">
+                      <Typography variant="caption" sx={{ color: COLORS.textSecondary, lineHeight: 1.4, display: 'block', mb: 0.5, borderBottom: `1px dotted ${COLORS.textSecondary}`, width: 'fit-content' }}>{r.reason}</Typography>
+                    </Tooltip>
+                  ) : (
+                    <Typography variant="caption" sx={{ color: COLORS.textSecondary, lineHeight: 1.4, display: 'block', mb: 0.5 }}>{r.reason}</Typography>
+                  )}
                   <Chip label={ps.label} size="small" sx={{ height: 18, fontSize: '0.62rem', fontWeight: 600, background: ps.bg, color: ps.color, border: `1px solid ${ps.color}30`, '& .MuiChip-label': { px: 0.8 } }} />
                 </Box>
               </Box>
@@ -523,7 +542,14 @@ function ActionableInterventions() {
                 fontSize: '0.9rem', flexShrink: 0,
               }}>{r.icon}</Box>
               <Box sx={{ flexGrow: 1 }}>
-                <Typography sx={{ fontWeight: 600, fontSize: '0.8rem', color: COLORS.textPrimary, mb: 0.2 }}>{r.label}</Typography>
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 0.2 }}>
+                  <Typography sx={{ fontWeight: 600, fontSize: '0.8rem', color: COLORS.textPrimary }}>{r.label}</Typography>
+                  {assignedTopics.has(r.label) ? (
+                        <Chip label="Assigned ✓" size="small" sx={{ background: `${COLORS.green}15`, color: COLORS.greenDark, fontWeight: 700, fontSize: '0.65rem', height: 22 }} />
+                  ) : (
+                        <Button size="small" onClick={(e) => handleClick(e, r.label)} sx={{ minWidth: 0, p: 0.5, px: 1, borderRadius: '8px', color: r.color, border: `1px solid ${r.color}30`, textTransform: 'none', fontWeight: 600 }}>+ Assign</Button>
+                  )}
+                </Box>
                 <Box sx={{ display: 'flex', gap: 1 }}>
                   <Chip label={r.type} size="small" sx={{ height: 16, fontSize: '0.6rem', background: `${r.color}12`, color: r.color, '& .MuiChip-label': { px: 0.6 } }} />
                   <Chip label={r.est} size="small" sx={{ height: 16, fontSize: '0.6rem', background: COLORS.divider, color: COLORS.textMuted, '& .MuiChip-label': { px: 0.6 } }} />
@@ -533,6 +559,35 @@ function ActionableInterventions() {
           ))}
         </Box>
 
+        <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleCloseMenu} PaperProps={{ sx: { mt: 1, borderRadius: '12px', minWidth: 200, boxShadow: '0 8px 24px rgba(0,0,0,0.12)' } }}>
+          <MenuItem onClick={() => handleSelectAssignType('Practice Questions')} sx={{ fontSize: '0.85rem', fontWeight: 600, py: 1.5, '&:hover': { background: `${COLORS.blue}10`, color: COLORS.blue } }}>📝 Practice Questions</MenuItem>
+          <MenuItem onClick={() => handleSelectAssignType('Concept Video')} sx={{ fontSize: '0.85rem', fontWeight: 600, py: 1.5, '&:hover': { background: `${COLORS.green}10`, color: COLORS.green } }}>▶️ Concept Video</MenuItem>
+          <MenuItem onClick={() => handleSelectAssignType('Reading Material')} sx={{ fontSize: '0.85rem', fontWeight: 600, py: 1.5, '&:hover': { background: `${COLORS.amber}10`, color: COLORS.amberDark } }}>📖 Reading Material</MenuItem>
+          <MenuItem onClick={() => handleSelectAssignType('Live Reteach Session')} sx={{ fontSize: '0.85rem', fontWeight: 600, py: 1.5, '&:hover': { background: `${COLORS.purple}10`, color: COLORS.purpleDark } }}>🧑‍🏫 Reteach Concept (Live)</MenuItem>
+        </Menu>
+
+      <Dialog open={assignModalOpen} onClose={() => setAssignModalOpen(false)} maxWidth="sm" fullWidth PaperProps={{ sx: { borderRadius: '16px', background: '#fff' } }}>
+        <Box sx={{ p: 3, textAlign: 'center' }}>
+            <Box sx={{ width: 64, height: 64, background: `${COLORS.blue}15`, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
+                <Typography sx={{ fontSize: '1.8rem' }}>💌</Typography>
+            </Box>
+            <Typography sx={{ fontWeight: 800, fontSize: '1.25rem', color: COLORS.textPrimary, mb: 1 }}>Distribute Content</Typography>
+            <Typography sx={{ fontSize: '0.85rem', color: COLORS.textSecondary, mb: 3 }}>
+                You are about to assign <b>{assignType}</b> covering the topic of <b>"{selectedTopic}"</b> to the student's learning roadmap. They will receive an automated notification.
+            </Typography>
+            
+            <Box sx={{ background: COLORS.bgWarm, border: `1px solid ${COLORS.divider}`, borderRadius: '12px', p: 2, mb: 3, textAlign: 'left' }}>
+                <Typography sx={{ fontSize: '0.75rem', fontWeight: 700, color: COLORS.textSecondary, textTransform: 'uppercase', mb: 1 }}>Assignment Summary</Typography>
+                <Typography sx={{ fontSize: '0.9rem', color: COLORS.textPrimary, mb: 0.5 }}><b>Type:</b> {assignType}</Typography>
+                <Typography sx={{ fontSize: '0.9rem', color: COLORS.textPrimary }}><b>Topic:</b> {selectedTopic}</Typography>
+            </Box>
+
+            <Box sx={{ display: 'flex', gap: 2 }}>
+                <Button fullWidth onClick={() => setAssignModalOpen(false)} variant="outlined" sx={{ borderRadius: '10px', textTransform: 'none', fontWeight: 700, color: COLORS.textSecondary, borderColor: COLORS.border }}>Cancel</Button>
+                <Button fullWidth onClick={handleConfirmAssign} variant="contained" sx={{ borderRadius: '10px', textTransform: 'none', fontWeight: 700, background: COLORS.blue, '&:hover': { background: COLORS.blueDark } }}>Confirm & Assign</Button>
+            </Box>
+        </Box>
+      </Dialog>
       </CardContent>
     </Card>
   );
@@ -581,16 +636,21 @@ function TeachingStrategy() {
 
 // ─── Main screen ──────────────────────────────────────────────────────────────
 export default function E1_StudentOverview() {
+  const { search } = useLocation();
+  const searchParams = new URLSearchParams(search);
+  const studentId = searchParams.get('studentId') || '1';
+  const currentStudent = studentsDb[studentId] || studentsDb['1'];
+
   return (
     <Layout
       role="educator"
-      title="Student Deep Dive"
+      title={`Deep Dive Analysis: ${currentStudent.name}`}
       subtitle="Mode 2: Individual performance analysis"
     >
       <Grid container spacing={2.5} alignItems="stretch">
         {/* Student snapshot – full width dark hero */}
         <Grid item xs={12}>
-          <StudentSnapshot />
+          <StudentSnapshot student={currentStudent} />
         </Grid>
 
         {/* Unified Performance Explorer */}

@@ -129,9 +129,9 @@ function MetricCard({ overline, title, subtitle, icon, color, detailLabel }) {
 
 // ─── Subject Summary Row ──────────────────────────────────────────────────────
 function SubjectRow({ subject, statusText, statusType }) {
-  const isWeak = statusType === 'support' || statusType === 'attention';
+  const isWeak = statusType === 'support' || statusType === 'improving';
   const color = statusType === 'support' ? COLORS.amber : 
-                statusType === 'attention' ? COLORS.yellow : 
+                statusType === 'improving' ? COLORS.blue : 
                 COLORS.green;
   
   return (
@@ -178,15 +178,15 @@ export default function P1_ProgressOverview() {
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2.5, mb: 1 }}>
               <Box sx={{
                 width: 56, height: 56, borderRadius: '16px',
-                background: `${COLORS.yellow}20`,
+                background: `${COLORS.blue}15`,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 fontSize: '2rem', flexShrink: 0
               }}>
-                🟡
+                🔵
               </Box>
               <Box>
                 <Typography sx={{ color: COLORS.textPrimary, fontSize: '1.4rem', fontWeight: 800, mb: 0.5, lineHeight: 1.2 }}>
-                  On track, needs support in a few areas
+                  Improving
                 </Typography>
                 <Typography variant="body1" sx={{ color: COLORS.textSecondary, fontWeight: 500 }}>
                   Your child is making steady progress.
@@ -253,41 +253,51 @@ export default function P1_ProgressOverview() {
             <Typography variant="overline" sx={{ display: 'block', mb: 1.5, color: COLORS.textSecondary, fontWeight: 700, letterSpacing: 1.2 }}>
               Subject-Wise Summary
             </Typography>
-            <SubjectRow subject="Math" statusText="Needs Support (Improving)" statusType="support" />
-            <SubjectRow subject="Science" statusText="Needs Attention (Low recent practice)" statusType="attention" />
-            <SubjectRow subject="English" statusText="Strong (Consistent)" statusType="strong" />
-            <SubjectRow subject="Hindi" statusText="On Track" statusType="strong" />
-            <SubjectRow subject="Social Science" statusText="On Track" statusType="strong" />
+            <SubjectRow subject="Math" statusText="Improving" statusType="improving" />
+            <SubjectRow subject="Science" statusText="Needs Support" statusType="support" />
+            <SubjectRow subject="English" statusText="Consistent/On Track" statusType="strong" />
+            <SubjectRow subject="Hindi" statusText="Consistent/On Track" statusType="strong" />
+            <SubjectRow subject="Social Science" statusText="Consistent/On Track" statusType="strong" />
           </CardContent>
         </Card>
       </Grid>
 
-      {/* ── ROW 3 ── */}
-      <Grid item xs={12} md={7}>
+      {/* ── ROW 3: Combined Section ── */}
+      <Grid item xs={12}>
         <Card elevation={0} sx={{ border: `1px solid ${COLORS.divider}`, height: '100%' }}>
-          <CardContent sx={{ p: { xs: 3, sm: 4 }, display: 'flex', flexDirection: 'column', height: '100%' }}>
-            <Typography variant="overline" sx={{ display: 'block', mb: 2, color: COLORS.textSecondary, fontWeight: 700, letterSpacing: 1.2 }}>
-              Where Support Is Needed
+          <CardContent sx={{ p: { xs: 3, sm: 4 } }}>
+            <Typography variant="overline" sx={{ display: 'block', mb: 3, color: COLORS.textSecondary, fontWeight: 700, letterSpacing: 1.2 }}>
+              Where Support Is Needed &amp; How Parents Can Help
             </Typography>
-            <Typography variant="body2" sx={{ color: COLORS.textSecondary, mb: 2.5, lineHeight: 1.6 }}>
-              What your child needs help with and how you can support.
-            </Typography>
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0, flexGrow: 1, justifyContent: 'center' }}>
-              {needs.map(n => <NeedCard key={n.topic} {...n} />)}
-            </Box>
-          </CardContent>
-        </Card>
-      </Grid>
-      
-      <Grid item xs={12} md={5}>
-        <Card elevation={0} sx={{ border: `1px solid ${COLORS.divider}`, height: '100%' }}>
-          <CardContent sx={{ p: { xs: 3, sm: 4 }, display: 'flex', flexDirection: 'column', height: '100%' }}>
-            <Typography variant="overline" sx={{ display: 'block', mb: 2, color: COLORS.textSecondary, fontWeight: 700, letterSpacing: 1.2 }}>
-              How Parents Can Help
-            </Typography>
-            <Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1, justifyContent: 'center' }}>
-              {actions.map(a => <ActionChip key={a.title} {...a} />)}
-            </Box>
+            
+            <Grid container spacing={4}>
+              {/* Needs Column */}
+              <Grid item xs={12} md={6}>
+                <Typography sx={{ fontWeight: 800, fontSize: '1.05rem', color: COLORS.textPrimary, mb: 1 }}>
+                  Areas for Attention
+                </Typography>
+                <Typography variant="body2" sx={{ color: COLORS.textSecondary, mb: 2.5, lineHeight: 1.6 }}>
+                  Insights into what your child needs to overcome current struggles.
+                </Typography>
+                <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                  {needs.map(n => <NeedCard key={n.topic} {...n} />)}
+                </Box>
+              </Grid>
+
+              {/* Actions Column */}
+              <Grid item xs={12} md={6}>
+                <Typography sx={{ fontWeight: 800, fontSize: '1.05rem', color: COLORS.textPrimary, mb: 1 }}>
+                  Actionable Steps
+                </Typography>
+                <Typography variant="body2" sx={{ color: COLORS.textSecondary, mb: 2.5, lineHeight: 1.6 }}>
+                  Direct ways you can support their learning effectively.
+                </Typography>
+                <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                  {actions.map(a => <ActionChip key={a.title} {...a} />)}
+                </Box>
+              </Grid>
+            </Grid>
+
           </CardContent>
         </Card>
       </Grid>

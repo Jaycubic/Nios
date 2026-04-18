@@ -17,6 +17,7 @@ const PARENT_NAV = [
   { label: 'Overview', path: '/parent/overview', Icon: IconDashboard },
 ];
 const EDUCATOR_NAV = [
+  { label: 'My Students', path: '/educator/mystudents', Icon: IconLearning },
   { label: 'Class Overview', path: '/educator/class', Icon: IconClass },
   { label: 'Student View', path: '/educator/overview', Icon: IconDashboard },
 ];
@@ -137,21 +138,6 @@ function TopNav({ title, subtitle, role }) {
         border: `1px solid ${meta.color}40`,
         fontWeight: 700, fontSize: '0.7rem', fontFamily: "'Inter'",
       }} />
-
-      {/* Change Role chip */}
-      <Chip
-        label="⌂  Change Role"
-        size="small"
-        onClick={() => navigate('/')}
-        clickable
-        sx={{
-          background: 'transparent', color: COLORS.textSecondary,
-          border: `1px solid ${COLORS.border}`,
-          fontSize: '0.7rem', fontFamily: "'Inter'", cursor: 'pointer',
-          transition: 'all 0.2s ease',
-          '&:hover': { background: `${COLORS.green}12`, color: COLORS.greenDark, borderColor: `${COLORS.green}50` },
-        }}
-      />
 
       <Avatar sx={{ width: 34, height: 34, background: COLORS.textPrimary, color: COLORS.bgWarm, fontSize: '0.85rem', fontWeight: 700 }}>A</Avatar>
     </Box>

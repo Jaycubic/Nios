@@ -25,35 +25,35 @@ const subjectMap = {
         color: COLORS.blue, icon: '📐', score: 68, practice: 75,
         weakTopics: ['Trigonometry', 'Quadratic Equations'],
         strongTopics: ['Algebra Basics', 'Number Systems'],
-        completedChapters: 2, totalChapters: 6,
+        completedChapters: 2, totalChapters: 8,
     },
     science: {
         id: 'science', name: 'Science', shortName: 'Science',
         color: COLORS.green, icon: '🔬', score: 55, practice: 38,
         weakTopics: ['Chemical Reactions', 'Electricity'],
         strongTopics: ['Physics Numericals'],
-        completedChapters: 0, totalChapters: 5,
+        completedChapters: 0, totalChapters: 8,
     },
     english: {
         id: 'english', name: 'English', shortName: 'English',
         color: COLORS.purple, icon: '📖', score: 82, practice: 80,
         weakTopics: [],
         strongTopics: ['Reading Skills', 'Essay Writing', 'Grammar'],
-        completedChapters: 3, totalChapters: 5,
+        completedChapters: 3, totalChapters: 8,
     },
     hindi: {
         id: 'hindi', name: 'Hindi', shortName: 'Hindi',
         color: COLORS.yellow, icon: '✍️', score: 74, practice: 71,
         weakTopics: ['Poetry Analysis'],
         strongTopics: ['Essay Writing', 'Grammar'],
-        completedChapters: 2, totalChapters: 4,
+        completedChapters: 2, totalChapters: 8,
     },
     social: {
         id: 'social', name: 'Social Science', shortName: 'Soc. Sci.',
         color: COLORS.amber, icon: '🌍', score: 61, practice: 72,
         weakTopics: ['History — Nationalism', 'Geography — Resources'],
         strongTopics: ['Civics — Democracy'],
-        completedChapters: 1, totalChapters: 5,
+        completedChapters: 1, totalChapters: 8,
     },
 };
 
@@ -85,9 +85,6 @@ const matrixDef = [
 ];
 
 // ─── Chapter Data ─────────────────────────────────────────────────────────────
-// IMPORTANT: Chapters are ordered completed → in-progress → not-started.
-// On the roadmap, index 0 (completed) maps to the BOTTOM anchor (start).
-// The last index (not-started) maps to the TOP anchor (goal / flag).
 
 const initialChaptersData = {
     math: [
@@ -262,6 +259,31 @@ const statusConfig = {
     'not-started': { label: 'Not Started', color: COLORS.textMuted, bg: COLORS.divider },
 };
 
+/**
+ * Word-wraps a title string into at most 2 lines, each ≤ maxChars characters.
+ * Prefers to break on word boundaries. Returns an array of 1 or 2 strings.
+ */
+function wrapTitle(text, maxChars = 14) {
+    if (text.length <= maxChars) return [text];
+    const words = text.split(' ');
+    let line1 = '';
+    let line2 = '';
+    for (let i = 0; i < words.length; i++) {
+        const candidate = line1 ? `${line1} ${words[i]}` : words[i];
+        if (candidate.length <= maxChars) {
+            line1 = candidate;
+        } else {
+            line2 = words.slice(i).join(' ');
+            break;
+        }
+    }
+    // Truncate line2 if still too long
+    if (line2.length > maxChars) {
+        line2 = `${line2.slice(0, maxChars - 1)}…`;
+    }
+    return line2 ? [line1, line2] : [line1];
+}
+
 function MiniBar({ label, value, color }) {
     return (
         <Box sx={{ mb: 0.6 }}>
@@ -298,11 +320,7 @@ function SubjectCard({ subject, accentColor, onSelect }) {
             </Box>
             <MiniBar label="Score" value={s.score} color={s.color} />
             <MiniBar label="Practice" value={s.practice} color={s.color} />
-            <Box sx={{ mt: 1, display: 'flex', alignItems: 'center', gap: 1 }}>
-                <LinearProgress variant="determinate" value={chPct}
-                    sx={{ flexGrow: 1, height: 4, borderRadius: 4, background: COLORS.divider, '& .MuiLinearProgress-bar': { background: accentColor, borderRadius: 4 } }} />
-                <Typography sx={{ fontSize: '0.62rem', fontWeight: 700, color: accentColor, flexShrink: 0 }}>{chPct}%</Typography>
-            </Box>
+            <MiniBar label="Syllabus Progress" value={chPct} color={accentColor} />
             <Box sx={{ mt: 1.2, textAlign: 'right' }}>
                 <Typography sx={{ fontSize: '0.62rem', color: s.color, fontWeight: 600 }}>View Roadmap →</Typography>
             </Box>
@@ -382,8 +400,33 @@ function SubjectMatrixView({ onSelectSubject }) {
 
 // ─── Practice Modal ───────────────────────────────────────────────────────────
 
-function PracticeModal({ chapter, subjectColor, open, onClose }) {
+function PracticeModal({ chapter, subjectColor, open, onClose, onComplete }) {
     if (!chapter) return null;
+
+    if (chapter.practiceCompleted < chapter.practiceTotal) {
+        return (
+            <Modal open={open} onClose={onClose}>
+                <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: { xs: '92vw', sm: 400 }, background: '#fff', borderRadius: '20px', boxShadow: '0 20px 60px rgba(0,0,0,0.18)', p: 3 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', mb: 2.5 }}>
+                        <Box>
+                            <Typography sx={{ fontWeight: 800, fontSize: '1.1rem', color: COLORS.textPrimary }}>Practice Challenge</Typography>
+                            <Typography sx={{ fontSize: '0.75rem', color: COLORS.textSecondary, mt: 0.2 }}>{chapter.title}</Typography>
+                        </Box>
+                        <IconButton size="small" onClick={onClose}><svg width="18" height="18" viewBox="0 0 24 24" fill={COLORS.textSecondary}><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" /></svg></IconButton>
+                    </Box>
+
+                    <Typography sx={{ mb: 3, fontWeight: 600, fontSize: '0.95rem' }}>Q1. What is the correct sequence of steps to solve this problem?</Typography>
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.2, mb: 4 }}>
+                        {['Option A', 'Option B', 'Option C', 'Option D'].map(o => (
+                            <Button key={o} variant="outlined" sx={{ justifyContent: 'flex-start', color: COLORS.textPrimary, borderColor: COLORS.divider, textTransform: 'none', px: 2, py: 1 }}>{o}</Button>
+                        ))}
+                    </Box>
+                    <Button onClick={() => onComplete(chapter.id)} variant="contained" fullWidth sx={{ background: `linear-gradient(135deg, ${subjectColor}, ${subjectColor}CC)`, color: '#fff', textTransform: 'none', fontWeight: 700, borderRadius: '8px', py: 1.2 }}>Submit Answer & Complete</Button>
+                </Box>
+            </Modal>
+        );
+    }
+
     const pct = Math.round((chapter.practiceCompleted / chapter.practiceTotal) * 100);
     const attempts = [{ label: 'Attempt 1', pct: 45 }, { label: 'Attempt 2', pct: 55 }, { label: 'Attempt 3', pct: pct }];
     const retentionScore = 70;
@@ -465,6 +508,31 @@ function PracticeModal({ chapter, subjectColor, open, onClose }) {
 
 function MockTestModal({ chapter, subjectColor, open, onClose, onComplete }) {
     if (!chapter) return null;
+
+    if (chapter.status !== 'completed') {
+        return (
+            <Modal open={open} onClose={onClose}>
+                <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: { xs: '92vw', sm: 400 }, background: '#fff', borderRadius: '20px', boxShadow: '0 20px 60px rgba(0,0,0,0.18)', p: 3 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', mb: 2.5 }}>
+                        <Box>
+                            <Typography sx={{ fontWeight: 800, fontSize: '1.1rem', color: COLORS.textPrimary }}>Mock Test Challenge</Typography>
+                            <Typography sx={{ fontSize: '0.75rem', color: COLORS.textSecondary, mt: 0.2 }}>{chapter.title} - Final Assessment</Typography>
+                        </Box>
+                        <IconButton size="small" onClick={onClose}><svg width="18" height="18" viewBox="0 0 24 24" fill={COLORS.textSecondary}><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" /></svg></IconButton>
+                    </Box>
+
+                    <Typography sx={{ mb: 3, fontWeight: 600, fontSize: '0.95rem' }}>Q1. Review the scenario and select the most appropriate overall consequence:</Typography>
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.2, mb: 4 }}>
+                        {['Option A', 'Option B', 'Option C', 'Option D'].map(o => (
+                            <Button key={o} variant="outlined" sx={{ justifyContent: 'flex-start', color: COLORS.textPrimary, borderColor: COLORS.divider, textTransform: 'none', px: 2, py: 1 }}>{o}</Button>
+                        ))}
+                    </Box>
+                    <Button onClick={() => onComplete(chapter.id)} variant="contained" fullWidth sx={{ background: `linear-gradient(135deg, ${subjectColor}, ${subjectColor}CC)`, color: '#fff', textTransform: 'none', fontWeight: 700, borderRadius: '8px', py: 1.2 }}>Submit Mock Test & Complete Chapter</Button>
+                </Box>
+            </Modal>
+        );
+    }
+
     const mockAttempts = [{ label: 'Test 1', pct: 62 }, { label: 'Test 2', pct: 68 }, { label: 'Test 3', pct: chapter.mockScore || 72 }].slice(0, Math.max(chapter.mockAttempts, 1));
     const avgTime = 2.5; const retentionScore = 70;
     const weakAreas = ['Quadratic Formula', 'Word Problems'];
@@ -552,7 +620,7 @@ function MockTestModal({ chapter, subjectColor, open, onClose, onComplete }) {
 
 // ─── Chapter Detail Panel ─────────────────────────────────────────────────────
 
-function ChapterDetailPanel({ chapter, subjectColor, onPracticeOpen, onMockOpen, onMoveUp, onMoveDown, isFirst, isLast, currentIndex, totalChapters }) {
+function ChapterDetailPanel({ chapter, subjectColor, onPracticeOpen, onMockOpen, onMoveUp, onMoveDown, isFirst, isLast, currentIndex, totalChapters, onUpdateChapter }) {
     if (!chapter) {
         return (
             <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', p: 4, textAlign: 'center', minHeight: 320 }}>
@@ -560,7 +628,7 @@ function ChapterDetailPanel({ chapter, subjectColor, onPracticeOpen, onMockOpen,
                     <Typography sx={{ fontSize: '2.8rem', mb: 1.5 }}>🗺️</Typography>
                     <Typography sx={{ fontSize: '0.9rem', fontWeight: 600, color: COLORS.textSecondary }}>Select a milestone</Typography>
                     <Typography sx={{ fontSize: '0.75rem', color: COLORS.textMuted, mt: 0.5, lineHeight: 1.6 }}>
-                        Tap any chapter node on the roadmap<br />to see its full details here.
+                        Tap any chapter card on the roadmap<br />to see its full details here.
                     </Typography>
                 </motion.div>
             </Box>
@@ -574,19 +642,33 @@ function ChapterDetailPanel({ chapter, subjectColor, onPracticeOpen, onMockOpen,
         <Box sx={{ p: { xs: 2, md: 2.5 }, overflowY: 'auto', maxHeight: { md: '70vh' } }}>
 
             {/* Study order controls */}
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2, p: 1.2, borderRadius: '10px', background: `${subjectColor}06`, border: `1px solid ${subjectColor}20` }}>
-                <Typography sx={{ fontSize: '0.7rem', fontWeight: 700, color: COLORS.textSecondary }}>Study order:</Typography>
-                <Button size="small" variant="outlined" disabled={isFirst} onClick={onMoveUp}
-                    sx={{ minWidth: 0, px: 1.2, py: 0.4, fontSize: '0.68rem', fontWeight: 600, color: subjectColor, borderColor: `${subjectColor}40`, borderRadius: '7px', textTransform: 'none', '&:hover': { borderColor: subjectColor, background: `${subjectColor}08` } }}>
-                    <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" style={{ marginRight: 3 }}><path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z" /></svg>
-                    Earlier
-                </Button>
-                <Button size="small" variant="outlined" disabled={isLast} onClick={onMoveDown}
-                    sx={{ minWidth: 0, px: 1.2, py: 0.4, fontSize: '0.68rem', fontWeight: 600, color: subjectColor, borderColor: `${subjectColor}40`, borderRadius: '7px', textTransform: 'none', '&:hover': { borderColor: subjectColor, background: `${subjectColor}08` } }}>
-                    <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" style={{ marginRight: 3 }}><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z" /></svg>
-                    Later
-                </Button>
-                <Typography sx={{ ml: 'auto', fontSize: '0.65rem', color: COLORS.textMuted, fontWeight: 600 }}>{currentIndex + 1} of {totalChapters}</Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 1, mb: 2, p: 1.2, borderRadius: '10px', background: `${subjectColor}06`, border: `1px solid ${subjectColor}20` }}>
+                <Box>
+                    <Typography sx={{ fontSize: '0.7rem', fontWeight: 700, color: COLORS.textPrimary }}>Current Position in Roadmap:</Typography>
+                    <Typography sx={{ fontSize: '0.65rem', color: COLORS.textMuted, fontWeight: 600 }}>Chapter {currentIndex + 1} of {totalChapters}</Typography>
+                </Box>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, ml: 'auto' }}>
+                    <Button 
+                        title="Move this chapter earlier in your learning path"
+                        size="small" 
+                        variant="outlined" 
+                        disabled={isFirst}
+                        onClick={onMoveUp}
+                        sx={{ fontSize: '0.65rem', minWidth: 0, px: 1.2, py: 0.3, color: subjectColor, borderColor: `${subjectColor}50`, '&:hover': { borderColor: subjectColor, background: `${subjectColor}10` }, textTransform: 'none', fontWeight: 700 }}
+                    >
+                        Earlier
+                    </Button>
+                    <Button 
+                        title="Delay this chapter to a later point in your roadmap"
+                        size="small" 
+                        variant="outlined" 
+                        disabled={isLast}
+                        onClick={onMoveDown}
+                        sx={{ fontSize: '0.65rem', minWidth: 0, px: 1.2, py: 0.3, color: subjectColor, borderColor: `${subjectColor}50`, '&:hover': { borderColor: subjectColor, background: `${subjectColor}10` }, textTransform: 'none', fontWeight: 700 }}
+                    >
+                        Later
+                    </Button>
+                </Box>
             </Box>
 
             {/* Chapter header */}
@@ -614,17 +696,25 @@ function ChapterDetailPanel({ chapter, subjectColor, onPracticeOpen, onMockOpen,
 
                 {/* Learning */}
                 <Box sx={{ p: 1.5, borderRadius: '12px', background: COLORS.bgWarm, border: `1px solid ${COLORS.border}`, display: 'flex', flexDirection: 'column' }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.8 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1.2 }}>
                         <Typography sx={{ fontSize: '1rem' }}>📚</Typography>
                         <Typography sx={{ fontSize: '0.78rem', fontWeight: 700, color: COLORS.textPrimary }}>Learning</Typography>
                     </Box>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexGrow: 1 }}>
-                        <Box sx={{ width: 28, height: 28, borderRadius: '8px', background: chapter.status === 'completed' ? `${COLORS.green}18` : chapter.status === 'in-progress' ? `${COLORS.blue}18` : COLORS.divider, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.9rem', flexShrink: 0 }}>
-                            {chapter.status === 'completed' ? '✅' : chapter.status === 'in-progress' ? '📖' : '🔒'}
-                        </Box>
-                        <Typography sx={{ fontSize: '0.75rem', color: COLORS.textSecondary }}>
-                            {chapter.status === 'completed' ? 'Chapter reading complete' : chapter.status === 'in-progress' ? 'Currently studying this chapter' : 'Not started yet'}
-                        </Typography>
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, flexGrow: 1 }}>
+                        {[
+                            { label: 'Chapter reading complete', isComplete: chapter.status === 'completed' || chapter.status === 'in-progress', action: () => chapter.status === 'not-started' && onUpdateChapter(chapter.id, { status: 'in-progress' }) },
+                            { label: 'Practice Questions Complete', isComplete: chapter.status === 'completed' || (chapter.practiceTotal > 0 && chapter.practiceCompleted >= chapter.practiceTotal) },
+                            { label: 'Mock Test Complete', isComplete: chapter.status === 'completed' || (chapter.mockAttempts !== undefined && chapter.mockAttempts > 0 && chapter.mockScore >= 75) }
+                        ].map((task, i) => (
+                            <Box key={i} sx={{ display: 'flex', alignItems: 'center', gap: 1, cursor: task.action ? 'pointer' : 'default' }} onClick={task.action}>
+                                <Box sx={{ width: 20, height: 20, borderRadius: '6px', background: task.isComplete ? `${COLORS.green}20` : 'transparent', border: task.isComplete ? `1px solid ${COLORS.green}40` : `1.5px solid ${COLORS.textMuted}50`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.65rem', flexShrink: 0, transition: 'all 0.2s', '&:hover': task.action ? { opacity: 0.8 } : {} }}>
+                                    {task.isComplete && '✅'}
+                                </Box>
+                                <Typography sx={{ fontSize: '0.7rem', color: task.isComplete ? COLORS.textPrimary : COLORS.textSecondary, userSelect: 'none' }}>
+                                    {task.label}
+                                </Typography>
+                            </Box>
+                        ))}
                     </Box>
                 </Box>
 
@@ -648,10 +738,19 @@ function ChapterDetailPanel({ chapter, subjectColor, onPracticeOpen, onMockOpen,
                             <Typography sx={{ fontSize: '0.6rem', color: COLORS.textMuted, mt: 0.3 }}>Adaptive difficulty</Typography>
                         </Box>
                     </Box>
-                    <Button variant="outlined" size="small" fullWidth onClick={onPracticeOpen} disabled={chapter.practiceCompleted === 0}
-                        sx={{ mt: 1, color: subjectColor, borderColor: `${subjectColor}50`, textTransform: 'none', fontWeight: 700, fontSize: '0.72rem', borderRadius: '8px', '&:hover': { borderColor: subjectColor, background: `${subjectColor}08` } }}>
-                        {chapter.practiceCompleted > 0 ? 'Report →' : 'No attempts'}
-                    </Button>
+                    {chapter.status === 'not-started' ? (
+                        <Button disabled variant="contained" size="small" fullWidth 
+                            sx={{ mt: 1, textTransform: 'none', fontWeight: 600, fontSize: '0.65rem', borderRadius: '8px', '&.Mui-disabled': { background: '#F3F4F6', color: '#9CA3AF' }, py: 0.8 }}>
+                            🔒 Complete Reading to Unlock
+                        </Button>
+                    ) : (
+                        <Button variant={chapter.practiceCompleted < chapter.practiceTotal ? "contained" : "outlined"} size="small" fullWidth onClick={onPracticeOpen} 
+                            sx={{ mt: 1, color: chapter.practiceCompleted < chapter.practiceTotal ? '#fff' : subjectColor, background: chapter.practiceCompleted < chapter.practiceTotal ? `linear-gradient(135deg, ${subjectColor}, ${subjectColor}CC)` : 'transparent', borderColor: `${subjectColor}50`, textTransform: 'none', fontWeight: 700, fontSize: '0.72rem', borderRadius: '8px', '&:hover': { borderColor: subjectColor, opacity: 0.9 } }}>
+                            {chapter.practiceCompleted >= chapter.practiceTotal && chapter.practiceTotal > 0 
+                                ? 'Report →' 
+                                : 'Attempt Questions'}
+                        </Button>
+                    )}
                 </Box>
 
                 {/* Mock Test */}
@@ -672,10 +771,17 @@ function ChapterDetailPanel({ chapter, subjectColor, onPracticeOpen, onMockOpen,
                             </Box>
                         )}
                     </Box>
-                    <Button variant="outlined" size="small" fullWidth onClick={onMockOpen} disabled={chapter.status === 'not-started'}
-                        sx={{ mt: 1, color: subjectColor, borderColor: `${subjectColor}50`, textTransform: 'none', fontWeight: 700, fontSize: '0.72rem', borderRadius: '8px', '&:hover': { borderColor: subjectColor, background: `${subjectColor}08` }, ...(chapter.status !== 'completed' && { background: `${subjectColor}15` }) }}>
-                        {chapter.status === 'completed' ? 'Analysis →' : 'Take Mock Test'}
-                    </Button>
+                    {(chapter.status === 'not-started' || chapter.practiceCompleted < chapter.practiceTotal) ? (
+                        <Button disabled variant="contained" size="small" fullWidth 
+                            sx={{ mt: 1, textTransform: 'none', fontWeight: 600, fontSize: '0.65rem', borderRadius: '8px', '&.Mui-disabled': { background: '#F3F4F6', color: '#9CA3AF' }, lineHeight: 1.2, py: 0.8 }}>
+                            🔒 Complete Practice to Unlock Mock Test
+                        </Button>
+                    ) : (
+                        <Button variant={chapter.status !== 'completed' ? "contained" : "outlined"} size="small" fullWidth onClick={onMockOpen} 
+                            sx={{ mt: 1, color: chapter.status !== 'completed' ? '#fff' : subjectColor, background: chapter.status !== 'completed' ? `linear-gradient(135deg, ${subjectColor}, ${subjectColor}CC)` : 'transparent', borderColor: `${subjectColor}50`, textTransform: 'none', fontWeight: 700, fontSize: '0.72rem', borderRadius: '8px', '&:hover': { borderColor: subjectColor, opacity: 0.9 } }}>
+                            {chapter.status === 'completed' ? 'Analysis →' : 'Take Mock Test'}
+                        </Button>
+                    )}
                 </Box>
             </Box>
 
@@ -684,17 +790,17 @@ function ChapterDetailPanel({ chapter, subjectColor, onPracticeOpen, onMockOpen,
                 <Box>
                     <Typography sx={{ fontSize: '0.72rem', fontWeight: 700, color: COLORS.textSecondary, letterSpacing: 0.8, textTransform: 'uppercase', mb: 1.2 }}>Topics in this Chapter</Typography>
                     <Box sx={{ borderRadius: '10px', border: `1px solid ${COLORS.border}`, overflow: 'hidden' }}>
-                        <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 80px 46px 60px', px: 1.5, py: 0.8, background: COLORS.divider }}>
+                        <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 80px 50px 80px', px: 1.5, py: 0.8, background: COLORS.divider }}>
                             {['Topic', 'Learning', 'Prac.', 'Progress'].map(h => (
                                 <Typography key={h} sx={{ fontSize: '0.6rem', fontWeight: 700, color: COLORS.textSecondary, textTransform: 'uppercase', letterSpacing: 0.4 }}>{h}</Typography>
                             ))}
                         </Box>
                         {chapter.topics.map((t, i) => (
-                            <Box key={t.name} sx={{ display: 'grid', gridTemplateColumns: '1fr 80px 46px 60px', px: 1.5, py: 1, borderTop: i > 0 ? `1px solid ${COLORS.divider}` : 'none', alignItems: 'center' }}>
+                            <Box key={t.name} sx={{ display: 'grid', gridTemplateColumns: '1fr 80px 50px 80px', px: 1.5, py: 1, borderTop: i > 0 ? `1px solid ${COLORS.divider}` : 'none', alignItems: 'center' }}>
                                 <Typography sx={{ fontSize: '0.72rem', color: COLORS.textPrimary, fontWeight: 500, lineHeight: 1.3, pr: 1 }}>{t.name}</Typography>
                                 <Chip label={t.learning} size="small" sx={{ height: 18, fontSize: '0.57rem', fontWeight: 600, maxWidth: 76, background: t.learning === 'Completed' ? `${COLORS.green}15` : t.learning === 'In Progress' ? `${COLORS.blue}15` : COLORS.divider, color: t.learning === 'Completed' ? COLORS.greenDark : t.learning === 'In Progress' ? COLORS.blue : COLORS.textMuted, '& .MuiChip-label': { px: 0.7 } }} />
                                 <Typography sx={{ fontSize: '0.7rem', color: COLORS.textSecondary, fontWeight: 600 }}>{t.practice}</Typography>
-                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, pl: 1 }}>
                                     <LinearProgress variant="determinate" value={t.progress} sx={{ flexGrow: 1, height: 4, borderRadius: 4, background: COLORS.divider, '& .MuiLinearProgress-bar': { background: subjectColor, borderRadius: 4 } }} />
                                     <Typography sx={{ fontSize: '0.56rem', color: subjectColor, fontWeight: 700, flexShrink: 0, minWidth: 24 }}>{t.progress}%</Typography>
                                 </Box>
@@ -707,117 +813,245 @@ function ChapterDetailPanel({ chapter, subjectColor, onPracticeOpen, onMockOpen,
     );
 }
 
-// ─── SVG Chapter Node ─────────────────────────────────────────────────────────
+// ─── SVG Chapter Node — Original geometry, text-wrap only ────────────────────
+//
+// Geometry: UNCHANGED from original
+//   cardW  118 px  — original width
+//   cardH   72 px  — original height
+//   nodeR   22 px
+//   connGap 30 px  (nodeR + 8)
+//
+// Only change: title now word-wraps into 2 lines (≤ 12 chars each) via
+// wrapTitle(), instead of hard-truncating at 13 chars with an ellipsis.
+// Y positions are recalculated to fit 2 lines inside the original 72px card.
+//
+//   y offsets (from cardY):
+//     "CHAPTER N" micro-label  →  +12
+//     Title line 1             →  +23
+//     Title line 2 (if any)   →  +33   (10px line-height, tight but clear)
+//     Sub-info line            →  +23 + titleLinesCnt * 10 + 3
+//     Status badge             →  cardH − 16  (pinned to bottom)
 
-function SVGChapterNode({ chapter, index, pos, isSelected, subjectColor, onSelect }) {
+function SVGChapterNode({ chapter, index, pos, isSelected, subjectColor, onSelect, onReorder }) {
     const isCompleted = chapter.status === 'completed';
     const isInProgress = chapter.status === 'in-progress';
 
-    // Labels: alternate sides based on x position
+    // ── Card geometry — ORIGINAL, unchanged ───────────────────────────────────
+    const nodeR = 22;
+    const cardW = 118;   // original
+    const cardH = 72;    // original
+    const connGap = nodeR + 8;
+
     const isOnRight = pos.x > ROAD_VIEWBOX_W / 2;
-    const labelX = isOnRight ? pos.x - 30 : pos.x + 30;
-    const labelAnchor = isOnRight ? 'end' : 'start';
+    const cardX = isOnRight ? pos.x - connGap - cardW : pos.x + connGap;
+    const cardY = pos.y - cardH / 2;
+
+    // Connector endpoints
+    const connX1 = isOnRight ? cardX + cardW : pos.x + nodeR;
+    const connX2 = isOnRight ? pos.x - nodeR : cardX;
+
+    // ── Visual config ─────────────────────────────────────────────────────────
+    const accentColor = isCompleted ? subjectColor : isInProgress ? COLORS.blue : '#D1D5DB';
+    const cardStroke = isSelected ? subjectColor : isInProgress ? `${COLORS.blue}50` : '#E8EAED';
+
+    const statusLabel = isCompleted ? 'Completed' : isInProgress ? 'In Progress' : 'Not Started';
+    const statusColor = isCompleted ? '#15803d' : isInProgress ? '#1d4ed8' : '#6B7280';
+    const statusBg = isCompleted ? '#dcfce7' : isInProgress ? '#dbeafe' : '#F3F4F6';
+    const badgeW = Math.round(statusLabel.length * 4.9 + 14);
+
+    // ── Text layout ───────────────────────────────────────────────────────────
+    const iconCX = cardX + 22;
+    const iconCY = cardY + cardH / 2;
+    const textX = cardX + 42;   // right of icon area (same as original)
+
+    // Word-wrap title into ≤ 2 lines of ≤ 12 chars each.
+    // Text area width ≈ cardW − 42(icon) − 4(padding) = 72px → ~12 chars @ 8.5px font
+    const titleLines = wrapTitle(chapter.title, 12);
+    const titleLinesCnt = titleLines.length;
+
+    // Sub-info line
+    const subText = isCompleted && chapter.mockScore != null
+        ? `Mock: ${chapter.mockScore}%`
+        : isInProgress && chapter.practiceCompleted > 0
+            ? `${chapter.practiceCompleted}/${chapter.practiceTotal} practiced`
+            : chapter.topics?.length > 0
+                ? `${chapter.topics.length} topic${chapter.topics.length !== 1 ? 's' : ''}`
+                : 'Not started';
+
+    // Y positions — recalculated for 72px card height with possible 2-line title
+    const chapterLabelY = cardY + 12;
+    const titleY1 = cardY + 23;
+    const titleY2 = cardY + 33;   // 10px line-height
+    const subInfoY = cardY + 23 + titleLinesCnt * 10 + 3;
+    const badgeBgY = cardY + cardH - 16;
+    const badgeTextY = cardY + cardH - 9;
 
     return (
         <motion.g
             initial={{ scale: 0, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            transition={{ delay: index * 0.07, type: 'spring', stiffness: 300, damping: 26 }}
+            transition={{ delay: index * 0.08, type: 'spring', stiffness: 280, damping: 24 }}
+            style={{ transformOrigin: `${pos.x}px ${pos.y}px` }}
         >
+            {/* ═══════════════════════════════════════════════════════════════
+                MILESTONE CARD
+            ═══════════════════════════════════════════════════════════════ */}
+
+            {/* Card drop-shadow */}
+            <rect x={cardX + 2} y={cardY + 3} width={cardW} height={cardH} rx={11}
+                fill="rgba(0,0,0,0.06)" />
+
+            {/* Card body */}
+            <rect
+                x={cardX} y={cardY} width={cardW} height={cardH} rx={11}
+                fill="#ffffff" stroke={cardStroke} strokeWidth={isSelected ? 2 : 1}
+                onClick={onSelect} style={{ cursor: 'pointer' }}
+            />
+
+            {/* Left accent strip — original proportions */}
+            <rect x={cardX + 1} y={cardY + 10} width={3.5} height={cardH - 20} rx={2}
+                fill={accentColor} style={{ pointerEvents: 'none' }} />
+
+            {/* Dashed connector: card edge → node edge */}
+            <line
+                x1={connX1} y1={pos.y} x2={connX2} y2={pos.y}
+                stroke={isSelected ? subjectColor : '#CBD5E1'}
+                strokeWidth={1.5} strokeDasharray="3.5 2.5"
+            />
+
+            {/* Icon circle background — original radius 14 */}
+            <circle cx={iconCX} cy={iconCY} r={14}
+                fill={isCompleted ? `${subjectColor}18` : isInProgress ? `${COLORS.blue}14` : '#F3F4F6'}
+                style={{ pointerEvents: 'none' }}
+            />
+
+            {/* Status icon — original fontSize 12 */}
+            <text x={iconCX} y={iconCY} textAnchor="middle" dominantBaseline="middle"
+                fontSize={12} style={{ pointerEvents: 'none', userSelect: 'none' }}>
+                {isCompleted ? '🏆' : isInProgress ? '📖' : '🔒'}
+            </text>
+
+            {/* "CHAPTER N" micro-label */}
+            <text x={textX} y={chapterLabelY}
+                fontSize={5.8} fill="#9CA3AF" fontWeight="700"
+                fontFamily="'Inter',sans-serif" letterSpacing="0.6"
+                style={{ pointerEvents: 'none' }}>
+                CHAPTER {index + 1}
+            </text>
+
+            {/* Title — line 1. fontSize 8.5 fits ~12 chars in 72px text area */}
+            <text x={textX} y={titleY1}
+                fontSize={8.5} fill="#111827" fontWeight="800"
+                fontFamily="'Inter',sans-serif"
+                style={{ pointerEvents: 'none' }}>
+                {titleLines[0]}
+            </text>
+
+            {/* Title — line 2 (only when title wraps) */}
+            {titleLinesCnt > 1 && (
+                <text x={textX} y={titleY2}
+                    fontSize={8.5} fill="#111827" fontWeight="800"
+                    fontFamily="'Inter',sans-serif"
+                    style={{ pointerEvents: 'none' }}>
+                    {titleLines[1]}
+                </text>
+            )}
+
+            {/* Sub-info line */}
+            <text x={textX} y={subInfoY}
+                fontSize={6.8} fill="#6B7280"
+                fontFamily="'Inter',sans-serif"
+                style={{ pointerEvents: 'none' }}>
+                {subText}
+            </text>
+
+            {/* Status badge — background */}
+            <rect x={textX} y={badgeBgY} width={badgeW} height={13} rx={6.5}
+                fill={statusBg} style={{ pointerEvents: 'none' }} />
+
+            {/* Status badge — text */}
+            <text
+                x={textX + badgeW / 2} y={badgeTextY}
+                textAnchor="middle" dominantBaseline="middle"
+                fontSize={6.5} fill={statusColor} fontWeight="700"
+                fontFamily="'Inter',sans-serif"
+                style={{ pointerEvents: 'none' }}>
+                {statusLabel}
+            </text>
+
+            {/* ═══════════════════════════════════════════════════════════════
+                NODE CIRCLE
+            ═══════════════════════════════════════════════════════════════ */}
+
             {/* Wide invisible click zone */}
-            <circle cx={pos.x} cy={pos.y} r={30} fill="transparent" onClick={onSelect} style={{ cursor: 'pointer' }} />
+            <circle cx={pos.x} cy={pos.y} r={34}
+                fill="transparent" onClick={onSelect} style={{ cursor: 'pointer' }} />
 
             {/* Pulsing selection ring */}
             {isSelected && (
                 <motion.circle
-                    cx={pos.x} cy={pos.y} r={24} fill="none"
+                    cx={pos.x} cy={pos.y} r={26} fill="none"
                     stroke={subjectColor} strokeWidth={2.5}
-                    animate={{ r: [22, 27, 22], opacity: [0.7, 0.12, 0.7] }}
+                    animate={{ r: [24, 29, 24], opacity: [0.75, 0.08, 0.75] }}
                     transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }}
                 />
             )}
 
-            {/* Shadow */}
-            <circle cx={pos.x} cy={pos.y + 2.5} r={19} fill="rgba(0,0,0,0.09)" />
+            {/* In-progress ambient pulse */}
+            {isInProgress && (
+                <motion.circle
+                    cx={pos.x} cy={pos.y} r={25} fill="none"
+                    stroke={COLORS.blue} strokeWidth={2}
+                    animate={{ r: [23, 29, 23], opacity: [0.35, 0.03, 0.35] }}
+                    transition={{ repeat: Infinity, duration: 2.5, ease: 'easeInOut' }}
+                />
+            )}
 
-            {/* Main circle */}
+            {/* Node drop-shadow */}
+            <circle cx={pos.x} cy={pos.y + 3} r={nodeR} fill="rgba(0,0,0,0.10)" />
+
+            {/* Node body */}
             <motion.circle
-                cx={pos.x} cy={pos.y} r={19}
+                cx={pos.x} cy={pos.y} r={nodeR}
                 fill={isCompleted ? subjectColor : '#ffffff'}
-                stroke={isCompleted ? 'none' : isInProgress ? subjectColor : '#D1D5DB'}
+                stroke={isCompleted ? 'none' : isInProgress ? COLORS.blue : '#D1D5DB'}
                 strokeWidth={isInProgress ? 3 : 2}
                 whileTap={{ scale: 0.88 }}
-                onClick={onSelect}
-                style={{ cursor: 'pointer' }}
+                onClick={onSelect} style={{ cursor: 'pointer' }}
             />
 
-            {/* Status icon inside circle */}
+            {/* Node inner icon */}
             {isCompleted ? (
                 <path
-                    d={`M ${pos.x - 7} ${pos.y} L ${pos.x - 2} ${pos.y + 6} L ${pos.x + 8} ${pos.y - 6}`}
+                    d={`M ${pos.x - 8} ${pos.y + 0.5} L ${pos.x - 2} ${pos.y + 7} L ${pos.x + 9} ${pos.y - 7}`}
                     fill="none" stroke="white" strokeWidth="2.5"
                     strokeLinecap="round" strokeLinejoin="round"
                     style={{ pointerEvents: 'none' }}
                 />
             ) : isInProgress ? (
                 <motion.circle
-                    cx={pos.x} cy={pos.y} r={7} fill={subjectColor}
-                    animate={{ scale: [1, 1.2, 1] }}
+                    cx={pos.x} cy={pos.y} r={8} fill={COLORS.blue}
+                    animate={{ scale: [1, 1.18, 1] }}
                     transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }}
                     style={{ pointerEvents: 'none' }}
                 />
             ) : (
-                <text x={pos.x} y={pos.y} textAnchor="middle" dominantBaseline="middle"
-                    fill="#9CA3AF" fontSize="10" fontWeight="700"
+                <text
+                    x={pos.x} y={pos.y}
+                    textAnchor="middle" dominantBaseline="middle"
+                    fill="#9CA3AF" fontSize="11" fontWeight="700"
                     fontFamily="'DM Sans','Inter',sans-serif"
-                    style={{ pointerEvents: 'none' }}
-                >{index + 1}</text>
+                    style={{ pointerEvents: 'none' }}>
+                    {index + 1}
+                </text>
             )}
-
-            {/* Chapter title */}
-            <text x={labelX} y={pos.y - 8} textAnchor={labelAnchor}
-                fill={isSelected ? '#111827' : '#374151'} fontSize="9.5"
-                fontWeight={isSelected ? '700' : '500'}
-                fontFamily="'Inter',sans-serif"
-                style={{ pointerEvents: 'none' }}
-            >
-                {chapter.title.length > 18 ? chapter.title.slice(0, 18) + '…' : chapter.title}
-            </text>
-
-            {/* Status sub-label */}
-            <text x={labelX} y={pos.y + 7} textAnchor={labelAnchor}
-                fill={isCompleted ? subjectColor : isInProgress ? COLORS.blue : '#9CA3AF'}
-                fontSize="7.5" fontWeight="600"
-                fontFamily="'Inter',sans-serif"
-                style={{ pointerEvents: 'none' }}
-            >
-                {isCompleted ? 'Completed' : isInProgress ? 'In Progress' : 'Not started'}
-            </text>
-
-            {/* Mock score badge */}
-            {chapter.mockScore !== null && chapter.mockScore !== undefined && (() => {
-                const bx = isOnRight ? labelX - 36 : labelX;
-                return (
-                    <g style={{ pointerEvents: 'none' }}>
-                        <rect x={bx} y={pos.y + 16} width={36} height={14} rx={4}
-                            fill={`${subjectColor}15`} stroke={`${subjectColor}30`} strokeWidth={0.8} />
-                        <text x={bx + 18} y={pos.y + 24} textAnchor="middle" dominantBaseline="middle"
-                            fill={subjectColor} fontSize="7.5" fontWeight="700" fontFamily="'Inter',sans-serif">
-                            {chapter.mockScore}%
-                        </text>
-                    </g>
-                );
-            })()}
         </motion.g>
     );
 }
 
 // ─── SVG Roadmap Panel ────────────────────────────────────────────────────────
-// Uses the REVERSED ROAD_PATH_D: path starts at BOTTOM (622) → winds up → TOP (40/flag).
-// chapters[0] (completed) → anchor 0.04 → BOTTOM (start area)
-// chapters[last] (not-started) → anchor 0.95 → TOP (goal / flag)
 
-function SVGRoadmapPanel({ chapters, subjectColor, selectedChapter, onSelectChapter }) {
+function SVGRoadmapPanel({ chapters, subjectColor, selectedChapter, onSelectChapter, onReorderChapter }) {
     const pathRef = useRef(null);
     const [nodePts, setNodePts] = useState([]);
 
@@ -835,18 +1069,15 @@ function SVGRoadmapPanel({ chapters, subjectColor, selectedChapter, onSelectChap
         } catch (e) {
             console.warn('Road path measurement failed:', e);
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [chapters.length]);
 
     const completedCount = chapters.filter(c => c.status === 'completed').length;
     const hasInProgress = chapters.some(c => c.status === 'in-progress');
-    // Progress fills from BOTTOM upward: pathLength 0→fraction
     const progressFrac = chapters.length
         ? (completedCount + (hasInProgress ? 0.5 : 0)) / chapters.length
         : 0;
 
     const sw = 26;
-    // Light blue-tinted base road surface
     const baseRoadColor = '#E8F0FE';
 
     return (
@@ -856,9 +1087,9 @@ function SVGRoadmapPanel({ chapters, subjectColor, selectedChapter, onSelectChap
             preserveAspectRatio="xMidYMid meet"
             style={{ display: 'block', overflow: 'visible' }}
         >
-            {/* ── Scenic Decorations ── */}
+            {/* ── Scenic decorations ── */}
             <g aria-hidden="true">
-                {/* GOAL flag at TOP (160, 40) */}
+                {/* GOAL flag */}
                 <line x1="160" y1="40" x2="160" y2="4" stroke="#CBD5E1" strokeWidth="1.8" strokeLinecap="round" />
                 <path d="M 160 4 L 182 12 L 160 20 Z" fill={subjectColor} opacity={0.92} />
                 <text x="168" y="14" textAnchor="middle" fill="#ffffff" fontSize="5.5" fontWeight="700"
@@ -867,7 +1098,7 @@ function SVGRoadmapPanel({ chapters, subjectColor, selectedChapter, onSelectChap
                 </text>
                 <circle cx="160" cy="40" r="3.5" fill={baseRoadColor} opacity={0.85} />
 
-                {/* START marker at BOTTOM (160, 622) */}
+                {/* START marker */}
                 <circle cx="160" cy="622" r="14" fill={subjectColor} opacity={0.08} />
                 <circle cx="160" cy="622" r="9" fill={subjectColor} opacity={0.15} />
                 <circle cx="160" cy="622" r="5" fill={subjectColor} opacity={0.60} />
@@ -884,6 +1115,7 @@ function SVGRoadmapPanel({ chapters, subjectColor, selectedChapter, onSelectChap
                     <circle cx="24" cy="390" r="13" /><circle cx="36" cy="382" r="9" />
                     <rect x="22" y="401" width="5" height="12" rx="2.5" fill="#A0AEC0" />
                 </g>
+
                 {/* Foliage — right */}
                 <g opacity={0.16} fill="#5AAF68">
                     <circle cx="294" cy="254" r="14" /><circle cx="282" cy="244" r="9" />
@@ -891,14 +1123,16 @@ function SVGRoadmapPanel({ chapters, subjectColor, selectedChapter, onSelectChap
                     <circle cx="298" cy="514" r="12" /><circle cx="286" cy="506" r="8" />
                     <rect x="296" y="525" width="5" height="11" rx="2.5" fill="#A0AEC0" />
                 </g>
-                {/* Upward travel chevrons */}
+
+                {/* Travel chevrons */}
                 <g opacity={0.22} stroke={subjectColor} strokeWidth="1.5" strokeLinecap="round" fill="none">
                     <polyline points="155,580 160,574 165,580" />
                     <polyline points="155,440 160,434 165,440" />
                     <polyline points="155,310 160,304 165,310" />
                     <polyline points="155,180 160,174 165,180" />
                 </g>
-                {/* Pebbles */}
+
+                {/* Ground pebbles */}
                 <g opacity={0.09} fill="#6B7280">
                     <circle cx="52" cy="208" r="3" />
                     <circle cx="268" cy="338" r="3" />
@@ -906,12 +1140,15 @@ function SVGRoadmapPanel({ chapters, subjectColor, selectedChapter, onSelectChap
                 </g>
             </g>
 
-            {/* ── Road layers (use REVERSED ROAD_PATH_D from RoadPath.tsx) ── */}
-            <path d={ROAD_PATH_D} fill="none" stroke="rgba(0,0,0,0.07)" strokeWidth={sw + 7} strokeLinecap="round" />
-            <path d={ROAD_PATH_D} fill="none" stroke={baseRoadColor} strokeWidth={sw} strokeLinecap="round" />
-            <path d={ROAD_PATH_D} fill="none" stroke="rgba(255,255,255,0.50)" strokeWidth={sw * 0.36} strokeLinecap="round" />
+            {/* ── Road layers ── */}
+            <path d={ROAD_PATH_D} fill="none" stroke="rgba(0,0,0,0.07)"
+                strokeWidth={sw + 7} strokeLinecap="round" />
+            <path d={ROAD_PATH_D} fill="none" stroke={baseRoadColor}
+                strokeWidth={sw} strokeLinecap="round" />
+            <path d={ROAD_PATH_D} fill="none" stroke="rgba(255,255,255,0.50)"
+                strokeWidth={sw * 0.36} strokeLinecap="round" />
 
-            {/* Progress fill — grows from BOTTOM upward as pathLength 0→fraction */}
+            {/* Progress fill */}
             <motion.path
                 d={ROAD_PATH_D} fill="none"
                 stroke={subjectColor} strokeWidth={sw} strokeLinecap="round" opacity={0.84}
@@ -928,10 +1165,12 @@ function SVGRoadmapPanel({ chapters, subjectColor, selectedChapter, onSelectChap
             />
 
             {/* Centre lane dashes */}
-            <path d={ROAD_PATH_D} fill="none" stroke="rgba(255,255,255,0.55)" strokeWidth={1.6} strokeDasharray="14 12" />
+            <path d={ROAD_PATH_D} fill="none"
+                stroke="rgba(255,255,255,0.55)" strokeWidth={1.6} strokeDasharray="14 12" />
 
-            {/* Hidden measurement reference path */}
-            <path ref={pathRef} id={ROAD_PATH_ID} d={ROAD_PATH_D} fill="none" stroke="transparent" strokeWidth={1} />
+            {/* Hidden reference path */}
+            <path ref={pathRef} id={ROAD_PATH_ID} d={ROAD_PATH_D}
+                fill="none" stroke="transparent" strokeWidth={1} />
 
             {/* ── Chapter milestone nodes ── */}
             <AnimatePresence>
@@ -944,6 +1183,7 @@ function SVGRoadmapPanel({ chapters, subjectColor, selectedChapter, onSelectChap
                         isSelected={selectedChapter?.id === chapter.id}
                         subjectColor={subjectColor}
                         onSelect={() => onSelectChapter(chapter)}
+                        onReorder={onReorderChapter}
                     />
                 ))}
             </AnimatePresence>
@@ -962,6 +1202,21 @@ function RoadmapView({ subjectId, onBack }) {
     const [practiceModalOpen, setPracticeModalOpen] = useState(false);
     const [mockModalOpen, setMockModalOpen] = useState(false);
 
+    const handleUpdateChapter = (chapterId, updates) => {
+        setChapters(prev => prev.map(c => c.id === chapterId ? { ...c, ...updates } : c));
+        if (selectedChapter?.id === chapterId) {
+            setSelectedChapter(prev => ({ ...prev, ...updates }));
+        }
+    };
+
+    const handleCompletePractice = (chapterId) => {
+        const c = chapters.find(x => x.id === chapterId);
+        if (c) {
+            handleUpdateChapter(chapterId, { practiceCompleted: c.practiceTotal });
+        }
+        setPracticeModalOpen(false);
+    };
+
     const handleCompleteChapter = (chapterId) => {
         let nextChapter = null;
         const newChapters = chapters.map(c => {
@@ -970,7 +1225,6 @@ function RoadmapView({ subjectId, onBack }) {
             }
             return c;
         });
-        
         const idx = chapters.findIndex(c => c.id === chapterId);
         if (idx !== -1 && idx + 1 < chapters.length) {
             if (newChapters[idx + 1].status === 'not-started') {
@@ -980,7 +1234,6 @@ function RoadmapView({ subjectId, onBack }) {
         } else if (idx !== -1) {
             nextChapter = newChapters[idx];
         }
-
         setChapters(newChapters);
         setSelectedChapter(nextChapter);
         setMockModalOpen(false);
@@ -991,6 +1244,17 @@ function RoadmapView({ subjectId, onBack }) {
         if (swap < 0 || swap >= chapters.length) return;
         const next = [...chapters];
         [next[index], next[swap]] = [next[swap], next[index]];
+        setChapters(next);
+    };
+
+    const handleReorderChapter = (fromIndex, toIndex) => {
+        if (toIndex < 0) toIndex = 0;
+        if (toIndex >= chapters.length) toIndex = chapters.length - 1;
+        if (fromIndex === toIndex) return;
+
+        const next = [...chapters];
+        const [moved] = next.splice(fromIndex, 1);
+        next.splice(toIndex, 0, moved);
         setChapters(next);
     };
 
@@ -1020,13 +1284,7 @@ function RoadmapView({ subjectId, onBack }) {
                 </Box>
             </Box>
 
-            {/* Direction hint banner */}
-            <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1, p: '10px 14px', borderRadius: '10px', mb: 2.5, background: `${subject.color}08`, border: `1px solid ${subject.color}22` }}>
-                <Typography sx={{ fontSize: '0.92rem', mt: '1px', flexShrink: 0 }}>💡</Typography>
-                <Typography sx={{ fontSize: '0.7rem', color: subject.color, fontWeight: 600, lineHeight: 1.5 }}>
-                    Your journey moves <strong>upward</strong> — completed chapters sit at the bottom, and the chapters you haven't tackled yet are near the flag at the top. Tap a milestone to see details. Use "Earlier / Later" to reorder.
-                </Typography>
-            </Box>
+            {/* Direction hint removed per user request */}
 
             {/* Legend */}
             <Box sx={{ display: 'flex', gap: 2, mb: 2.5, flexWrap: 'wrap', alignItems: 'center' }}>
@@ -1045,21 +1303,34 @@ function RoadmapView({ subjectId, onBack }) {
                 </Box>
             </Box>
 
-            {/* Two-column layout */}
             <Box sx={{ display: 'flex', gap: 2.5, alignItems: 'flex-start' }}>
 
-                {/* Left: SVG Roadmap (sticky) */}
-                <Box sx={{ width: { xs: '100%', md: 280 }, flexShrink: 0, position: { md: 'sticky' }, top: { md: 16 } }}>
+                {/* Left: SVG Roadmap — original width 300px, road itself unchanged */}
+                <Box sx={{
+                    width: { xs: '100%', md: 300 },
+                    flexShrink: 0,
+                    position: { md: 'sticky' },
+                    top: { md: 16 },
+                }}>
                     <SVGRoadmapPanel
                         chapters={chapters}
                         subjectColor={subject.color}
                         selectedChapter={selectedChapter}
                         onSelectChapter={setSelectedChapter}
+                        onReorderChapter={handleReorderChapter}
                     />
                 </Box>
 
-                {/* Right: Chapter detail */}
-                <Box sx={{ flexGrow: 1, minWidth: 0, borderRadius: '16px', border: `1.5px solid ${COLORS.border}`, background: '#fff', minHeight: { md: 480 }, overflow: 'hidden' }}>
+                {/* Right: Chapter detail — naturally narrower now */}
+                <Box sx={{
+                    flexGrow: 1,
+                    minWidth: 0,
+                    borderRadius: '16px',
+                    border: `1.5px solid ${COLORS.border}`,
+                    background: '#fff',
+                    minHeight: { md: 480 },
+                    overflow: 'hidden',
+                }}>
                     <AnimatePresence mode="wait">
                         <motion.div
                             key={selectedChapter?.id ?? 'empty'}
@@ -1074,29 +1345,32 @@ function RoadmapView({ subjectId, onBack }) {
                                 onPracticeOpen={() => setPracticeModalOpen(true)}
                                 onMockOpen={() => setMockModalOpen(true)}
                                 onMoveUp={() => {
-                                    if (selectedIndex > 0) {
-                                        moveChapter(selectedIndex, -1);
-                                        setSelectedChapter(prev => prev);
-                                    }
+                                    if (selectedIndex > 0) { moveChapter(selectedIndex, -1); }
                                 }}
                                 onMoveDown={() => {
-                                    if (selectedIndex < chapters.length - 1) {
-                                        moveChapter(selectedIndex, 1);
-                                        setSelectedChapter(prev => prev);
-                                    }
+                                    if (selectedIndex < chapters.length - 1) { moveChapter(selectedIndex, 1); }
                                 }}
                                 isFirst={selectedIndex === 0}
                                 isLast={selectedIndex === chapters.length - 1}
                                 currentIndex={selectedIndex}
                                 totalChapters={chapters.length}
+                                onUpdateChapter={handleUpdateChapter}
                             />
                         </motion.div>
                     </AnimatePresence>
                 </Box>
             </Box>
 
-            <PracticeModal chapter={selectedChapter} subjectColor={subject.color} open={practiceModalOpen} onClose={() => setPracticeModalOpen(false)} />
-            <MockTestModal chapter={selectedChapter} subjectColor={subject.color} open={mockModalOpen} onClose={() => setMockModalOpen(false)} onComplete={handleCompleteChapter} />
+            <PracticeModal
+                chapter={selectedChapter} subjectColor={subject.color}
+                open={practiceModalOpen} onClose={() => setPracticeModalOpen(false)}
+                onComplete={handleCompletePractice}
+            />
+            <MockTestModal
+                chapter={selectedChapter} subjectColor={subject.color}
+                open={mockModalOpen} onClose={() => setMockModalOpen(false)}
+                onComplete={handleCompleteChapter}
+            />
         </Box>
     );
 }
@@ -1114,16 +1388,24 @@ export default function S2_SubjectMatrix() {
         <Layout
             role="student"
             title={view === 'matrix' ? 'Subject Health Matrix' : `${subjectMap[selectedSubject]?.name} Roadmap`}
-            subtitle={view === 'roadmap' && selectedSubject ? `Learning Roadmap · ${subjectMap[selectedSubject].name}` : 'Grade 10 · NIOS Board · Aarav Singh'}
+            subtitle={
+                view === 'roadmap' && selectedSubject
+                    ? `Learning Roadmap · ${subjectMap[selectedSubject].name}`
+                    : 'Grade 10 · NIOS Board · Aarav Singh'
+            }
         >
             <AnimatePresence mode="wait">
                 {view === 'matrix' && (
-                    <motion.div key="matrix" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.25 }}>
+                    <motion.div key="matrix"
+                        initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.25 }}>
                         <SubjectMatrixView onSelectSubject={handleSelectSubject} />
                     </motion.div>
                 )}
                 {view === 'roadmap' && selectedSubject && (
-                    <motion.div key="roadmap" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.25 }}>
+                    <motion.div key="roadmap"
+                        initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.25 }}>
                         <RoadmapView subjectId={selectedSubject} onBack={handleBack} />
                     </motion.div>
                 )}

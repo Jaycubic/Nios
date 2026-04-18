@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import {
   Box, Typography, Card, CardContent, Grid, Chip, LinearProgress,
-  Divider, Button, Collapse,
+  Divider, Button, Collapse, Dialog, DialogTitle, DialogContent, IconButton, DialogActions
 } from '@mui/material';
 import Layout from '../../components/Layout';
 import { COLORS } from '../../theme';
@@ -173,24 +173,52 @@ function GoalRow({ text, done }) {
 // ─── Learning Path Row (Horizontal Expandable Flow) ───────────────────────────
 function LearningPathRow({ subject, needsAttention, strengthen, practice, color }) {
   const [activeStep, setActiveStep] = useState(0); 
+  const [formatModalOpen, setFormatModalOpen] = useState(false);
+  const [studyModalOpen, setStudyModalOpen] = useState(false);
+  const [practiceModalOpen, setPracticeModalOpen] = useState(false);
+  const [selectedFormat, setSelectedFormat] = useState(null);
 
   const handleNext = () => setActiveStep(prev => prev + 1);
   const isAllDone = activeStep === 3;
 
+  const handleActionClick = (index) => {
+    if (index === 0 || index === 1) {
+      setFormatModalOpen(true);
+    } else if (index === 2) {
+      setPracticeModalOpen(true);
+    }
+  }
+
+  const handleFormatSelect = (fmt) => {
+    setSelectedFormat(fmt);
+    setFormatModalOpen(false);
+    setStudyModalOpen(true);
+  }
+
+  const handleStudyComplete = () => {
+    setStudyModalOpen(false);
+    handleNext();
+  }
+
+  const handlePracticeComplete = () => {
+    setPracticeModalOpen(false);
+    handleNext();
+  }
+
   const steps = [
+    {
+      title: 'Strengthen Foundation',
+      subtitle: 'Recap core concepts first',
+      btnLabel: 'Select Study Mode',
+      color: COLORS.yellow,
+      items: strengthen,
+    },
     {
       title: 'Needs Attention',
       subtitle: 'Review weak concepts',
-      btnLabel: 'Mark Reviewed',
+      btnLabel: 'Select Study Mode',
       color: COLORS.amber,
       items: needsAttention,
-    },
-    {
-      title: 'Strengthen Foundation',
-      subtitle: 'Recap core concepts',
-      btnLabel: 'Continue',
-      color: COLORS.yellow,
-      items: strengthen,
     },
     {
       title: 'Apply & Practice',
@@ -293,7 +321,7 @@ function LearningPathRow({ subject, needsAttention, strengthen, practice, color 
                       <Button
                         variant={index === 2 ? "contained" : "outlined"}
                         size="small"
-                        onClick={handleNext}
+                        onClick={() => handleActionClick(index)}
                         sx={{
                           ... (index === 2 ? {
                             background: `linear-gradient(135deg, ${COLORS.green} 0%, ${COLORS.greenDark} 100%)`,
@@ -319,6 +347,51 @@ function LearningPathRow({ subject, needsAttention, strengthen, practice, color 
           );
         })}
       </Box>
+
+      {/* Modals for UX UX Flow */}
+      <Dialog open={formatModalOpen} onClose={() => setFormatModalOpen(false)} maxWidth="xs" fullWidth PaperProps={{ sx: { borderRadius: '16px' } }}>
+        <DialogTitle sx={{ fontWeight: 800, fontSize: '1.1rem', background: `${COLORS.blue}08`, borderBottom: `1px solid ${COLORS.divider}` }}>How would you like to study?</DialogTitle>
+        <DialogContent sx={{ p: 3 }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+            {[ { label: 'Use Text', icon: '📖', fmt: 'text' }, { label: 'Use Video', icon: '▶️', fmt: 'video' }, { label: 'Use Audio', icon: '🎧', fmt: 'audio' }].map(o => (
+              <Button key={o.label} variant="outlined" onClick={() => handleFormatSelect(o.fmt)} sx={{ justifyContent: 'flex-start', p: 1.5, borderRadius: '10px', borderColor: COLORS.border, color: COLORS.textPrimary, '&:hover': { background: `${color}0A`, borderColor: color } }}>
+                <Typography sx={{ fontSize: '1.2rem', mr: 1.5 }}>{o.icon}</Typography>
+                <Typography sx={{ fontWeight: 700, textTransform: 'none' }}>{o.label}</Typography>
+              </Button>
+            ))}
+          </Box>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={studyModalOpen} onClose={() => setStudyModalOpen(false)} maxWidth="sm" fullWidth PaperProps={{ sx: { borderRadius: '16px' } }}>
+        <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Typography sx={{ fontWeight: 800 }}>Learning Mode: {selectedFormat?.toUpperCase()}</Typography>
+          <IconButton size="small" onClick={() => setStudyModalOpen(false)}>✕</IconButton>
+        </DialogTitle>
+        <DialogContent dividers sx={{ minHeight: 200, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', background: COLORS.bgWarm }}>
+          {selectedFormat === 'video' && <Box sx={{ width: '100%', height: 180, background: '#000', borderRadius: '8px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}><Typography sx={{ color: '#fff', fontSize: '2rem' }}>▶️</Typography></Box>}
+          {selectedFormat === 'audio' && <Box sx={{ width: '100%', p: 3, background: `${COLORS.purple}10`, borderRadius: '8px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}><Typography sx={{ color: COLORS.purpleDark, fontSize: '2rem' }}>🔊 Audio Player</Typography></Box>}
+          {selectedFormat === 'text' && <Box><Typography sx={{ color: COLORS.textPrimary, mb: 1, fontWeight: 700 }}>Concept Notes</Typography><Typography sx={{ color: COLORS.textSecondary, lineHeight: 1.6 }}>Here is the detailed theory regarding the selected concepts. Reading this will help clarify doubts and solidify foundational knowledge required for the upcoming challenges.</Typography></Box>}
+        </DialogContent>
+        <DialogActions sx={{ p: 2 }}>
+          <Button onClick={handleStudyComplete} variant="contained" sx={{ background: `linear-gradient(135deg, ${color}, ${color}CC)`, color: '#fff', textTransform: 'none', fontWeight: 700, borderRadius: '8px' }}>Mark Reviewed & Continue</Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog open={practiceModalOpen} onClose={() => setPracticeModalOpen(false)} maxWidth="sm" fullWidth PaperProps={{ sx: { borderRadius: '16px' } }}>
+        <DialogTitle sx={{ fontWeight: 800 }}>Practice Challenge</DialogTitle>
+        <DialogContent dividers sx={{ minHeight: 180, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+          <Typography sx={{ mb: 3, fontWeight: 600, fontSize: '1rem' }}>Q1. What is the correct sequence of steps to solve this problem?</Typography>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+            {['Option A', 'Option B', 'Option C', 'Option D'].map(o => (
+              <Button key={o} variant="outlined" sx={{ justifyContent: 'flex-start', color: COLORS.textPrimary, borderColor: COLORS.divider, textTransform: 'none' }}>{o}</Button>
+            ))}
+          </Box>
+        </DialogContent>
+        <DialogActions sx={{ p: 2 }}>
+          <Button onClick={handlePracticeComplete} variant="contained" sx={{ background: `linear-gradient(135deg, ${COLORS.green}, ${COLORS.greenDark})`, color: '#fff', textTransform: 'none', fontWeight: 700, borderRadius: '8px' }}>Submit Answer</Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }

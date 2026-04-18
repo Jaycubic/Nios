@@ -77,8 +77,8 @@ const statusStyle = {
   mastered: { fill: COLORS.green, ring: COLORS.green, label: 'Mastered', text: '#fff' },
   proficient: { fill: COLORS.blue, ring: COLORS.blue, label: 'Proficient', text: '#fff' },
   developing: { fill: COLORS.yellow, ring: COLORS.yellow, label: 'Developing', text: '#fff' },
-  gap: { fill: COLORS.amber, ring: COLORS.amber, label: 'Gap', text: '#fff' },
-  blocked: { fill: '#B91C1C', ring: '#B91C1C', label: 'Blocked', text: '#fff' },
+  gap: { fill: COLORS.amber, ring: COLORS.amber, label: 'Not Started', tooltip: 'Prerequisite concept has not been started or needs review.', text: '#fff' },
+  blocked: { fill: '#B91C1C', ring: '#B91C1C', label: 'Not Started', tooltip: 'Blocked: Cannot proceed until prerequisite concepts are started.', text: '#fff' },
 };
 
 // ─── Prerequisite Gap Map SVG ─────────────────────────────────────────────────
@@ -101,10 +101,10 @@ function PrereqGapMap() {
   return (
     <Box sx={{ position: 'relative' }}>
       <Typography variant="overline" sx={{ display: 'block', mb: 1 }}>
-        🔗 Prerequisite Gap Map
+        🔗 Prerequisite Knowledge Map
       </Typography>
       <Typography variant="caption" sx={{ color: COLORS.textSecondary, display: 'block', mb: 2 }}>
-        Hover a concept node to see details. Blocked nodes cannot be unlocked until prerequisite gaps are resolved.
+        Hover a concept node to see details. Concepts marked as "Not Started" block dependent topics.
       </Typography>
 
       <Box sx={{
@@ -229,7 +229,7 @@ function PrereqGapMap() {
             const ty = Math.max(20, Math.min(H - 70, hovered.y - 25));
             return (
               <g>
-                <rect x={tx} y={ty} width={140} height={54} rx={8} ry={8}
+                <rect x={tx} y={ty} width={140} height={s.tooltip ? 80 : 54} rx={8} ry={8}
                   fill={COLORS.bgCard} stroke={s.ring} strokeWidth="1.5"
                   style={{ filter: '0 4px 12px rgba(0,0,0,0.12)' }}
                 />
@@ -237,13 +237,18 @@ function PrereqGapMap() {
                   style={{ fill: s.ring, fontSize: '10px', fontWeight: 700, fontFamily: "'DM Sans'" }}>
                   {hovered.label.replace('\n', ' ')}
                 </text>
-                <rect x={tx + 8} y={ty + 26} width={50} height={14} rx={6}
+                <rect x={tx + 8} y={ty + 26} width={58} height={14} rx={6}
                   fill={`${s.fill}20`} stroke={`${s.fill}50`} strokeWidth="0.8"
                 />
-                <text x={tx + 33} y={ty + 35} textAnchor="middle"
+                <text x={tx + 37} y={ty + 35} textAnchor="middle"
                   style={{ fill: s.ring, fontSize: '8px', fontWeight: 700, fontFamily: "'Inter'" }}>
                   {s.label}
                 </text>
+                {s.tooltip && (
+                   <foreignObject x={tx + 10} y={ty + 44} width={120} height={32}>
+                     <div xmlns="http://www.w3.org/1999/xhtml" style={{ fontSize: '8px', color: COLORS.textSecondary, fontFamily: 'Inter', lineHeight: 1.2 }}>{s.tooltip}</div>
+                   </foreignObject>
+                )}
               </g>
             );
           })()}
@@ -256,10 +261,12 @@ function PrereqGapMap() {
           borderTop: `1px solid ${COLORS.divider}`,
         }}>
           {Object.entries(statusStyle).map(([status, s]) => (
-            <Box key={status} sx={{ display: 'flex', alignItems: 'center', gap: 0.7 }}>
-              <Box sx={{ width: 10, height: 10, borderRadius: '50%', background: s.fill, flexShrink: 0 }} />
-              <Typography variant="caption" sx={{ color: COLORS.textMuted, fontSize: '0.68rem' }}>{s.label}</Typography>
-            </Box>
+            <Tooltip key={status} title={s.tooltip || ''} arrow placement="top" disableHoverListener={!s.tooltip}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.7, cursor: s.tooltip ? 'help' : 'default' }}>
+                <Box sx={{ width: 10, height: 10, borderRadius: '50%', background: s.fill, flexShrink: 0 }} />
+                <Typography variant="caption" sx={{ color: COLORS.textMuted, fontSize: '0.68rem', textDecoration: s.tooltip ? `underline dotted ${COLORS.textMuted}` : 'none' }}>{s.label}</Typography>
+              </Box>
+            </Tooltip>
           ))}
         </Box>
       </Box>
@@ -351,13 +358,13 @@ function ErrorAnalysisSection() {
 // ─── §4B: Concept-level gaps ─────────────────────────────────────────────────
 function ConceptGapsSection() {
   const sevStyle = {
-    high: { color: COLORS.amber, bg: `${COLORS.amber}12`, label: '🔴 High' },
-    medium: { color: COLORS.yellow, bg: `${COLORS.yellow}12`, label: '🟡 Medium' },
-    low: { color: COLORS.blue, bg: `${COLORS.blue}10`, label: '🔵 Low' },
+    high: { color: COLORS.amber, bg: `${COLORS.amber}12`, label: '🔴 High', tooltip: 'High priority topic not started or showing critical weakness.' },
+    medium: { color: COLORS.yellow, bg: `${COLORS.yellow}12`, label: '🟡 Medium', tooltip: 'Needs review.' },
+    low: { color: COLORS.blue, bg: `${COLORS.blue}10`, label: '🔵 Low', tooltip: 'On track but could use optimization.' },
   };
   return (
     <Box>
-      <Typography variant="overline" sx={{ display: 'block', mb: 2 }}>🔹 Concept-Level Gaps</Typography>
+      <Typography variant="overline" sx={{ display: 'block', mb: 2 }}>🔹 Concept-Level Progress Updates</Typography>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
         {conceptGaps.map(g => {
           const s = sevStyle[g.severity];
@@ -374,7 +381,9 @@ function ConceptGapsSection() {
               <Typography variant="caption" sx={{ color: COLORS.textMuted }}>
                 {g.subject} · {g.attempts} attempts
               </Typography>
-              <Chip label={s.label} size="small" sx={{ height: 18, fontSize: '0.62rem', fontWeight: 700, background: `${s.color}15`, color: s.color, '& .MuiChip-label': { px: 0.8 } }} />
+              <Tooltip title={s.tooltip} placement="top" arrow>
+                <Chip label={s.label} size="small" sx={{ cursor: 'help', height: 18, fontSize: '0.62rem', fontWeight: 700, background: `${s.color}15`, color: s.color, '& .MuiChip-label': { px: 0.8 } }} />
+              </Tooltip>
             </Box>
           );
         })}

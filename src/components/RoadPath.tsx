@@ -19,10 +19,8 @@ export const ROAD_VIEWBOX = `0 0 ${ROAD_VIEWBOX_W} ${ROAD_VIEWBOX_H}`;
  * REVERSED Cubic Bézier winding road path.
  * Direction: bottom-center (START) → winding up → top-center (GOAL / flag).
  *
- * Geometry is identical to the forward path — only the traversal direction is flipped.
- * This means:
- *   pathLength  0   → (160, 622)  bottom-center   START — completed chapters live here
- *   pathLength  1   → (160,  40)  top-center       GOAL  — not-started chapters live here (near flag)
+ * pathLength  0   → (160, 622)  bottom-center   START — completed chapters live here
+ * pathLength  1   → (160,  40)  top-center       GOAL  — not-started chapters live here (near flag)
  *
  * Safe node anchor zones along the path (fraction 0→1):
  *   0.04  →  (160, 612)   centre       start area
@@ -85,26 +83,20 @@ export interface RoadPathProps {
 function RoadDecorations({ roadColor }: { roadColor: string }) {
     return (
         <g aria-hidden="true">
-
             {/* ── GOAL flag at top (160, 40) ── */}
             <line x1="160" y1="40" x2="160" y2="4" stroke="#CBD5E1" strokeWidth="1.8" strokeLinecap="round" />
-            {/* Flag pennant */}
             <path d="M 160 4 L 182 12 L 160 20 Z" fill="#4F81ED" opacity={0.92} />
-            {/* "GOAL" text on pennant */}
             <text x="168" y="14" textAnchor="middle" fill="#ffffff" fontSize="5.5" fontWeight="700"
                 fontFamily="'Inter',sans-serif" letterSpacing="0.5" style={{ pointerEvents: 'none' }}>
                 GOAL
             </text>
-            {/* Pole base circle */}
             <circle cx="160" cy="40" r="3.5" fill={roadColor} opacity={0.8} />
 
             {/* ── START marker at bottom (160, 622) ── */}
-            {/* Glow ring */}
             <circle cx="160" cy="622" r="14" fill="#4F81ED" opacity={0.08} />
             <circle cx="160" cy="622" r="9" fill="#4F81ED" opacity={0.14} />
             <circle cx="160" cy="622" r="5" fill="#4F81ED" opacity={0.55} />
             <circle cx="160" cy="622" r="2.5" fill="#ffffff" opacity={0.9} />
-            {/* START label */}
             <text x="160" y="638" textAnchor="middle" fill="#4F81ED" fontSize="7" fontWeight="700"
                 fontFamily="'Inter',sans-serif" letterSpacing="1" opacity={0.7} style={{ pointerEvents: 'none' }}>
                 START
@@ -126,7 +118,7 @@ function RoadDecorations({ roadColor }: { roadColor: string }) {
                 <rect x="296" y="525" width="5" height="11" rx="2.5" fill="#A0AEC0" />
             </g>
 
-            {/* ── Upward chevrons — hint the direction of travel ── */}
+            {/* ── Upward chevrons ── */}
             <g opacity={0.22} stroke="#4F81ED" strokeWidth="1.5" strokeLinecap="round" fill="none">
                 <polyline points="155,580 160,574 165,580" />
                 <polyline points="155,440 160,434 165,440" />
@@ -148,11 +140,7 @@ function RoadDecorations({ roadColor }: { roadColor: string }) {
 
 /**
  * `RoadPath` — standalone winding road SVG for learning journey UIs.
- *
  * The road travels BOTTOM → TOP.
- * Completed chapters should be placed near the bottom anchors (low fractions).
- * Not-started chapters should be placed near the top anchors (high fractions, near flag).
- *
  * `progressPercent` fills the road upward from the bottom (0 % = empty, 100 % = full).
  */
 const RoadPath = forwardRef<SVGSVGElement, RoadPathProps>(
@@ -160,8 +148,8 @@ const RoadPath = forwardRef<SVGSVGElement, RoadPathProps>(
         width = '100%',
         height,
         strokeWidth = 26,
-        baseColor = '#E8F0FE',   // light blue-tinted road surface
-        progressColor = '#4F81ED',   // default to theme blue
+        baseColor = '#E8F0FE',
+        progressColor = '#4F81ED',
         progressPercent = 0,
         animateProgress = true,
         className,
@@ -187,7 +175,7 @@ const RoadPath = forwardRef<SVGSVGElement, RoadPathProps>(
                 <path d={ROAD_PATH_D} fill="none" stroke="rgba(0,0,0,0.07)"
                     strokeWidth={sw + 7} strokeLinecap="round" strokeLinejoin="round" />
 
-                {/* Base road surface (unfinished / upcoming) */}
+                {/* Base road surface */}
                 <path d={ROAD_PATH_D} fill="none" stroke={baseColor}
                     strokeWidth={sw} strokeLinecap="round" strokeLinejoin="round" />
 
@@ -195,7 +183,7 @@ const RoadPath = forwardRef<SVGSVGElement, RoadPathProps>(
                 <path d={ROAD_PATH_D} fill="none" stroke="rgba(255,255,255,0.50)"
                     strokeWidth={sw * 0.36} strokeLinecap="round" strokeLinejoin="round" />
 
-                {/* ── Progress fill: animates from bottom upward ── */}
+                {/* Progress fill */}
                 <motion.path
                     d={ROAD_PATH_D} fill="none"
                     stroke={progressColor} strokeWidth={sw} strokeLinecap="round" opacity={0.84}
@@ -213,12 +201,11 @@ const RoadPath = forwardRef<SVGSVGElement, RoadPathProps>(
                     transition={{ duration: 1.8, ease: [0.43, 0.13, 0.23, 0.96], delay: 0.3 }}
                 />
 
-                {/* Centre lane dashes (full road) */}
+                {/* Centre lane dashes */}
                 <path d={ROAD_PATH_D} fill="none"
                     stroke="rgba(255,255,255,0.55)" strokeWidth={1.6} strokeDasharray="14 12" />
 
-                {/* ── Invisible reference path for getPointAtLength() ──
-            Keep last so DOM paint order stays clean.              */}
+                {/* Invisible reference path for getPointAtLength() */}
                 <path id={ROAD_PATH_ID} d={ROAD_PATH_D} fill="none" stroke="transparent" strokeWidth={1} />
             </svg>
         );
@@ -236,7 +223,7 @@ export default RoadPath;
  * const total = el.getTotalLength();                    // ≈ 1320 viewBox-px
  * const pt    = el.getPointAtLength(t * total);         // {x, y}
  *
- * ─── Reversed-path anchor safe zones (fraction t → viewBox coordinate) ───────
+ * ─── Reversed-path anchor safe zones ─────────────────────────────────────────
  *   t = 0.04  →  (160, 612)  centre   completed / START area
  *   t = 0.21  →  (244, 532)  right    first right apex (going up)
  *   t = 0.39  →  ( 76, 406)  left     first left  apex
@@ -244,8 +231,9 @@ export default RoadPath;
  *   t = 0.78  →  ( 76, 154)  left     second left apex
  *   t = 0.95  →  (160,  48)  centre   GOAL area (near flag)
  *
- * ─── Progress semantics ──────────────────────────────────────────────────────
- *   progressPercent = (completedChapters / totalChapters) * 100
- *   The fill grows upward from the bottom, visually showing how far the
- *   student has climbed toward the goal flag at the top.
+ * ─── Card placement geometry ─────────────────────────────────────────────────
+ *   nodeR = 22, cardW = 118, connGap = 30
+ *   isOnRight (x > 160) → card LEFT:  cardX = pos.x - 148  (clear of road)
+ *   isLeft    (x ≤ 160) → card RIGHT: cardX = pos.x + 30   (clear of road)
+ *   ~17 px gap between card edge and road edge at every anchor.
  */

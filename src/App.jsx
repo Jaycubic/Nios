@@ -7,6 +7,7 @@ import theme from './theme';
 import P1_ProgressOverview  from './screens/parent/P1_ProgressOverview';
 
 // Educator screens
+import E0_MyStudents          from './screens/educator/E0_MyStudents';
 import E0_ClassOverview       from './screens/educator/E0_ClassOverview';
 import E1_StudentOverview     from './screens/educator/E1_StudentOverview';
 import E3_ErrorAnalysis       from './screens/educator/E3_ErrorAnalysis';
@@ -15,8 +16,7 @@ import E3_ErrorAnalysis       from './screens/educator/E3_ErrorAnalysis';
 import S1_Dashboard           from './screens/student/S1_Dashboard';
 import S2_SubjectMatrix       from './screens/student/S2_SubjectMatrix';
 
-// Role selection
-import RoleSelect             from './screens/RoleSelect';
+// Role selection removed
 
 export default function App() {
   return (
@@ -24,13 +24,14 @@ export default function App() {
       <CssBaseline />
       <BrowserRouter>
         <Routes>
-          {/* Role selection landing */}
-          <Route path="/" element={<RoleSelect />} />
+          {/* Redirect base to student dashboard */}
+          <Route path="/" element={<Navigate to="/student/dashboard" replace />} />
 
           {/* Parent */}
           <Route path="/parent/overview"    element={<P1_ProgressOverview />} />
 
           {/* Educator — Mode 1: Class Overview */}
+          <Route path="/educator/mystudents" element={<E0_MyStudents />} />
           <Route path="/educator/class"     element={<E0_ClassOverview />} />
 
           {/* Educator — Mode 2: Student Deep Dive */}
