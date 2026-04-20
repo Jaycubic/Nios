@@ -94,23 +94,18 @@ const practiceRecs = [
 const teachingStrategies = [
   { 
     icon: '🔢', 
-    title: 'Focus on Step-by-Step Problem Solving',
-    text: 'Encourage the student to break each problem down into explicit, labelled steps before rushing to compute the final answer. Provide scaffolding where they write down knowns, unknowns, and formulas. This addresses the tendency to make substitution errors.'
+    title: 'Focus on Step-by-Step Solving',
+    text: 'Encourage breaking problems into explicit, labeled steps before computing. Scaffold practice so they write knowns, unknowns, and formulas to reduce substitution errors.'
   },
   { 
     icon: '📉', 
-    title: 'Reduce Initial Problem Complexity',
-    text: 'When introducing new identities or reinforcing weak areas, start with simpler, isolated variants of the problem rather than full, multi-step equations. Gradually increase the difficulty only after achieving 80% accuracy on foundational concepts.'
+    title: 'Reduce Problem Complexity',
+    text: 'Start with simpler, isolated problem variants rather than full multi-step equations. Gradually increase difficulty only once foundational accuracy is consistent.'
   },
   { 
     icon: '🖼️', 
-    title: 'Leverage Visual Concept Explanations',
-    text: 'Actively use visual aids to explain abstract concepts—such as drawing detailed right-angled triangle diagrams when defining trigonometric ratios, and utilizing number lines or area models for algebraic polynomials. Visual anchoring helps memorize logic naturally.'
-  },
-  {
-    icon: '🔄',
-    title: 'Incorporate Spaced Repetition Practice',
-    text: 'To effectively improve retention, assign mixed-practice sets that reintroduce previously missed questions after 3-day and 7-day intervals. This strategic spacing will convert short-term memorization into long-term conceptual mastery.'
+    title: 'Use Visual Explanations',
+    text: 'Anchor abstract concepts visually. Draw right-angled triangle diagrams for trigonometry boundaries and use core number lines for algebra to build natural intuition.'
   }
 ];
 
