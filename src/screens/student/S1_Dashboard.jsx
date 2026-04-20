@@ -242,7 +242,7 @@ function LearningPathRow({ subject, needsAttention, strengthen, practice, color 
       <Box sx={{ 
         display: 'flex', gap: 1.5, alignItems: 'stretch',
         flexDirection: { xs: 'column', md: 'row' },
-        minHeight: { md: 200 }
+        minHeight: isAllDone ? 'auto' : { md: 200 }
       }}>
         {steps.map((step, index) => {
           const isLocked = activeStep < index;
@@ -259,16 +259,17 @@ function LearningPathRow({ subject, needsAttention, strengthen, practice, color 
               borderRadius: '12px',
               border: `1px solid ${isActive ? step.color : isCompleted || isAllDone ? `${step.color}30` : isLocked ? `${COLORS.border}50` : 'transparent'}`,
               background: isAllDone ? `${step.color}06` : isActive ? `${step.color}08` : isCompleted ? `${step.color}04` : `${COLORS.divider}20`,
-              p: 2,
+              p: isAllDone ? 1.5 : 2,
               display: 'flex',
               flexDirection: 'column',
+              justifyContent: isAllDone ? 'center' : 'flex-start',
               transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
               overflow: 'hidden',
               opacity: isLocked ? 0.6 : 1,
             }}>
               
               {/* Header Box (Icon + Title) */}
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1.5 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: isAllDone ? 0 : 1.5 }}>
                 <Box sx={{
                   width: 24, height: 24, flexShrink: 0, borderRadius: '50%',
                   background: isCompleted || isAllDone ? step.color : isActive ? step.color : COLORS.divider,

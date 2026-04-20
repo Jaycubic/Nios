@@ -1,6 +1,6 @@
 // src/screens/parent/P1_ProgressOverview.jsx
-import React, { useState } from 'react';
-import { Box, Typography, Card, CardContent, Grid, Chip, Button, Divider, Collapse } from '@mui/material';
+import React from 'react';
+import { Box, Typography, Card, CardContent, Grid, Chip, Button, Divider } from '@mui/material';
 import Layout from '../../components/Layout';
 import { COLORS } from '../../theme';
 
@@ -43,15 +43,11 @@ function NeedCard({ topic, note, icon, color }) {
 }
 
 function ActionChip({ icon, title, detail, color }) {
-  const [expanded, setExpanded] = useState(false);
-
   return (
     <Card
       elevation={0}
-      onClick={() => setExpanded(e => !e)}
       sx={{
-        cursor: 'pointer',
-        border: `1px solid ${expanded ? color + '50' : COLORS.border}`,
+        border: `1px solid ${COLORS.border}`,
         mb: 1.2,
         transition: 'all 0.2s ease',
         '&:hover': { borderColor: `${color}40`, boxShadow: `0 4px 16px ${color}15` },
@@ -68,15 +64,12 @@ function ActionChip({ icon, title, detail, color }) {
           <Typography sx={{ fontWeight: 600, fontSize: '0.84rem', color: COLORS.textPrimary, flexGrow: 1, lineHeight: 1.3 }}>
             {title}
           </Typography>
-          <Typography sx={{ color: COLORS.textMuted, fontSize: '0.8rem', transition: 'transform 0.2s', transform: expanded ? 'rotate(180deg)' : 'none' }}>▾</Typography>
         </Box>
-        <Collapse in={expanded}>
-          <Box sx={{ mt: 1, pl: '46px' }}>
-            <Typography variant="body2" sx={{ color: COLORS.textSecondary, lineHeight: 1.5, fontSize: '0.8rem' }}>
-              {detail}
-            </Typography>
-          </Box>
-        </Collapse>
+        <Box sx={{ mt: 1, pl: '46px' }}>
+          <Typography variant="body2" sx={{ color: COLORS.textSecondary, lineHeight: 1.5, fontSize: '0.8rem' }}>
+            {detail}
+          </Typography>
+        </Box>
       </CardContent>
     </Card>
   );
@@ -104,17 +97,17 @@ function MetricCard({ overline, title, subtitle, icon, color, detailLabel }) {
             <Typography sx={{ fontSize: '1.5rem', fontWeight: 800, color: color, lineHeight: 1, fontFamily: "'DM Sans'", mb: 0.5, letterSpacing: '-0.02em' }}>
               {title}
             </Typography>
-            <Chip 
-              label={subtitle} 
-              size="small" 
-              sx={{ 
+            <Chip
+              label={subtitle}
+              size="small"
+              sx={{
                 background: 'transparent',
                 border: `1px solid ${COLORS.divider}`,
-                color: COLORS.textSecondary, 
-                fontWeight: 700, 
+                color: COLORS.textSecondary,
+                fontWeight: 700,
                 fontSize: '0.7rem',
                 borderRadius: '6px'
-              }} 
+              }}
             />
           </Box>
         </Box>
@@ -130,10 +123,10 @@ function MetricCard({ overline, title, subtitle, icon, color, detailLabel }) {
 // ─── Subject Summary Row ──────────────────────────────────────────────────────
 function SubjectRow({ subject, statusText, statusType }) {
   const isWeak = statusType === 'support' || statusType === 'improving';
-  const color = statusType === 'support' ? COLORS.amber : 
-                statusType === 'improving' ? COLORS.blue : 
-                COLORS.green;
-  
+  const color = statusType === 'support' ? COLORS.amber :
+    statusType === 'improving' ? COLORS.blue :
+      COLORS.green;
+
   return (
     <Box sx={{
       display: 'flex', alignItems: 'center', justifyContent: 'space-between',
@@ -142,17 +135,17 @@ function SubjectRow({ subject, statusText, statusType }) {
       mb: 0.8
     }}>
       <Typography sx={{ fontWeight: 700, color: COLORS.textPrimary, fontSize: '0.85rem' }}>{subject}</Typography>
-      <Chip 
-        label={statusText} 
-        size="small" 
-        sx={{ 
+      <Chip
+        label={statusText}
+        size="small"
+        sx={{
           height: 20,
-          background: `${color}15`, 
-          color: isWeak ? color + 'Dark' : color, 
-          fontWeight: 700, 
+          background: `${color}15`,
+          color: isWeak ? color + 'Dark' : color,
+          fontWeight: 700,
           fontSize: '0.65rem',
-          border: `1px solid ${color}30` 
-        }} 
+          border: `1px solid ${color}30`
+        }}
       />
     </Box>
   );
@@ -165,144 +158,144 @@ export default function P1_ProgressOverview() {
       title="Aarav's Progress"
       subtitle="Grade 10 · NIOS Board · Last updated today"
     >
-    <Grid container spacing={3} alignItems="stretch">
+      <Grid container spacing={3} alignItems="stretch">
 
-      {/* ── ROW 1 ── */}
-      <Grid item xs={12} md={7}>
-        <Card elevation={0} sx={{ border: `1px solid ${COLORS.divider}`, height: '100%' }}>
-          <CardContent sx={{ p: { xs: 3, sm: 4 }, display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'center' }}>
-            <Typography variant="overline" sx={{ display: 'block', mb: 2, color: COLORS.textSecondary, fontWeight: 700, letterSpacing: 1.2 }}>
-              Overall Status
-            </Typography>
+        {/* ── ROW 1 ── */}
+        <Grid item xs={12} md={7}>
+          <Card elevation={0} sx={{ border: `1px solid ${COLORS.divider}`, height: '100%' }}>
+            <CardContent sx={{ p: { xs: 3, sm: 4 }, display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'center' }}>
+              <Typography variant="overline" sx={{ display: 'block', mb: 2, color: COLORS.textSecondary, fontWeight: 700, letterSpacing: 1.2 }}>
+                Overall Status
+              </Typography>
 
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2.5, mb: 1 }}>
-              <Box sx={{
-                width: 56, height: 56, borderRadius: '16px',
-                background: `${COLORS.blue}15`,
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: '2rem', flexShrink: 0
-              }}>
-                🔵
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2.5, mb: 1 }}>
+                <Box sx={{
+                  width: 56, height: 56, borderRadius: '16px',
+                  background: `${COLORS.blue}15`,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontSize: '2rem', flexShrink: 0
+                }}>
+                  🔵
+                </Box>
+                <Box>
+                  <Typography sx={{ color: COLORS.textPrimary, fontSize: '1.4rem', fontWeight: 800, mb: 0.5, lineHeight: 1.2 }}>
+                    Improving
+                  </Typography>
+                  <Typography variant="body1" sx={{ color: COLORS.textSecondary, fontWeight: 500 }}>
+                    Your child is making steady progress.
+                  </Typography>
+                </Box>
               </Box>
-              <Box>
-                <Typography sx={{ color: COLORS.textPrimary, fontSize: '1.4rem', fontWeight: 800, mb: 0.5, lineHeight: 1.2 }}>
-                  Improving
-                </Typography>
-                <Typography variant="body1" sx={{ color: COLORS.textSecondary, fontWeight: 500 }}>
-                  Your child is making steady progress.
-                </Typography>
-              </Box>
-            </Box>
-          </CardContent>
-        </Card>
-      </Grid>
+            </CardContent>
+          </Card>
+        </Grid>
 
-      <Grid item xs={12} md={5}>
-        <Card elevation={0} sx={{ background: `linear-gradient(135deg, ${COLORS.green}08, ${COLORS.blue}05)`, border: `1px solid ${COLORS.green}30`, height: '100%' }}>
-          <CardContent sx={{ p: { xs: 3, sm: 4 }, display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'center' }}>
-            <Typography variant="overline" sx={{ display: 'block', mb: 2, color: COLORS.greenDark, fontWeight: 800, letterSpacing: 1.2 }}>
-              What's Going Well
-            </Typography>
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
-              <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1.5 }}>
-                <Typography sx={{ fontSize: '1.2rem', mt: -0.2 }}>🌟</Typography>
-                <Typography sx={{ color: COLORS.textPrimary, fontWeight: 600, fontSize: '0.95rem' }}>
-                  Your child is consistent with studying.
-                </Typography>
+        <Grid item xs={12} md={5}>
+          <Card elevation={0} sx={{ background: `linear-gradient(135deg, ${COLORS.green}08, ${COLORS.blue}05)`, border: `1px solid ${COLORS.green}30`, height: '100%' }}>
+            <CardContent sx={{ p: { xs: 3, sm: 4 }, display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'center' }}>
+              <Typography variant="overline" sx={{ display: 'block', mb: 2, color: COLORS.greenDark, fontWeight: 800, letterSpacing: 1.2 }}>
+                What's Going Well
+              </Typography>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+                <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1.5 }}>
+                  <Typography sx={{ fontSize: '1.2rem', mt: -0.2 }}>🌟</Typography>
+                  <Typography sx={{ color: COLORS.textPrimary, fontWeight: 600, fontSize: '0.95rem' }}>
+                    Your child is consistent with studying.
+                  </Typography>
+                </Box>
+                <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1.5 }}>
+                  <Typography sx={{ fontSize: '1.2rem', mt: -0.2 }}>📈</Typography>
+                  <Typography sx={{ color: COLORS.textPrimary, fontWeight: 600, fontSize: '0.95rem' }}>
+                    Improvement seen in English.
+                  </Typography>
+                </Box>
               </Box>
-              <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1.5 }}>
-                <Typography sx={{ fontSize: '1.2rem', mt: -0.2 }}>📈</Typography>
-                <Typography sx={{ color: COLORS.textPrimary, fontWeight: 600, fontSize: '0.95rem' }}>
-                  Improvement seen in English.
-                </Typography>
-              </Box>
-            </Box>
-          </CardContent>
-        </Card>
-      </Grid>
+            </CardContent>
+          </Card>
+        </Grid>
 
-      {/* ── ROW 2 ── */}
-      <Grid item xs={12} md={7}>
-        <Grid container spacing={2} sx={{ height: '100%' }}>
-          <Grid item xs={12} sm={6}>
-            <MetricCard
-              overline="Study Consistency"
-              icon="🔥"
-              title="Good"
-              subtitle="Based on streaks & goals"
-              color={COLORS.yellow}
-              detailLabel={<>Studied <strong>4 days this week</strong>. Maintaining steady momentum.</>}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <MetricCard
-              overline="Practice Level"
-              icon="📝"
-              title="Active"
-              subtitle="Questions Practiced"
-              color={COLORS.blue}
-              detailLabel={<>Actively engaging with practice sets and modules.</>}
-            />
+        {/* ── ROW 2 ── */}
+        <Grid item xs={12} md={7}>
+          <Grid container spacing={2} sx={{ height: '100%' }}>
+            <Grid item xs={12} sm={6}>
+              <MetricCard
+                overline="Study Consistency"
+                icon="🔥"
+                title="Good"
+                subtitle="Based on streaks & goals"
+                color={COLORS.yellow}
+                detailLabel={<>Studied <strong>4 days this week</strong>. Maintaining steady momentum.</>}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <MetricCard
+                overline="Practice Level"
+                icon="📝"
+                title="Active"
+                subtitle="Questions Practiced"
+                color={COLORS.blue}
+                detailLabel={<>Actively engaging with practice sets and modules.</>}
+              />
+            </Grid>
           </Grid>
         </Grid>
-      </Grid>
 
-      <Grid item xs={12} md={5}>
-        <Card elevation={0} sx={{ border: `1px solid ${COLORS.divider}`, height: '100%' }}>
-          <CardContent sx={{ p: 2, display: 'flex', flexDirection: 'column', justifyContent: 'center', height: '100%', pb: '16px !important' }}>
-            <Typography variant="overline" sx={{ display: 'block', mb: 1.5, color: COLORS.textSecondary, fontWeight: 700, letterSpacing: 1.2 }}>
-              Subject-Wise Summary
-            </Typography>
-            <SubjectRow subject="Math" statusText="Improving" statusType="improving" />
-            <SubjectRow subject="Science" statusText="Needs Support" statusType="support" />
-            <SubjectRow subject="English" statusText="Consistent/On Track" statusType="strong" />
-            <SubjectRow subject="Hindi" statusText="Consistent/On Track" statusType="strong" />
-            <SubjectRow subject="Social Science" statusText="Consistent/On Track" statusType="strong" />
-          </CardContent>
-        </Card>
-      </Grid>
+        <Grid item xs={12} md={5}>
+          <Card elevation={0} sx={{ border: `1px solid ${COLORS.divider}`, height: '100%' }}>
+            <CardContent sx={{ p: 2, display: 'flex', flexDirection: 'column', justifyContent: 'center', height: '100%', pb: '16px !important' }}>
+              <Typography variant="overline" sx={{ display: 'block', mb: 1.5, color: COLORS.textSecondary, fontWeight: 700, letterSpacing: 1.2 }}>
+                Subject-Wise Summary
+              </Typography>
+              <SubjectRow subject="Math" statusText="Improving" statusType="improving" />
+              <SubjectRow subject="Science" statusText="Needs Support" statusType="support" />
+              <SubjectRow subject="English" statusText="Consistent" statusType="strong" />
+              <SubjectRow subject="Hindi" statusText="Consistent" statusType="strong" />
+              <SubjectRow subject="Social Science" statusText="Consistent" statusType="strong" />
+            </CardContent>
+          </Card>
+        </Grid>
 
-      {/* ── ROW 3: Combined Section ── */}
-      <Grid item xs={12}>
-        <Card elevation={0} sx={{ border: `1px solid ${COLORS.divider}`, height: '100%' }}>
-          <CardContent sx={{ p: { xs: 3, sm: 4 } }}>
-            <Typography variant="overline" sx={{ display: 'block', mb: 3, color: COLORS.textSecondary, fontWeight: 700, letterSpacing: 1.2 }}>
-              Where Support Is Needed &amp; How Parents Can Help
-            </Typography>
-            
-            <Grid container spacing={4}>
-              {/* Needs Column */}
-              <Grid item xs={12} md={6}>
-                <Typography sx={{ fontWeight: 800, fontSize: '1.05rem', color: COLORS.textPrimary, mb: 1 }}>
-                  Areas for Attention
-                </Typography>
-                <Typography variant="body2" sx={{ color: COLORS.textSecondary, mb: 2.5, lineHeight: 1.6 }}>
-                  Insights into what your child needs to overcome current struggles.
-                </Typography>
-                <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                  {needs.map(n => <NeedCard key={n.topic} {...n} />)}
-                </Box>
+        {/* ── ROW 3: Combined Section ── */}
+        <Grid item xs={12}>
+          <Card elevation={0} sx={{ border: `1px solid ${COLORS.divider}`, height: '100%' }}>
+            <CardContent sx={{ p: { xs: 3, sm: 4 } }}>
+              <Typography variant="overline" sx={{ display: 'block', mb: 3, color: COLORS.textSecondary, fontWeight: 700, letterSpacing: 1.2 }}>
+                Where Support Is Needed &amp; How Parents Can Help
+              </Typography>
+
+              <Grid container spacing={4}>
+                {/* Needs Column */}
+                <Grid item xs={12} md={6}>
+                  <Typography sx={{ fontWeight: 800, fontSize: '1.05rem', color: COLORS.textPrimary, mb: 1 }}>
+                    Areas for Attention
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: COLORS.textSecondary, mb: 2.5, lineHeight: 1.6 }}>
+                    Insights into what your child needs to overcome current struggles.
+                  </Typography>
+                  <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                    {needs.map(n => <NeedCard key={n.topic} {...n} />)}
+                  </Box>
+                </Grid>
+
+                {/* Actions Column */}
+                <Grid item xs={12} md={6}>
+                  <Typography sx={{ fontWeight: 800, fontSize: '1.05rem', color: COLORS.textPrimary, mb: 1 }}>
+                    Actionable Steps
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: COLORS.textSecondary, mb: 2.5, lineHeight: 1.6 }}>
+                    Direct ways you can support their learning effectively.
+                  </Typography>
+                  <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                    {actions.map(a => <ActionChip key={a.title} {...a} />)}
+                  </Box>
+                </Grid>
               </Grid>
 
-              {/* Actions Column */}
-              <Grid item xs={12} md={6}>
-                <Typography sx={{ fontWeight: 800, fontSize: '1.05rem', color: COLORS.textPrimary, mb: 1 }}>
-                  Actionable Steps
-                </Typography>
-                <Typography variant="body2" sx={{ color: COLORS.textSecondary, mb: 2.5, lineHeight: 1.6 }}>
-                  Direct ways you can support their learning effectively.
-                </Typography>
-                <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                  {actions.map(a => <ActionChip key={a.title} {...a} />)}
-                </Box>
-              </Grid>
-            </Grid>
+            </CardContent>
+          </Card>
+        </Grid>
 
-          </CardContent>
-        </Card>
       </Grid>
-
-    </Grid>
-  </Layout>
-);
+    </Layout>
+  );
 }

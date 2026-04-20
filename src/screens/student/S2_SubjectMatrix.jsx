@@ -639,7 +639,7 @@ function ChapterDetailPanel({ chapter, subjectColor, onPracticeOpen, onMockOpen,
     const pct = Math.round((chapter.practiceCompleted / chapter.practiceTotal) * 100);
 
     return (
-        <Box sx={{ p: { xs: 2, md: 2.5 }, overflowY: 'auto', maxHeight: { md: '70vh' } }}>
+        <Box sx={{ p: { xs: 2, md: 2.5 }, overflowY: 'auto' }}>
 
             {/* Study order controls */}
             <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 1, mb: 2, p: 1.2, borderRadius: '10px', background: `${subjectColor}06`, border: `1px solid ${subjectColor}20` }}>
@@ -790,13 +790,13 @@ function ChapterDetailPanel({ chapter, subjectColor, onPracticeOpen, onMockOpen,
                 <Box>
                     <Typography sx={{ fontSize: '0.72rem', fontWeight: 700, color: COLORS.textSecondary, letterSpacing: 0.8, textTransform: 'uppercase', mb: 1.2 }}>Topics in this Chapter</Typography>
                     <Box sx={{ borderRadius: '10px', border: `1px solid ${COLORS.border}`, overflow: 'hidden' }}>
-                        <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 80px 50px 80px', px: 1.5, py: 0.8, background: COLORS.divider }}>
-                            {['Topic', 'Learning', 'Prac.', 'Progress'].map(h => (
+                        <Box sx={{ display: 'grid', gridTemplateColumns: '1.5fr 100px 90px 100px', px: 1.5, py: 0.8, background: COLORS.divider }}>
+                            {['Topic', 'Learning', 'Practices', 'Progress'].map(h => (
                                 <Typography key={h} sx={{ fontSize: '0.6rem', fontWeight: 700, color: COLORS.textSecondary, textTransform: 'uppercase', letterSpacing: 0.4 }}>{h}</Typography>
                             ))}
                         </Box>
                         {chapter.topics.map((t, i) => (
-                            <Box key={t.name} sx={{ display: 'grid', gridTemplateColumns: '1fr 80px 50px 80px', px: 1.5, py: 1, borderTop: i > 0 ? `1px solid ${COLORS.divider}` : 'none', alignItems: 'center' }}>
+                            <Box key={t.name} sx={{ display: 'grid', gridTemplateColumns: '1.5fr 100px 90px 100px', px: 1.5, py: 1, borderTop: i > 0 ? `1px solid ${COLORS.divider}` : 'none', alignItems: 'center' }}>
                                 <Typography sx={{ fontSize: '0.72rem', color: COLORS.textPrimary, fontWeight: 500, lineHeight: 1.3, pr: 1 }}>{t.name}</Typography>
                                 <Chip label={t.learning} size="small" sx={{ height: 18, fontSize: '0.57rem', fontWeight: 600, maxWidth: 76, background: t.learning === 'Completed' ? `${COLORS.green}15` : t.learning === 'In Progress' ? `${COLORS.blue}15` : COLORS.divider, color: t.learning === 'Completed' ? COLORS.greenDark : t.learning === 'In Progress' ? COLORS.blue : COLORS.textMuted, '& .MuiChip-label': { px: 0.7 } }} />
                                 <Typography sx={{ fontSize: '0.7rem', color: COLORS.textSecondary, fontWeight: 600 }}>{t.practice}</Typography>
