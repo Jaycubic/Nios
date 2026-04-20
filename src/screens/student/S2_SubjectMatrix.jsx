@@ -791,18 +791,18 @@ function ChapterDetailPanel({ chapter, subjectColor, onPracticeOpen, onMockOpen,
                     <Typography sx={{ fontSize: '0.72rem', fontWeight: 700, color: COLORS.textSecondary, letterSpacing: 0.8, textTransform: 'uppercase', mb: 1.2 }}>Topics in this Chapter</Typography>
                     <Box sx={{ borderRadius: '10px', border: `1px solid ${COLORS.border}`, overflow: 'hidden' }}>
                         <Box sx={{ display: 'grid', gridTemplateColumns: '1.5fr 100px 90px 100px', px: 1.5, py: 0.8, background: COLORS.divider }}>
-                            {['Topic', 'Learning', 'Practices', 'Progress'].map(h => (
-                                <Typography key={h} sx={{ fontSize: '0.6rem', fontWeight: 700, color: COLORS.textSecondary, textTransform: 'uppercase', letterSpacing: 0.4 }}>{h}</Typography>
+                            {['Topic', 'Learning', 'Practices', 'Progress'].map((h, idx) => (
+                                <Typography key={h} sx={{ fontSize: '0.6rem', fontWeight: 700, color: COLORS.textSecondary, textTransform: 'uppercase', letterSpacing: 0.4, textAlign: idx > 0 ? 'center' : 'left' }}>{h}</Typography>
                             ))}
                         </Box>
                         {chapter.topics.map((t, i) => (
                             <Box key={t.name} sx={{ display: 'grid', gridTemplateColumns: '1.5fr 100px 90px 100px', px: 1.5, py: 1, borderTop: i > 0 ? `1px solid ${COLORS.divider}` : 'none', alignItems: 'center' }}>
                                 <Typography sx={{ fontSize: '0.72rem', color: COLORS.textPrimary, fontWeight: 500, lineHeight: 1.3, pr: 1 }}>{t.name}</Typography>
-                                <Chip label={t.learning} size="small" sx={{ height: 18, fontSize: '0.57rem', fontWeight: 600, maxWidth: 76, background: t.learning === 'Completed' ? `${COLORS.green}15` : t.learning === 'In Progress' ? `${COLORS.blue}15` : COLORS.divider, color: t.learning === 'Completed' ? COLORS.greenDark : t.learning === 'In Progress' ? COLORS.blue : COLORS.textMuted, '& .MuiChip-label': { px: 0.7 } }} />
-                                <Typography sx={{ fontSize: '0.7rem', color: COLORS.textSecondary, fontWeight: 600 }}>{t.practice}</Typography>
-                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, pl: 1 }}>
+                                <Chip label={t.learning} size="small" sx={{ justifySelf: 'center', height: 18, fontSize: '0.57rem', fontWeight: 600, maxWidth: 80, background: t.learning === 'Completed' ? `${COLORS.green}15` : t.learning === 'In Progress' ? `${COLORS.blue}15` : COLORS.divider, color: t.learning === 'Completed' ? COLORS.greenDark : t.learning === 'In Progress' ? COLORS.blue : COLORS.textMuted, '& .MuiChip-label': { px: 0.7 } }} />
+                                <Typography sx={{ fontSize: '0.7rem', color: COLORS.textSecondary, fontWeight: 600, textAlign: 'center' }}>{t.practice}</Typography>
+                                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 0.8, px: 0.5 }}>
                                     <LinearProgress variant="determinate" value={t.progress} sx={{ flexGrow: 1, height: 4, borderRadius: 4, background: COLORS.divider, '& .MuiLinearProgress-bar': { background: subjectColor, borderRadius: 4 } }} />
-                                    <Typography sx={{ fontSize: '0.56rem', color: subjectColor, fontWeight: 700, flexShrink: 0, minWidth: 24 }}>{t.progress}%</Typography>
+                                    <Typography sx={{ fontSize: '0.56rem', color: subjectColor, fontWeight: 700, flexShrink: 0, minWidth: 26, textAlign: 'right' }}>{t.progress}%</Typography>
                                 </Box>
                             </Box>
                         ))}

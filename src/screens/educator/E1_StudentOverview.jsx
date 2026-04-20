@@ -92,9 +92,26 @@ const practiceRecs = [
 ];
 
 const teachingStrategies = [
-  { icon: '🔢', text: 'Focus on step-by-step solving — break each problem into labelled steps before computing' },
-  { icon: '📉', text: 'Reduce problem complexity initially — start with simpler variants before full equations' },
-  { icon: '🖼️', text: 'Use visual explanations for concepts — triangle diagrams for trig, number lines for algebra' },
+  { 
+    icon: '🔢', 
+    title: 'Focus on Step-by-Step Problem Solving',
+    text: 'Encourage the student to break each problem down into explicit, labelled steps before rushing to compute the final answer. Provide scaffolding where they write down knowns, unknowns, and formulas. This addresses the tendency to make substitution errors.'
+  },
+  { 
+    icon: '📉', 
+    title: 'Reduce Initial Problem Complexity',
+    text: 'When introducing new identities or reinforcing weak areas, start with simpler, isolated variants of the problem rather than full, multi-step equations. Gradually increase the difficulty only after achieving 80% accuracy on foundational concepts.'
+  },
+  { 
+    icon: '🖼️', 
+    title: 'Leverage Visual Concept Explanations',
+    text: 'Actively use visual aids to explain abstract concepts—such as drawing detailed right-angled triangle diagrams when defining trigonometric ratios, and utilizing number lines or area models for algebraic polynomials. Visual anchoring helps memorize logic naturally.'
+  },
+  {
+    icon: '🔄',
+    title: 'Incorporate Spaced Repetition Practice',
+    text: 'To effectively improve retention, assign mixed-practice sets that reintroduce previously missed questions after 3-day and 7-day intervals. This strategic spacing will convert short-term memorization into long-term conceptual mastery.'
+  }
 ];
 
 const priorityStyle = {
@@ -452,13 +469,15 @@ function PerformanceDrilldown() {
 function ActionableInterventions() {
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedTopic, setSelectedTopic] = useState(null);
+  const [assignCategory, setAssignCategory] = useState(null);
   const [assignModalOpen, setAssignModalOpen] = useState(false);
   const [assignType, setAssignType] = useState(null);
   const [assignedTopics, setAssignedTopics] = useState(new Set());
 
-  const handleClick = (event, topic) => {
+  const handleClick = (event, topic, category) => {
     setAnchorEl(event.currentTarget);
     setSelectedTopic(topic);
+    setAssignCategory(category);
   };
   const handleCloseMenu = () => {
     setAnchorEl(null);
@@ -505,7 +524,7 @@ function ActionableInterventions() {
                     {assignedTopics.has(r.topic) ? (
                         <Chip label="Assigned ✓" size="small" sx={{ background: `${COLORS.green}15`, color: COLORS.greenDark, fontWeight: 700, fontSize: '0.65rem', height: 22 }} />
                     ) : (
-                        <Button size="small" onClick={(e) => handleClick(e, r.topic)} sx={{ minWidth: 0, p: 0.5, px: 1, borderRadius: '8px', color: COLORS.blue, border: `1px solid ${COLORS.blue}30`, textTransform: 'none', fontWeight: 600 }}>+ Assign</Button>
+                        <Button size="small" onClick={(e) => handleClick(e, r.topic, 'concept')} sx={{ minWidth: 0, p: 0.5, px: 1, borderRadius: '8px', color: COLORS.blue, border: `1px solid ${COLORS.blue}30`, textTransform: 'none', fontWeight: 600 }}>+ Assign</Button>
                     )}
                   </Box>
                   {r.isNotStarted ? (
@@ -547,7 +566,7 @@ function ActionableInterventions() {
                   {assignedTopics.has(r.label) ? (
                         <Chip label="Assigned ✓" size="small" sx={{ background: `${COLORS.green}15`, color: COLORS.greenDark, fontWeight: 700, fontSize: '0.65rem', height: 22 }} />
                   ) : (
-                        <Button size="small" onClick={(e) => handleClick(e, r.label)} sx={{ minWidth: 0, p: 0.5, px: 1, borderRadius: '8px', color: r.color, border: `1px solid ${r.color}30`, textTransform: 'none', fontWeight: 600 }}>+ Assign</Button>
+                        <Button size="small" onClick={(e) => handleClick(e, r.label, 'practice')} sx={{ minWidth: 0, p: 0.5, px: 1, borderRadius: '8px', color: r.color, border: `1px solid ${r.color}30`, textTransform: 'none', fontWeight: 600 }}>+ Assign</Button>
                   )}
                 </Box>
                 <Box sx={{ display: 'flex', gap: 1 }}>
@@ -560,10 +579,14 @@ function ActionableInterventions() {
         </Box>
 
         <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleCloseMenu} PaperProps={{ sx: { mt: 1, borderRadius: '12px', minWidth: 200, boxShadow: '0 8px 24px rgba(0,0,0,0.12)' } }}>
-          <MenuItem onClick={() => handleSelectAssignType('Practice Questions')} sx={{ fontSize: '0.85rem', fontWeight: 600, py: 1.5, '&:hover': { background: `${COLORS.blue}10`, color: COLORS.blue } }}>📝 Practice Questions</MenuItem>
-          <MenuItem onClick={() => handleSelectAssignType('Concept Video')} sx={{ fontSize: '0.85rem', fontWeight: 600, py: 1.5, '&:hover': { background: `${COLORS.green}10`, color: COLORS.green } }}>▶️ Concept Video</MenuItem>
-          <MenuItem onClick={() => handleSelectAssignType('Reading Material')} sx={{ fontSize: '0.85rem', fontWeight: 600, py: 1.5, '&:hover': { background: `${COLORS.amber}10`, color: COLORS.amberDark } }}>📖 Reading Material</MenuItem>
-          <MenuItem onClick={() => handleSelectAssignType('Live Reteach Session')} sx={{ fontSize: '0.85rem', fontWeight: 600, py: 1.5, '&:hover': { background: `${COLORS.purple}10`, color: COLORS.purpleDark } }}>🧑‍🏫 Reteach Concept (Live)</MenuItem>
+          {assignCategory === 'practice' && (
+            <MenuItem onClick={() => handleSelectAssignType('Practice Questions')} sx={{ fontSize: '0.85rem', fontWeight: 600, py: 1.5, '&:hover': { background: `${COLORS.blue}10`, color: COLORS.blue } }}>📝 Practice Questions</MenuItem>
+          )}
+          {assignCategory === 'concept' && [
+            <MenuItem key="video" onClick={() => handleSelectAssignType('Concept Video')} sx={{ fontSize: '0.85rem', fontWeight: 600, py: 1.5, '&:hover': { background: `${COLORS.green}10`, color: COLORS.green } }}>▶️ Concept Video</MenuItem>,
+            <MenuItem key="reading" onClick={() => handleSelectAssignType('Reading Material')} sx={{ fontSize: '0.85rem', fontWeight: 600, py: 1.5, '&:hover': { background: `${COLORS.amber}10`, color: COLORS.amberDark } }}>📖 Reading Material</MenuItem>,
+            <MenuItem key="reteach" onClick={() => handleSelectAssignType('Live Reteach Session')} sx={{ fontSize: '0.85rem', fontWeight: 600, py: 1.5, '&:hover': { background: `${COLORS.purple}10`, color: COLORS.purpleDark } }}>🧑‍🏫 Reteach Concept (Live)</MenuItem>
+          ]}
         </Menu>
 
       <Dialog open={assignModalOpen} onClose={() => setAssignModalOpen(false)} maxWidth="sm" fullWidth PaperProps={{ sx: { borderRadius: '16px', background: '#fff' } }}>
@@ -614,18 +637,23 @@ function TeachingStrategy() {
           {teachingStrategies.map((s, i) => (
             <Box key={i} sx={{
               display: 'flex', alignItems: 'flex-start', gap: 1.5,
-              p: '12px', borderRadius: '12px',
+              p: '15px', borderRadius: '12px',
               background: COLORS.bgWarm, border: `1px solid ${COLORS.border}`,
             }}>
               <Box sx={{
-                width: 32, height: 32, borderRadius: '8px',
+                width: 38, height: 38, borderRadius: '8px',
                 background: `${COLORS.purple}12`,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: '0.9rem', flexShrink: 0,
+                fontSize: '1.2rem', flexShrink: 0,
               }}>{s.icon}</Box>
-              <Typography sx={{ fontSize: '0.82rem', color: COLORS.textPrimary, lineHeight: 1.6, pt: 0.2 }}>
-                {s.text}
-              </Typography>
+              <Box>
+                <Typography sx={{ fontSize: '0.88rem', fontWeight: 700, color: COLORS.textPrimary, mb: 0.5 }}>
+                  {s.title}
+                </Typography>
+                <Typography sx={{ fontSize: '0.8rem', color: COLORS.textSecondary, lineHeight: 1.6 }}>
+                  {s.text}
+                </Typography>
+              </Box>
             </Box>
           ))}
         </Box>
