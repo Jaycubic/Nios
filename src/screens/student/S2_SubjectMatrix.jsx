@@ -284,46 +284,26 @@ function wrapTitle(text, maxChars = 14) {
     return line2 ? [line1, line2] : [line1];
 }
 
-function MiniBar({ label, value, color }) {
-    return (
-        <Box sx={{ mb: 0.6 }}>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.3 }}>
-                <Typography sx={{ fontSize: '0.68rem', color: COLORS.textSecondary, fontWeight: 500 }}>{label}</Typography>
-                <Typography sx={{ fontSize: '0.68rem', fontWeight: 700, color }}>{value}%</Typography>
-            </Box>
-            <LinearProgress variant="determinate" value={value}
-                sx={{ height: 5, borderRadius: 4, background: COLORS.divider, '& .MuiLinearProgress-bar': { background: color, borderRadius: 4 } }}
-            />
-        </Box>
-    );
-}
 
 // ─── Subject Card ─────────────────────────────────────────────────────────────
 
 function SubjectCard({ subject, accentColor, onSelect }) {
     const s = subjectMap[subject];
-    const chPct = Math.round((s.completedChapters / s.totalChapters) * 100);
     return (
         <Box onClick={() => onSelect(subject)} sx={{
             p: 1.5, borderRadius: '12px', cursor: 'pointer',
             background: '#fff', border: `1.5px solid ${COLORS.border}`,
             transition: 'all 0.2s',
+            display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 1.5,
             '&:hover': { border: `1.5px solid ${s.color}`, boxShadow: `0 4px 16px ${s.color}20`, transform: 'translateY(-2px)' },
         }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1.2 }}>
-                <Box sx={{ width: 28, height: 28, borderRadius: '8px', background: `${s.color}15`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.9rem', flexShrink: 0 }}>{s.icon}</Box>
-                <Box sx={{ flexGrow: 1 }}>
-                    <Typography sx={{ fontSize: '0.78rem', fontWeight: 700, color: COLORS.textPrimary, lineHeight: 1.2 }}>{s.name}</Typography>
-                    <Typography sx={{ fontSize: '0.62rem', color: COLORS.textMuted }}>{s.completedChapters}/{s.totalChapters} chapters done</Typography>
-                </Box>
-                <Box sx={{ width: 7, height: 7, borderRadius: '50%', background: accentColor, flexShrink: 0 }} />
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, minWidth: 0 }}>
+                <Box sx={{ width: 32, height: 32, borderRadius: '8px', background: `${s.color}15`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1rem', flexShrink: 0 }}>{s.icon}</Box>
+                <Typography sx={{ fontSize: '0.82rem', fontWeight: 700, color: COLORS.textPrimary, lineHeight: 1.2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{s.name}</Typography>
             </Box>
-            <MiniBar label="Score" value={s.score} color={s.color} />
-            <MiniBar label="Practice" value={s.practice} color={s.color} />
-            <MiniBar label="Syllabus Progress" value={chPct} color={accentColor} />
-            <Box sx={{ mt: 1.2, textAlign: 'right' }}>
-                <Typography sx={{ fontSize: '0.62rem', color: s.color, fontWeight: 600 }}>View Roadmap →</Typography>
-            </Box>
+            <Button size="small" variant="outlined" onClick={(e) => { e.stopPropagation(); onSelect(subject); }} sx={{ fontSize: '0.65rem', textTransform: 'none', fontWeight: 700, color: s.color, borderColor: `${s.color}50`, py: 0.4, px: 1, flexShrink: 0, '&:hover': { borderColor: s.color, background: `${s.color}08` } }}>
+                View Roadmap
+            </Button>
         </Box>
     );
 }
@@ -383,16 +363,6 @@ function SubjectMatrixView({ onSelectSubject }) {
                         {matrixDef.map(def => <MatrixQuadrant key={def.key} def={def} onSelect={onSelectSubject} />)}
                     </Box>
                 </Box>
-            </Box>
-
-            <Box sx={{ mt: 2.5, p: 2, borderRadius: '12px', background: COLORS.bgWarm, border: `1px solid ${COLORS.border}`, display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 2 }}>
-                <Typography sx={{ fontSize: '0.7rem', fontWeight: 700, color: COLORS.textSecondary, mr: 1 }}>LEGEND</Typography>
-                {[{ icon: '📊', label: 'Score = Assessment accuracy across all attempts' }, { icon: '📝', label: 'Practice = Volume of questions attempted' }].map(item => (
-                    <Box key={item.label} sx={{ display: 'flex', alignItems: 'center', gap: 0.6 }}>
-                        <Typography sx={{ fontSize: '0.75rem' }}>{item.icon}</Typography>
-                        <Typography sx={{ fontSize: '0.68rem', color: COLORS.textSecondary }}>{item.label}</Typography>
-                    </Box>
-                ))}
             </Box>
         </Box>
     );
