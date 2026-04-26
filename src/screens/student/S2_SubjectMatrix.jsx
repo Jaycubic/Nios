@@ -1159,9 +1159,9 @@ function RoadmapView({ subjectId, onBack }) {
 
                 <Box sx={{ display: 'flex', gap: 1.5, ml: 'auto' }}>
                     {[
-                        { label: 'Score', value: `${subject.score}%`, icon: '🎯' },
+                        { label: 'Subject Score', value: `${subject.score}%`, icon: '🎯' },
                         { label: 'Practice', value: `${subject.practice}%`, icon: '✏️' },
-                        { label: 'Syllabus', value: `${overallPct}%`, icon: '📚' },
+                        { label: 'Syllabus Completion', value: `${overallPct}%`, icon: '📚' },
                     ].map((stat, i) => (
                         <Box key={i} sx={{ px: 1.5, py: 0.8, borderRadius: '10px', background: '#fff', border: `1px solid ${COLORS.border}`, display: 'flex', alignItems: 'center', gap: 1.2 }}>
                             <Box sx={{ width: 26, height: 26, borderRadius: '6px', background: `${COLORS.primaryPurple}10`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.9rem' }}>{stat.icon}</Box>
