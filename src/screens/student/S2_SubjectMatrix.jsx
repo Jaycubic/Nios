@@ -596,14 +596,27 @@ const LEARNING_PHASES = [
 function ChapterDetailModal({ chapter, open, onClose, subjectColor, onPracticeOpen, onMockOpen }) {
     const [expandedPhase, setExpandedPhase] = useState('phase1');
     const [checkedTopics, setCheckedTopics] = useState({});
+    const prevPracticeDone = useRef(chapter?.practiceCompleted || 0);
 
     // Reset local state when chapter changes
     useEffect(() => {
         if (open && chapter) {
             setExpandedPhase('phase1');
             setCheckedTopics({});
+            prevPracticeDone.current = chapter.practiceCompleted || 0;
         }
     }, [chapter?.id, open]);
+
+    useEffect(() => {
+        if (!chapter) return;
+        if (chapter.practiceCompleted >= chapter.practiceTotal && prevPracticeDone.current < chapter.practiceTotal) {
+            const phase1TopicsDone = chapter.topics?.every(t => checkedTopics[`phase1-${t.name}`]);
+            if (phase1TopicsDone) {
+                setExpandedPhase('phase2');
+            }
+        }
+        prevPracticeDone.current = chapter.practiceCompleted;
+    }, [chapter?.practiceCompleted, chapter?.practiceTotal, chapter?.topics, checkedTopics]);
 
     if (!chapter) return null;
 
@@ -780,13 +793,13 @@ function ChapterDetailModal({ chapter, open, onClose, subjectColor, onPracticeOp
                                             <Box sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end', pt: 1 }}>
                                                 <Button
                                                     variant="contained"
-                                                    onClick={(e) => { e.stopPropagation(); onClose(); onPracticeOpen(); }}
+                                                    onClick={(e) => { e.stopPropagation(); onPracticeOpen(); }}
                                                     sx={{
                                                         background: COLORS.primaryPurple, color: '#fff', fontWeight: 700, borderRadius: '10px', textTransform: 'none', py: 0.8,
                                                         boxShadow: `0 4px 12px ${COLORS.primaryPurple}30`,
                                                         '&:hover': { background: COLORS.purpleHover }
                                                     }}>
-                                                    {chapter.practiceCompleted >= chapter.practiceTotal ? '✅ Practice Completed' : '✏️ 1st Time Practice'}
+                                                    {chapter.practiceCompleted >= chapter.practiceTotal ? 'Review Score' : '✏️ 1st Time Practice'}
                                                 </Button>
                                             </Box>
                                         )}
