@@ -35,9 +35,9 @@ const questions = [
 
 // ─── §4B: Concept gap data ────────────────────────────────────────────────────
 const conceptGaps = [
-  { label: 'Standard Angle Values (0°-90°)', subject: 'Math', attempts: 5, severity: 'high' },
-  { label: 'Fundamental Identities (sin²θ + cos²θ = 1)', subject: 'Math', attempts: 4, severity: 'high' },
-  { label: 'Reciprocal Ratios (sec, cosec, cot)', subject: 'Math', attempts: 2, severity: 'medium' },
+  { label: 'Standard Angle Values (0°-90°)', subject: '📐 Math', attempts: 5, severity: 'high' },
+  { label: 'Fundamental Identities (sin²θ + cos²θ = 1)', subject: '📐 Math', attempts: 4, severity: 'high' },
+  { label: 'Reciprocal Ratios (sec, cosec, cot)', subject: '📐 Math', attempts: 2, severity: 'medium' },
 ];
 
 // ─── §4C: Prerequisite gap map nodes/edges ────────────────────────────────────
@@ -313,7 +313,7 @@ function ErrorAnalysisSection() {
   const [expanded, setExpanded] = useState('Q1');
   return (
     <Box>
-      <Typography variant="overline" sx={{ display: 'block', mb: 2 }}>🔹 Step-wise Error Analysis</Typography>
+      <Typography variant="overline" sx={{ display: 'block', mb: 2 }}>🔍 Step-wise Error Analysis</Typography>
       {questions.map(q => {
         const isOpen = expanded === q.id;
         const errors = q.steps.filter(s => s.status === 'error').length;
@@ -364,7 +364,7 @@ function ConceptGapsSection() {
   };
   return (
     <Box>
-      <Typography variant="overline" sx={{ display: 'block', mb: 2 }}>🔹 Concept-Level Progress Updates</Typography>
+      <Typography variant="overline" sx={{ display: 'block', mb: 2 }}>📚 Concept-Level Progress Updates</Typography>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
         {conceptGaps.map(g => {
           const s = sevStyle[g.severity];

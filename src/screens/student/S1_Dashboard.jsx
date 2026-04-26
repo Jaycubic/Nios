@@ -9,11 +9,11 @@ import { COLORS } from '../../theme';
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 const syllabusSubjects = [
-  { name: 'Math',           pct: 68, color: COLORS.blue    },
-  { name: 'Science',        pct: 55, color: COLORS.green   },
-  { name: 'English',        pct: 82, color: COLORS.purple  },
-  { name: 'Hindi',          pct: 74, color: COLORS.yellow  },
-  { name: 'Social Science', pct: 61, color: COLORS.amber   },
+  { name: 'Math',           pct: 68, icon: '📐' },
+  { name: 'Science',        pct: 55, icon: '🔬' },
+  { name: 'English',        pct: 82, icon: '📖' },
+  { name: 'Hindi',          pct: 74, icon: '✍️' },
+  { name: 'Social Science', pct: 61, icon: '🌍' },
 ];
 const overallPct = Math.round(syllabusSubjects.reduce((s, x) => s + x.pct, 0) / syllabusSubjects.length);
 
@@ -28,41 +28,33 @@ const todayGoals = [
 const streakCount = 6;
 
 const improvementAreas = [
-  { subject: 'Math — Trigonometry',      tag: 'Needs Focus', color: COLORS.amber  },
-  { subject: 'Math — Quadratic Equations', tag: 'Needs Focus', color: COLORS.amber },
-  { subject: 'Science — Chemical Reactions', tag: 'Review', color: COLORS.yellow  },
-  { subject: 'English — Grammar',        tag: 'Needs Focus', color: COLORS.amber  },
+  { subject: '📐 Math — Trigonometry',      tag: 'Start with Foundation', color: COLORS.amber,
+    needsAttention: ['Standard Angle Values', 'Trigonometric Identities'],
+    strengthen:     ['Basic Trig Ratios (sin/cos/tan)', 'Reciprocal Functions'],
+    practice:       { count: 12, label: 'Adaptive Practice Questions' }
+  },
+  { subject: '📐 Math — Quadratic Equations', tag: 'Start with Foundation', color: COLORS.amber,
+    needsAttention: ['Roots of Equations', 'Completing the Square'],
+    strengthen:     ['Factoring Basics', 'Standard Form'],
+    practice:       { count: 10, label: 'Adaptive Practice Questions' }
+  },
+  { subject: '🔬 Science — Chemical Reactions', tag: 'Quick Revision', color: COLORS.yellow,
+    needsAttention: ['Balancing Equations', 'Types of Reactions'],
+    strengthen:     ['Reactants & Products', 'Atomic Mass Concepts'],
+    practice:       { count: 8, label: 'Practice Questions' }
+  },
+  { subject: '📖 English — Grammar',        tag: 'Start with Foundation', color: COLORS.amber,
+    needsAttention: ['Subject-Verb Agreement', 'Tense Usage'],
+    strengthen:     ['Parts of Speech', 'Sentence Structure'],
+    practice:       { count: 10, label: 'Practice Questions' }
+  },
 ];
 
 const workingWell = [
-  { subject: 'English — Reading Skills',    icon: '📖' },
-  { subject: 'Math — Algebra Basics',       icon: '✅' },
-  { subject: 'Science — Physics Numericals', icon: '🔬' },
-  { subject: 'Hindi — Essay Writing',       icon: '✍️' },
-];
-
-const learningPaths = [
-  {
-    subject: 'Math — Trigonometry',
-    needsAttention: ['Standard Angle Values', 'Trigonometric Identities'],
-    strengthen:     ['Basic Trig Ratios (sin/cos/tan)', 'Reciprocal Functions'],
-    practice:       { count: 12, label: 'Adaptive Practice Questions' },
-    color: COLORS.blue,
-  },
-  {
-    subject: 'Science — Chemical Reactions',
-    needsAttention: ['Balancing Equations', 'Types of Reactions'],
-    strengthen:     ['Reactants & Products', 'Atomic Mass Concepts'],
-    practice:       { count: 8, label: 'Practice Questions' },
-    color: COLORS.green,
-  },
-  {
-    subject: 'English — Grammar',
-    needsAttention: ['Subject-Verb Agreement', 'Tense Usage'],
-    strengthen:     ['Parts of Speech', 'Sentence Structure'],
-    practice:       { count: 10, label: 'Practice Questions' },
-    color: COLORS.purple,
-  },
+  { subject: '📖 English — Reading Skills' },
+  { subject: '📐 Math — Algebra Basics' },
+  { subject: '🔬 Science — Physics Numericals' },
+  { subject: '✍️ Hindi — Essay Writing' },
 ];
 
 // ─── Ring SVG (donut chart) ───────────────────────────────────────────────────
@@ -171,28 +163,31 @@ function GoalRow({ text, done }) {
 }
 
 // ─── Learning Path Row (Horizontal Expandable Flow) ───────────────────────────
-function LearningPathRow({ subject, needsAttention, strengthen, practice, color }) {
+function LearningPathRow({ subject, needsAttention, strengthen, practice, onComplete }) {
   const [activeStep, setActiveStep] = useState(0); 
-  const [formatModalOpen, setFormatModalOpen] = useState(false);
   const [studyModalOpen, setStudyModalOpen] = useState(false);
   const [practiceModalOpen, setPracticeModalOpen] = useState(false);
-  const [selectedFormat, setSelectedFormat] = useState(null);
 
-  const handleNext = () => setActiveStep(prev => prev + 1);
+  const handleNext = () => {
+    setActiveStep(prev => {
+      const nextStep = prev + 1;
+      if (nextStep === 3 && onComplete) {
+        // Delay before triggering completion to allow user to see the success state
+        setTimeout(() => {
+          onComplete();
+        }, 1200);
+      }
+      return nextStep;
+    });
+  };
   const isAllDone = activeStep === 3;
 
   const handleActionClick = (index) => {
     if (index === 0 || index === 1) {
-      setFormatModalOpen(true);
+      setStudyModalOpen(true);
     } else if (index === 2) {
       setPracticeModalOpen(true);
     }
-  }
-
-  const handleFormatSelect = (fmt) => {
-    setSelectedFormat(fmt);
-    setFormatModalOpen(false);
-    setStudyModalOpen(true);
   }
 
   const handleStudyComplete = () => {
@@ -209,34 +204,34 @@ function LearningPathRow({ subject, needsAttention, strengthen, practice, color 
     {
       title: 'Strengthen Foundation',
       subtitle: 'Recap core concepts first',
-      btnLabel: 'Select Study Mode',
-      color: COLORS.yellow,
+      btnLabel: 'Review & Prepare',
+      color: COLORS.primaryPurple,
       items: strengthen,
     },
     {
       title: 'Needs Attention',
       subtitle: 'Review weak concepts',
-      btnLabel: 'Select Study Mode',
-      color: COLORS.amber,
+      btnLabel: 'Review & Prepare',
+      color: COLORS.primaryPurple,
       items: needsAttention,
     },
     {
       title: 'Apply & Practice',
       subtitle: 'Ready to test skills',
       btnLabel: 'Start Practice →',
-      color: COLORS.green,
+      color: COLORS.primaryPurple,
       items: null,
     }
   ];
 
   return (
-    <Box sx={{ mb: 3.5 }}>
-      {/* Subject header */}
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1.5 }}>
-        <Box sx={{ width: 10, height: 10, borderRadius: '3px', background: color, flexShrink: 0 }} />
-        <Typography sx={{ fontWeight: 700, fontSize: '0.9rem', color: COLORS.textPrimary }}>{subject}</Typography>
-        {isAllDone && <Chip label="All Steps Completed" size="small" sx={{ ml: 'auto', background: `${COLORS.green}15`, color: COLORS.greenDark, fontWeight: 700, height: 22, fontSize: '0.7rem' }} />}
-      </Box>
+    <Box>
+      {/* Header with completion chip if done */}
+      {isAllDone && (
+        <Box sx={{ display: 'flex', alignItems: 'center', mb: 1.5 }}>
+          <Chip label="All Steps Completed" size="small" sx={{ ml: 'auto', background: `${COLORS.green}15`, color: COLORS.greenDark, fontWeight: 700, height: 22, fontSize: '0.7rem' }} />
+        </Box>
+      )}
 
       {/* Horizontal Expandable Steps */}
       <Box sx={{ 
@@ -256,26 +251,29 @@ function LearningPathRow({ subject, needsAttention, strengthen, practice, color 
           return (
             <Box key={step.title} sx={{
               flex: { xs: 'none', md: flexAmt },
-              borderRadius: '12px',
-              border: `1px solid ${isActive ? step.color : isCompleted || isAllDone ? `${step.color}30` : isLocked ? `${COLORS.border}50` : 'transparent'}`,
-              background: isAllDone ? `${step.color}06` : isActive ? `${step.color}08` : isCompleted ? `${step.color}04` : `${COLORS.divider}20`,
-              p: isAllDone ? 1.5 : 2,
+              borderRadius: '16px',
+              border: `1.5px solid ${isActive ? COLORS.primaryPurple : isCompleted || isAllDone ? COLORS.purpleBorder : isLocked ? `${COLORS.border}50` : 'transparent'}`,
+              background: isAllDone ? `${COLORS.purpleLight}40` : isActive ? COLORS.purpleLight : isCompleted ? `${COLORS.purpleLight}20` : `${COLORS.divider}20`,
+              boxShadow: isActive ? `0 6px 20px ${COLORS.primaryPurple}15` : 'none',
+              p: isAllDone ? 2 : 2.5,
               display: 'flex',
               flexDirection: 'column',
               justifyContent: isAllDone ? 'center' : 'flex-start',
               transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
               overflow: 'hidden',
-              opacity: isLocked ? 0.6 : 1,
+              opacity: isLocked ? 0.5 : 1,
             }}>
               
               {/* Header Box (Icon + Title) */}
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: isAllDone ? 0 : 1.5 }}>
                 <Box sx={{
-                  width: 24, height: 24, flexShrink: 0, borderRadius: '50%',
-                  background: isCompleted || isAllDone ? step.color : isActive ? step.color : COLORS.divider,
+                  width: 28, height: 28, flexShrink: 0, borderRadius: '50%',
+                  background: isCompleted || isAllDone || isActive ? step.color : '#fff',
+                  border: isCompleted || isAllDone || isActive ? 'none' : `1px solid ${COLORS.border}`,
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   color: isCompleted || isAllDone || isActive ? '#fff' : COLORS.textMuted,
-                  fontSize: '0.75rem', fontWeight: 700
+                  fontSize: '0.8rem', fontWeight: 800,
+                  boxShadow: isActive ? `0 2px 8px ${step.color}40` : 'none'
                 }}>
                   {isCompleted || isAllDone ? '✓' : isLocked ? '🔒' : index + 1}
                 </Box>
@@ -291,8 +289,8 @@ function LearningPathRow({ subject, needsAttention, strengthen, practice, color 
 
               {/* Main Content Area (Shown for Active, Locked, and Completed) */}
               {!isAllDone && (
-                <Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1, animation: 'fadeIn 0.5s ease', opacity: !isActive ? 0.6 : 1, transition: 'opacity 0.3s' }}>
-                  <Typography sx={{ fontSize: '0.78rem', color: COLORS.textSecondary, mb: 1.5 }}>
+                <Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1, animation: 'fadeIn 0.5s ease', opacity: !isActive ? 0.7 : 1, transition: 'opacity 0.3s' }}>
+                  <Typography sx={{ fontSize: '0.8rem', color: COLORS.textSecondary, mb: 2 }}>
                     {step.subtitle}
                   </Typography>
                   
@@ -325,12 +323,14 @@ function LearningPathRow({ subject, needsAttention, strengthen, practice, color 
                         onClick={() => handleActionClick(index)}
                         sx={{
                           ... (index === 2 ? {
-                            background: `linear-gradient(135deg, ${COLORS.green} 0%, ${COLORS.greenDark} 100%)`,
-                            color: '#fff', boxShadow: `0 3px 10px ${COLORS.green}35`,
+                            background: COLORS.primaryPurple,
+                            color: '#fff', boxShadow: `0 3px 10px ${COLORS.primaryPurple}35`,
+                            '&:hover': { background: COLORS.purpleHover, boxShadow: `0 5px 16px ${COLORS.primaryPurple}60` }
                           } : {
-                            color: step.color, borderColor: `${step.color}50`,
+                            color: COLORS.primaryPurple, borderColor: COLORS.purpleBorder, background: '#fff',
+                            '&:hover': { background: COLORS.purpleLight, borderColor: COLORS.primaryPurple }
                           }),
-                          textTransform: 'none', fontWeight: 600, fontSize: '0.75rem', py: 0.6, px: 2,
+                          textTransform: 'none', fontWeight: 700, fontSize: '0.8rem', py: 0.8, px: 2, borderRadius: '8px', mt: 'auto'
                         }}
                       >
                         {step.btnLabel}
@@ -349,33 +349,40 @@ function LearningPathRow({ subject, needsAttention, strengthen, practice, color 
         })}
       </Box>
 
-      {/* Modals for UX UX Flow */}
-      <Dialog open={formatModalOpen} onClose={() => setFormatModalOpen(false)} maxWidth="xs" fullWidth PaperProps={{ sx: { borderRadius: '16px' } }}>
-        <DialogTitle sx={{ fontWeight: 800, fontSize: '1.1rem', background: `${COLORS.blue}08`, borderBottom: `1px solid ${COLORS.divider}` }}>How would you like to study?</DialogTitle>
-        <DialogContent sx={{ p: 3 }}>
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
-            {[ { label: 'Use Text', icon: '📖', fmt: 'text' }, { label: 'Use Video', icon: '▶️', fmt: 'video' }, { label: 'Use Audio', icon: '🎧', fmt: 'audio' }].map(o => (
-              <Button key={o.label} variant="outlined" onClick={() => handleFormatSelect(o.fmt)} sx={{ justifyContent: 'flex-start', p: 1.5, borderRadius: '10px', borderColor: COLORS.border, color: COLORS.textPrimary, '&:hover': { background: `${color}0A`, borderColor: color } }}>
-                <Typography sx={{ fontSize: '1.2rem', mr: 1.5 }}>{o.icon}</Typography>
-                <Typography sx={{ fontWeight: 700, textTransform: 'none' }}>{o.label}</Typography>
-              </Button>
-            ))}
-          </Box>
-        </DialogContent>
-      </Dialog>
-
+      {/* Modals for UX Flow */}
       <Dialog open={studyModalOpen} onClose={() => setStudyModalOpen(false)} maxWidth="sm" fullWidth PaperProps={{ sx: { borderRadius: '16px' } }}>
-        <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Typography sx={{ fontWeight: 800 }}>Learning Mode: {selectedFormat?.toUpperCase()}</Typography>
+        <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: COLORS.purpleLight, borderBottom: `1px solid ${COLORS.purpleBorder}` }}>
+          <Typography sx={{ fontWeight: 800, color: COLORS.primaryPurple }}>Review & Prepare</Typography>
           <IconButton size="small" onClick={() => setStudyModalOpen(false)}>✕</IconButton>
         </DialogTitle>
-        <DialogContent dividers sx={{ minHeight: 200, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', background: COLORS.bgWarm }}>
-          {selectedFormat === 'video' && <Box sx={{ width: '100%', height: 180, background: '#000', borderRadius: '8px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}><Typography sx={{ color: '#fff', fontSize: '2rem' }}>▶️</Typography></Box>}
-          {selectedFormat === 'audio' && <Box sx={{ width: '100%', p: 3, background: `${COLORS.purple}10`, borderRadius: '8px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}><Typography sx={{ color: COLORS.purpleDark, fontSize: '2rem' }}>🔊 Audio Player</Typography></Box>}
-          {selectedFormat === 'text' && <Box><Typography sx={{ color: COLORS.textPrimary, mb: 1, fontWeight: 700 }}>Concept Notes</Typography><Typography sx={{ color: COLORS.textSecondary, lineHeight: 1.6 }}>Here is the detailed theory regarding the selected concepts. Reading this will help clarify doubts and solidify foundational knowledge required for the upcoming challenges.</Typography></Box>}
+        <DialogContent dividers sx={{ minHeight: 200, display: 'flex', flexDirection: 'column', background: COLORS.bgWarm, p: 3 }}>
+          <Box sx={{ mb: 3 }}>
+            <Typography sx={{ fontWeight: 800, color: COLORS.textPrimary, mb: 1, fontSize: '0.9rem' }}>📌 What to focus on</Typography>
+            <ul style={{ margin: 0, paddingLeft: '20px', color: COLORS.textSecondary, fontSize: '0.85rem' }}>
+              {needsAttention && needsAttention.map(item => <li key={item} style={{ marginBottom: '4px' }}>{item}</li>)}
+              {strengthen && strengthen.map(item => <li key={item} style={{ marginBottom: '4px' }}>{item}</li>)}
+              <li style={{ marginBottom: '4px' }}>Common mistakes: Keep an eye on typical pitfalls.</li>
+            </ul>
+          </Box>
+          <Box sx={{ mb: 3 }}>
+            <Typography sx={{ fontWeight: 800, color: COLORS.textPrimary, mb: 1, fontSize: '0.9rem' }}>💡 How to study (tips & tricks)</Typography>
+            <ul style={{ margin: 0, paddingLeft: '20px', color: COLORS.textSecondary, fontSize: '0.85rem' }}>
+              <li style={{ marginBottom: '4px' }}>Solve 3–5 textbook examples first</li>
+              <li style={{ marginBottom: '4px' }}>Break formulas into patterns instead of memorizing</li>
+              <li style={{ marginBottom: '4px' }}>Revise key identities once before solving</li>
+              <li style={{ marginBottom: '4px' }}>Optional: watch a short concept video</li>
+            </ul>
+          </Box>
+          <Box>
+            <Typography sx={{ fontWeight: 800, color: COLORS.textPrimary, mb: 1, fontSize: '0.9rem' }}>🎯 Suggested actions</Typography>
+            <ul style={{ margin: 0, paddingLeft: '20px', color: COLORS.textSecondary, fontSize: '0.85rem' }}>
+              <li style={{ marginBottom: '4px' }}>Do textbook examples / small boxes</li>
+              <li style={{ marginBottom: '4px' }}>Attempt a few warm-up questions</li>
+            </ul>
+          </Box>
         </DialogContent>
-        <DialogActions sx={{ p: 2 }}>
-          <Button onClick={handleStudyComplete} variant="contained" sx={{ background: `linear-gradient(135deg, ${color}, ${color}CC)`, color: '#fff', textTransform: 'none', fontWeight: 700, borderRadius: '8px' }}>Mark Reviewed & Continue</Button>
+        <DialogActions sx={{ p: 2, background: COLORS.bgCard }}>
+          <Button onClick={handleStudyComplete} variant="contained" color="primary" fullWidth>Mark as Reviewed & Continue</Button>
         </DialogActions>
       </Dialog>
 
@@ -390,7 +397,7 @@ function LearningPathRow({ subject, needsAttention, strengthen, practice, color 
           </Box>
         </DialogContent>
         <DialogActions sx={{ p: 2 }}>
-          <Button onClick={handlePracticeComplete} variant="contained" sx={{ background: `linear-gradient(135deg, ${COLORS.green}, ${COLORS.greenDark})`, color: '#fff', textTransform: 'none', fontWeight: 700, borderRadius: '8px' }}>Submit Answer</Button>
+          <Button onClick={handlePracticeComplete} variant="contained" color="primary">Submit Answer</Button>
         </DialogActions>
       </Dialog>
     </Box>
@@ -400,8 +407,17 @@ function LearningPathRow({ subject, needsAttention, strengthen, practice, color 
 // ─── Main Screen ──────────────────────────────────────────────────────────────
 export default function S1_Dashboard() {
   const [goals, setGoals] = useState(todayGoals);
+  const [activeLearningPath, setActiveLearningPath] = useState(null);
+  const [completedAreas, setCompletedAreas] = useState([]);
   const doneCnt = goals.filter(g => g.done).length;
   const goalPct = Math.round((doneCnt / goals.length) * 100);
+
+  const handleLearningPathComplete = (subject) => {
+    setActiveLearningPath(null); // Close modal
+    setTimeout(() => {
+      setCompletedAreas(prev => [...prev, subject]); // Trigger slide-out animation after modal closes
+    }, 300);
+  };
 
   // Dynamic 7 day streak calculation
   const todayDate = new Date();
@@ -437,7 +453,7 @@ export default function S1_Dashboard() {
 
               {/* Big donut */}
               <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2, position: 'relative' }}>
-                <DonutRing pct={overallPct} size={120} stroke={11} color={COLORS.green} />
+                <DonutRing pct={overallPct} size={120} stroke={11} color={COLORS.primaryPurple} />
                 <Box sx={{
                   position: 'absolute', top: '50%', left: '50%',
                   transform: 'translate(-50%, -50%)',
@@ -455,8 +471,8 @@ export default function S1_Dashboard() {
                 {syllabusSubjects.map(s => (
                   <Box key={s.name}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.4 }}>
-                      <Typography sx={{ fontSize: '0.76rem', fontWeight: 600, color: COLORS.textPrimary }}>{s.name}</Typography>
-                      <Typography sx={{ fontSize: '0.72rem', fontWeight: 700, color: s.color }}>{s.pct}%</Typography>
+                      <Typography sx={{ fontSize: '0.76rem', fontWeight: 600, color: COLORS.textPrimary }}>{s.icon} {s.name}</Typography>
+                      <Typography sx={{ fontSize: '0.72rem', fontWeight: 700, color: COLORS.primaryPurple }}>{s.pct}%</Typography>
                     </Box>
                     <LinearProgress
                       variant="determinate"
@@ -464,7 +480,7 @@ export default function S1_Dashboard() {
                       sx={{
                         height: 6, borderRadius: 6,
                         background: COLORS.divider,
-                        '& .MuiLinearProgress-bar': { background: s.color, borderRadius: 6 },
+                        '& .MuiLinearProgress-bar': { background: COLORS.primaryPurple, borderRadius: 6 },
                       }}
                     />
                   </Box>
@@ -596,8 +612,8 @@ export default function S1_Dashboard() {
                 display: 'flex', justifyContent: 'space-between',
                 gap: 0.5, mb: 2, alignItems: 'center'
               }}>
-                {dynamicStreakDays.filter(d => !d.isToday).map(d => (
-                  <StreakCircle key={d.day} day={d.day} done={d.done} isToday={false} goalPct={0} />
+                {dynamicStreakDays.map(d => (
+                  <StreakCircle key={d.day} day={d.day} done={d.done} isToday={d.isToday} goalPct={d.isToday ? goalPct : 0} />
                 ))}
               </Box>
 
@@ -643,34 +659,39 @@ export default function S1_Dashboard() {
           <Card elevation={0} sx={{ height: '100%' }}>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>
-                <Box sx={{ width: 3, height: 22, borderRadius: 2, background: COLORS.amber }} />
+                <Typography sx={{ fontSize: '1.2rem' }}>📈</Typography>
                 <Typography variant="overline">Improvement Areas</Typography>
               </Box>
               <Typography sx={{ fontSize: '0.75rem', color: COLORS.textSecondary, mb: 2 }}>
                 Focus on these to grow faster.
               </Typography>
-              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+              <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                 {improvementAreas.map(a => (
-                  <Box key={a.subject} sx={{
-                    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                    p: '10px 14px', borderRadius: '10px',
-                    background: COLORS.bgWarm, border: `1px solid ${COLORS.border}`,
-                  }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.2 }}>
-                      <Box sx={{ width: 8, height: 8, borderRadius: '50%', background: a.color, flexShrink: 0 }} />
-                      <Typography sx={{ fontWeight: 600, fontSize: '0.84rem', color: COLORS.textPrimary }}>{a.subject}</Typography>
-                    </Box>
-                    <Chip
-                      label={a.tag}
-                      size="small"
+                  <Collapse key={a.subject} in={!completedAreas.includes(a.subject)} timeout={600} unmountOnExit>
+                    <Box 
+                      onClick={() => setActiveLearningPath(a)}
                       sx={{
-                        height: 20, fontSize: '0.62rem', fontWeight: 700,
-                        background: `${a.color}15`, color: a.color,
-                        border: `1px solid ${a.color}30`,
-                        '& .MuiChip-label': { px: 1 },
-                      }}
-                    />
-                  </Box>
+                        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                        p: '12px 16px', borderRadius: '12px', mb: 1.5,
+                        background: COLORS.bgWarm, border: `1px solid ${COLORS.border}`,
+                        cursor: 'pointer', transition: 'all 0.2s',
+                        '&:hover': { background: `${a.color}0A`, borderColor: a.color, transform: 'translateY(-2px)', boxShadow: `0 4px 12px ${a.color}20` }
+                      }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.2 }}>
+                        <Typography sx={{ fontWeight: 600, fontSize: '0.9rem', color: COLORS.textPrimary }}>{a.subject}</Typography>
+                      </Box>
+                      <Chip
+                        label={a.tag}
+                        size="small"
+                        sx={{
+                          height: 24, fontSize: '0.65rem', fontWeight: 700,
+                          background: `${a.color}15`, color: a.color,
+                          border: `1px solid ${a.color}30`,
+                          '& .MuiChip-label': { px: 1.5 },
+                        }}
+                      />
+                    </Box>
+                  </Collapse>
                 ))}
               </Box>
             </CardContent>
@@ -700,9 +721,7 @@ export default function S1_Dashboard() {
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
                       flexShrink: 0,
                     }}>
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="#fff">
-                        <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
-                      </svg>
+                      <Typography sx={{ fontSize: '1.2rem' }}>{w.icon}</Typography>
                     </Box>
                     <Typography sx={{ fontWeight: 600, fontSize: '0.84rem', color: COLORS.textPrimary }}>{w.subject}</Typography>
                   </Box>
@@ -712,24 +731,37 @@ export default function S1_Dashboard() {
           </Card>
         </Grid>
 
-        {/* ── ROW 3: Recommended Learning Path ── */}
-        <Grid item xs={12}>
-          <Card elevation={0}>
-            <CardContent>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1 }}>
-                <Typography sx={{ fontSize: '1.1rem' }}>🗺️</Typography>
-                <Typography variant="overline" sx={{ fontSize: '0.72rem' }}>Recommended Learning Path</Typography>
+        {/* ── Modal for Active Learning Path ── */}
+        <Dialog open={!!activeLearningPath} onClose={() => setActiveLearningPath(null)} maxWidth="md" fullWidth PaperProps={{ sx: { borderRadius: '28px', background: COLORS.bgCard, overflow: 'hidden' } }}>
+          <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', p: '24px 24px 16px 24px' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              <Box sx={{ width: 48, height: 48, borderRadius: '14px', background: COLORS.purpleLight, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Typography sx={{ fontSize: '1.6rem' }}>🗺️</Typography>
               </Box>
-              <Typography sx={{ fontSize: '0.78rem', color: COLORS.textSecondary, mb: 3, lineHeight: 1.6 }}>
-                Follow each path step-by-step. Address gaps first, build your foundation, then unlock practice.
+              <Box>
+                <Typography sx={{ fontSize: '1.25rem', fontWeight: 600, color: COLORS.textPrimary, lineHeight: 1.2, mb: 0.5 }}>{activeLearningPath?.subject}</Typography>
+                <Typography sx={{ fontSize: '0.85rem', color: COLORS.textSecondary }}>Recommended Learning Path</Typography>
+              </Box>
+            </Box>
+            <IconButton size="small" onClick={() => setActiveLearningPath(null)} sx={{ color: '#000', '&:hover': { background: `${COLORS.textMuted}15` } }}>✕</IconButton>
+          </DialogTitle>
+          <DialogContent sx={{ px: '24px', pb: '24px', pt: 0 }}>
+            <Box sx={{ mb: 3.5, mt: 1 }}>
+              <Typography sx={{ fontSize: '0.9rem', color: COLORS.textSecondary, lineHeight: 1.5 }}>
+                Follow this path step-by-step. Address gaps first, build your foundation, then unlock practice.
               </Typography>
-
-              {learningPaths.map(lp => (
-                <LearningPathRow key={lp.subject} {...lp} />
-              ))}
-            </CardContent>
-          </Card>
-        </Grid>
+            </Box>
+            {activeLearningPath && (
+              <LearningPathRow 
+                subject={activeLearningPath.subject} 
+                needsAttention={activeLearningPath.needsAttention} 
+                strengthen={activeLearningPath.strengthen} 
+                practice={activeLearningPath.practice} 
+                onComplete={() => handleLearningPathComplete(activeLearningPath.subject)}
+              />
+            )}
+          </DialogContent>
+        </Dialog>
 
       </Grid>
     </Layout>

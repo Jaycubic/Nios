@@ -6,12 +6,12 @@ import Layout from '../../components/Layout';
 import { COLORS } from '../../theme';
 
 const studentCardsData = [
-  { id: '1', name: 'Rahul Sharma', grade: 'Class 10 - NIOS', subjects: ['Math', 'Science', 'English'], state: 'Needs Support', stateColor: COLORS.amber, struggle: 'Trigonometry basics, Substitution errors', strengths: 'Geometry' },
-  { id: '2', name: 'Aisha Khan', grade: 'Class 10 - NIOS', subjects: ['Math', 'Science', 'Hindi'], state: 'Improving', stateColor: COLORS.blue, struggle: 'Chemical Equations', strengths: 'Physics conceptuals' },
-  { id: '3', name: 'Priya Patel', grade: 'Class 10 - NIOS', subjects: ['English', 'Social Science', 'Hindi'], state: 'On Track', stateColor: COLORS.green, struggle: 'None apparent', strengths: 'Writing skills, Comprehension' },
-  { id: '4', name: 'Dev Joshi', grade: 'Class 10 - NIOS', subjects: ['Math', 'English', 'Science'], state: 'Needs Support', stateColor: COLORS.amber, struggle: 'Grammar rules, Vocabulary retention', strengths: 'Reading comprehension' },
-  { id: '5', name: 'Meera Reddy', grade: 'Class 10 - NIOS', subjects: ['Science', 'Social Science', 'Hindi'], state: 'Improving', stateColor: COLORS.blue, struggle: 'Acids & Bases', strengths: 'Geography mapping' },
-  { id: '6', name: 'Rohan Gupta', grade: 'Class 10 - NIOS', subjects: ['Math', 'Hindi', 'Social Science'], state: 'On Track', stateColor: COLORS.green, struggle: 'Algebra expressions', strengths: 'Hindi grammar' },
+  { id: '1', name: 'Rahul Sharma', grade: 'Class 10 - NIOS', subjects: ['📐 Math', '🔬 Science', '📖 English'], state: 'Needs Support', stateColor: COLORS.amber, struggle: 'Trigonometry basics, Substitution errors', strengths: 'Geometry' },
+  { id: '2', name: 'Aisha Khan', grade: 'Class 10 - NIOS', subjects: ['📐 Math', '🔬 Science', '✍️ Hindi'], state: 'Improving', stateColor: COLORS.blue, struggle: 'Chemical Equations', strengths: 'Physics conceptuals' },
+  { id: '3', name: 'Priya Patel', grade: 'Class 10 - NIOS', subjects: ['📖 English', '🌍 Social Science', '✍️ Hindi'], state: 'On Track', stateColor: COLORS.green, struggle: 'None apparent', strengths: 'Writing skills, Comprehension' },
+  { id: '4', name: 'Dev Joshi', grade: 'Class 10 - NIOS', subjects: ['📐 Math', '📖 English', '🔬 Science'], state: 'Needs Support', stateColor: COLORS.amber, struggle: 'Grammar rules, Vocabulary retention', strengths: 'Reading comprehension' },
+  { id: '5', name: 'Meera Reddy', grade: 'Class 10 - NIOS', subjects: ['🔬 Science', '🌍 Social Science', '✍️ Hindi'], state: 'Improving', stateColor: COLORS.blue, struggle: 'Acids & Bases', strengths: 'Geography mapping' },
+  { id: '6', name: 'Rohan Gupta', grade: 'Class 10 - NIOS', subjects: ['📐 Math', '✍️ Hindi', '🌍 Social Science'], state: 'On Track', stateColor: COLORS.green, struggle: 'Algebra expressions', strengths: 'Hindi grammar' },
 ];
 
 function StudentCard({ student }) {
@@ -47,7 +47,7 @@ function StudentCard({ student }) {
           <Typography sx={{ fontSize: '0.85rem', color: COLORS.textPrimary, fontWeight: 500 }}>{student.strengths}</Typography>
         </Box>
 
-        <Button fullWidth variant="contained" onClick={() => navigate('/educator/overview?studentId=' + student.id)} sx={{ textTransform: 'none', fontWeight: 700, background: `linear-gradient(135deg, ${COLORS.blue}, ${COLORS.blue}CC)`, color: '#fff', borderRadius: '10px', py: 1 }}>
+        <Button fullWidth variant="contained" color="primary" onClick={() => navigate('/educator/overview?studentId=' + student.id)} sx={{ textTransform: 'none', fontWeight: 700, borderRadius: '10px', py: 1 }}>
           Deep Dive Analysis →
         </Button>
       </CardContent>
@@ -58,8 +58,9 @@ function StudentCard({ student }) {
 export default function E0_MyStudents() {
   return (
     <Layout role="educator" title="Grade 10 NIOS" subtitle="Track progress and guide learning outcomes">
-      <Box sx={{ mb: 3 }}>
-        <Typography variant="overline" sx={{ display: 'block', color: COLORS.textSecondary, fontWeight: 700, letterSpacing: 1.2 }}>{studentCardsData.length} Learners Assigned</Typography>
+      <Box sx={{ mb: 3, display: 'flex', alignItems: 'center', gap: 1 }}>
+        <Typography sx={{ fontSize: '1.2rem' }}>👥</Typography>
+        <Typography variant="overline" sx={{ color: COLORS.textSecondary, fontWeight: 700, letterSpacing: 1.2 }}>{studentCardsData.length} Learners Assigned</Typography>
       </Box>
       <Grid container spacing={3} alignItems="stretch">
         {studentCardsData.map(student => (

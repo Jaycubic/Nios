@@ -1,7 +1,7 @@
 // src/components/RoadPath.tsx
 // ─── Standalone SVG Winding Road — Learning Journey Asset ─────────────────
-// Direction: BOTTOM → TOP  (student starts at bottom, climbs toward the flag/goal at top)
-// Completed chapters anchor near bottom. Not-started chapters anchor near the flag (top).
+// Direction: LEFT (START) → RIGHT (GOAL / flag)
+// Completed chapters anchor near left. Not-started chapters anchor near flag (right).
 
 import React, { forwardRef } from 'react';
 import { motion } from 'framer-motion';
@@ -11,54 +11,50 @@ import { motion } from 'framer-motion';
 /** Unique ID for the invisible reference path used with getPointAtLength() */
 export const ROAD_PATH_ID = 'lrn-road-path-ref';
 
-export const ROAD_VIEWBOX_W = 320;
-export const ROAD_VIEWBOX_H = 660;
+export const ROAD_VIEWBOX_W = 900;
+export const ROAD_VIEWBOX_H = 200;
 export const ROAD_VIEWBOX = `0 0 ${ROAD_VIEWBOX_W} ${ROAD_VIEWBOX_H}`;
 
 /**
- * REVERSED Cubic Bézier winding road path.
- * Direction: bottom-center (START) → winding up → top-center (GOAL / flag).
+ * Horizontal S-curve road path.
+ * Direction: left-center (START) → winding right → right-center (GOAL / flag).
  *
- * pathLength  0   → (160, 622)  bottom-center   START — completed chapters live here
- * pathLength  1   → (160,  40)  top-center       GOAL  — not-started chapters live here (near flag)
- *
- * Safe node anchor zones along the path (fraction 0→1):
- *   0.04  →  (160, 612)   centre       start area
- *   0.21  →  (244, 532)   right apex
- *   0.39  →  ( 76, 406)   left  apex
- *   0.59  →  (244, 280)   right apex
- *   0.78  →  ( 76, 154)   left  apex
- *   0.95  →  (160,  48)   centre       goal area (near flag)
+ * pathLength 0 → (30, 100)   left-center   START — completed chapters live here
+ * pathLength 1 → (870, 100)  right-center  GOAL  — not-started chapters live here (near flag)
  */
 export const ROAD_PATH_D = [
-    'M 160 622',
-    'C 160 604, 244 576, 244 532',   // bottom-center → right apex y≈532
-    'C 244 476,  76 462,  76 406',   // right apex    → left  apex y≈406
-    'C  76 350, 244 336, 244 280',   // left  apex    → right apex y≈280
-    'C 244 224,  76 210,  76 154',   // right apex    → left  apex y≈154
-    'C  76  98, 160  84, 160  40',   // left  apex    → top-center (GOAL)
+    'M 30 100',
+    'C 30 100, 120 40,  220 100',   // left start → first up-crest
+    'C 320 160, 420 40,  500 100',  // down → second up-crest
+    'C 580 160, 660 40,  740 100',  // down → third up-crest
+    'C 800 130, 840 100, 870 100',  // settle into goal
 ].join(' ');
 
 /**
- * Pre-calibrated node anchor fractions (0–1 along the REVERSED path).
- * anchor 0.04 ≈ bottom (start / completed)
- * anchor 0.95 ≈ top    (goal  / not-started, near flag)
+ * Pre-calibrated node anchor fractions (0–1 along the horizontal path).
+ * anchor 0.03 ≈ left (start / completed)
+ * anchor 0.97 ≈ right (goal / not-started, near flag)
  */
 const ANCHOR_MAP: Record<number, number[]> = {
     1: [0.50],
-    2: [0.04, 0.95],
-    3: [0.04, 0.50, 0.95],
-    4: [0.04, 0.34, 0.66, 0.95],
-    5: [0.04, 0.26, 0.50, 0.74, 0.95],
-    6: [0.04, 0.21, 0.39, 0.59, 0.78, 0.95],
-    7: [0.04, 0.18, 0.34, 0.50, 0.65, 0.81, 0.95],
-    8: [0.04, 0.16, 0.30, 0.44, 0.57, 0.70, 0.83, 0.95],
+    2: [0.05, 0.95],
+    3: [0.05, 0.50, 0.95],
+    4: [0.05, 0.35, 0.65, 0.95],
+    5: [0.05, 0.28, 0.50, 0.72, 0.95],
+    6: [0.05, 0.22, 0.41, 0.59, 0.78, 0.95],
+    7: [0.05, 0.19, 0.36, 0.50, 0.64, 0.81, 0.95],
+    8: [0.05, 0.17, 0.31, 0.45, 0.57, 0.69, 0.82, 0.95],
+    10: [0.05, 0.14, 0.25, 0.36, 0.47, 0.57, 0.67, 0.77, 0.87, 0.95],
+    12: [0.04, 0.12, 0.21, 0.30, 0.39, 0.48, 0.57, 0.66, 0.75, 0.83, 0.90, 0.96],
 };
 
-/** Returns normalized anchor fractions for `count` nodes (1–8). */
+/** Returns normalized anchor fractions for `count` nodes (1–12). */
 export function getNodeAnchors(count: number): number[] {
-    const key = Math.min(Math.max(count, 1), 8);
-    return ANCHOR_MAP[key] ?? ANCHOR_MAP[8];
+    const key = Math.min(Math.max(count, 1), 12);
+    if (ANCHOR_MAP[key]) return ANCHOR_MAP[key];
+    // interpolate for missing keys
+    const step = 0.90 / (count - 1);
+    return Array.from({ length: count }, (_, i) => 0.05 + i * step);
 }
 
 // ─── Props ────────────────────────────────────────────────────────────────────
@@ -71,7 +67,7 @@ export interface RoadPathProps {
     baseColor?: string;
     /** Animated progress fill colour — use subject/brand colour */
     progressColor?: string;
-    /** 0–100: how much of the road (from bottom) is filled with progressColor */
+    /** 0–100: how much of the road (from left) is filled with progressColor */
     progressPercent?: number;
     animateProgress?: boolean;
     className?: string;
@@ -80,57 +76,56 @@ export interface RoadPathProps {
 
 // ─── Scenic Decorations ───────────────────────────────────────────────────────
 
-function RoadDecorations({ roadColor }: { roadColor: string }) {
+function RoadDecorations({ roadColor, progressColor }: { roadColor: string; progressColor: string }) {
     return (
         <g aria-hidden="true">
-            {/* ── GOAL flag at top (160, 40) ── */}
-            <line x1="160" y1="40" x2="160" y2="4" stroke="#CBD5E1" strokeWidth="1.8" strokeLinecap="round" />
-            <path d="M 160 4 L 182 12 L 160 20 Z" fill="#4F81ED" opacity={0.92} />
-            <text x="168" y="14" textAnchor="middle" fill="#ffffff" fontSize="5.5" fontWeight="700"
+            {/* ── GOAL flag at right (870, 100) ── */}
+            <line x1="870" y1="100" x2="870" y2="55" stroke="#CBD5E1" strokeWidth="2" strokeLinecap="round" />
+            <path d="M 870 55 L 898 65 L 870 75 Z" fill="#6C5CE7" opacity={0.92} />
+            <text x="882" y="67" textAnchor="middle" fill="#ffffff" fontSize="7" fontWeight="700"
                 fontFamily="'Inter',sans-serif" letterSpacing="0.5" style={{ pointerEvents: 'none' }}>
                 GOAL
             </text>
-            <circle cx="160" cy="40" r="3.5" fill={roadColor} opacity={0.8} />
+            <circle cx="870" cy="100" r="4" fill={roadColor} opacity={0.8} />
 
-            {/* ── START marker at bottom (160, 622) ── */}
-            <circle cx="160" cy="622" r="14" fill="#4F81ED" opacity={0.08} />
-            <circle cx="160" cy="622" r="9" fill="#4F81ED" opacity={0.14} />
-            <circle cx="160" cy="622" r="5" fill="#4F81ED" opacity={0.55} />
-            <circle cx="160" cy="622" r="2.5" fill="#ffffff" opacity={0.9} />
-            <text x="160" y="638" textAnchor="middle" fill="#4F81ED" fontSize="7" fontWeight="700"
+            {/* ── START marker at left (30, 100) ── */}
+            <circle cx="30" cy="100" r="16" fill="#6C5CE7" opacity={0.08} />
+            <circle cx="30" cy="100" r="10" fill="#6C5CE7" opacity={0.14} />
+            <circle cx="30" cy="100" r="6" fill="#6C5CE7" opacity={0.55} />
+            <circle cx="30" cy="100" r="3" fill="#ffffff" opacity={0.9} />
+            <text x="30" y="124" textAnchor="middle" fill="#6C5CE7" fontSize="8" fontWeight="700"
                 fontFamily="'Inter',sans-serif" letterSpacing="1" opacity={0.7} style={{ pointerEvents: 'none' }}>
                 START
             </text>
 
-            {/* ── Foliage — left side ── */}
-            <g opacity={0.16} fill="#5AAF68">
-                <circle cx="28" cy="126" r="15" /><circle cx="42" cy="116" r="10" />
-                <rect x="26" y="139" width="5" height="14" rx="2.5" fill="#A0AEC0" />
-                <circle cx="24" cy="390" r="13" /><circle cx="36" cy="382" r="9" />
-                <rect x="22" y="401" width="5" height="12" rx="2.5" fill="#A0AEC0" />
+            {/* ── Foliage — top ── */}
+            <g opacity={0.14} fill="#5AAF68">
+                <circle cx="220" cy="28" r="14" /><circle cx="232" cy="20" r="9" />
+                <rect x="218" y="40" width="5" height="12" rx="2.5" fill="#A0AEC0" />
+                <circle cx="500" cy="24" r="13" /><circle cx="514" cy="17" r="8" />
+                <rect x="498" y="35" width="5" height="11" rx="2.5" fill="#A0AEC0" />
             </g>
 
-            {/* ── Foliage — right side ── */}
-            <g opacity={0.16} fill="#5AAF68">
-                <circle cx="294" cy="254" r="14" /><circle cx="282" cy="244" r="9" />
-                <rect x="292" y="267" width="5" height="13" rx="2.5" fill="#A0AEC0" />
-                <circle cx="298" cy="514" r="12" /><circle cx="286" cy="506" r="8" />
-                <rect x="296" y="525" width="5" height="11" rx="2.5" fill="#A0AEC0" />
+            {/* ── Foliage — bottom ── */}
+            <g opacity={0.14} fill="#5AAF68">
+                <circle cx="320" cy="178" r="13" /><circle cx="308" cy="170" r="8" />
+                <rect x="318" y="162" width="5" height="-12" rx="2.5" fill="#A0AEC0" />
+                <circle cx="640" cy="182" r="12" /><circle cx="628" cy="174" r="8" />
             </g>
 
-            {/* ── Upward chevrons ── */}
-            <g opacity={0.22} stroke="#4F81ED" strokeWidth="1.5" strokeLinecap="round" fill="none">
-                <polyline points="155,580 160,574 165,580" />
-                <polyline points="155,440 160,434 165,440" />
-                <polyline points="155,310 160,304 165,310" />
-                <polyline points="155,180 160,174 165,180" />
+            {/* ── Right-pointing chevrons on road ── */}
+            <g opacity={0.20} stroke="#6C5CE7" strokeWidth="1.5" strokeLinecap="round" fill="none">
+                <polyline points="150,96 156,100 150,104" />
+                <polyline points="360,96 366,100 360,104" />
+                <polyline points="560,96 566,100 560,104" />
+                <polyline points="740,96 746,100 740,104" />
             </g>
 
             {/* ── Ground pebbles ── */}
-            <g opacity={0.09} fill="#6B7280">
-                <circle cx="52" cy="208" r="3" />
-                <circle cx="268" cy="338" r="3" />
-                <circle cx="52" cy="462" r="3" />
+            <g opacity={0.08} fill="#6B7280">
+                <circle cx="190" cy="145" r="3" />
+                <circle cx="420" cy="160" r="3" />
+                <circle cx="680" cy="148" r="3" />
             </g>
         </g>
     );
@@ -139,17 +134,17 @@ function RoadDecorations({ roadColor }: { roadColor: string }) {
 // ─── RoadPath Component ───────────────────────────────────────────────────────
 
 /**
- * `RoadPath` — standalone winding road SVG for learning journey UIs.
- * The road travels BOTTOM → TOP.
- * `progressPercent` fills the road upward from the bottom (0 % = empty, 100 % = full).
+ * `RoadPath` — standalone horizontal winding road SVG for learning journey UIs.
+ * The road travels LEFT → RIGHT.
+ * `progressPercent` fills the road rightward from the left (0% = empty, 100% = full).
  */
 const RoadPath = forwardRef<SVGSVGElement, RoadPathProps>(
     ({
         width = '100%',
         height,
-        strokeWidth = 26,
+        strokeWidth = 20,
         baseColor = '#E8F0FE',
-        progressColor = '#4F81ED',
+        progressColor = '#6C5CE7',
         progressPercent = 0,
         animateProgress = true,
         className,
@@ -167,9 +162,9 @@ const RoadPath = forwardRef<SVGSVGElement, RoadPathProps>(
                 preserveAspectRatio="xMidYMid meet"
                 className={className}
                 style={{ display: 'block', overflow: 'visible', ...style }}
-                aria-label="Learning journey roadmap — bottom to top"
+                aria-label="Learning journey roadmap — left to right"
             >
-                <RoadDecorations roadColor={baseColor} />
+                <RoadDecorations roadColor={baseColor} progressColor={progressColor} />
 
                 {/* Drop shadow */}
                 <path d={ROAD_PATH_D} fill="none" stroke="rgba(0,0,0,0.07)"
@@ -214,26 +209,3 @@ const RoadPath = forwardRef<SVGSVGElement, RoadPathProps>(
 
 RoadPath.displayName = 'RoadPath';
 export default RoadPath;
-
-/*
- * ─── Path Interpolation ───────────────────────────────────────────────────────
- * ViewBox: "0 0 320 660"  →  aspect ratio ≈ 1 : 2.06
- *
- * const el    = document.getElementById(ROAD_PATH_ID) as SVGPathElement;
- * const total = el.getTotalLength();                    // ≈ 1320 viewBox-px
- * const pt    = el.getPointAtLength(t * total);         // {x, y}
- *
- * ─── Reversed-path anchor safe zones ─────────────────────────────────────────
- *   t = 0.04  →  (160, 612)  centre   completed / START area
- *   t = 0.21  →  (244, 532)  right    first right apex (going up)
- *   t = 0.39  →  ( 76, 406)  left     first left  apex
- *   t = 0.59  →  (244, 280)  right    second right apex
- *   t = 0.78  →  ( 76, 154)  left     second left apex
- *   t = 0.95  →  (160,  48)  centre   GOAL area (near flag)
- *
- * ─── Card placement geometry ─────────────────────────────────────────────────
- *   nodeR = 22, cardW = 118, connGap = 30
- *   isOnRight (x > 160) → card LEFT:  cardX = pos.x - 148  (clear of road)
- *   isLeft    (x ≤ 160) → card RIGHT: cardX = pos.x + 30   (clear of road)
- *   ~17 px gap between card edge and road edge at every anchor.
- */

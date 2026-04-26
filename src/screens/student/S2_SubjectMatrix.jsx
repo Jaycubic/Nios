@@ -22,35 +22,35 @@ import {
 const subjectMap = {
     math: {
         id: 'math', name: 'Mathematics', shortName: 'Math',
-        color: COLORS.blue, icon: '📐', score: 68, practice: 75,
+        icon: '📐', score: 68, practice: 75,
         weakTopics: ['Trigonometry', 'Quadratic Equations'],
         strongTopics: ['Algebra Basics', 'Number Systems'],
         completedChapters: 2, totalChapters: 8,
     },
     science: {
         id: 'science', name: 'Science', shortName: 'Science',
-        color: COLORS.green, icon: '🔬', score: 55, practice: 38,
+        icon: '🔬', score: 55, practice: 38,
         weakTopics: ['Chemical Reactions', 'Electricity'],
         strongTopics: ['Physics Numericals'],
         completedChapters: 0, totalChapters: 8,
     },
     english: {
         id: 'english', name: 'English', shortName: 'English',
-        color: COLORS.purple, icon: '📖', score: 82, practice: 80,
+        icon: '📖', score: 82, practice: 80,
         weakTopics: [],
         strongTopics: ['Reading Skills', 'Essay Writing', 'Grammar'],
         completedChapters: 3, totalChapters: 8,
     },
     hindi: {
         id: 'hindi', name: 'Hindi', shortName: 'Hindi',
-        color: COLORS.yellow, icon: '✍️', score: 74, practice: 71,
+        icon: '✍️', score: 74, practice: 71,
         weakTopics: ['Poetry Analysis'],
         strongTopics: ['Essay Writing', 'Grammar'],
         completedChapters: 2, totalChapters: 8,
     },
     social: {
         id: 'social', name: 'Social Science', shortName: 'Soc. Sci.',
-        color: COLORS.amber, icon: '🌍', score: 61, practice: 72,
+        icon: '🌍', score: 61, practice: 72,
         weakTopics: ['History — Nationalism', 'Geography — Resources'],
         strongTopics: ['Civics — Democracy'],
         completedChapters: 1, totalChapters: 8,
@@ -168,7 +168,7 @@ const initialChaptersData = {
             ],
         },
         {
-            id: 2, title: 'Grammar — Parts of Speech', status: 'completed', firstTime: true,
+            id: 2, title: 'Grammar-Parts of Speech', status: 'completed', firstTime: true,
             practiceCompleted: 14, practiceTotal: 15, mockScore: 82, mockAttempts: 1,
             topics: [
                 { name: 'Nouns & Pronouns', learning: 'Completed', practice: '5/5', progress: 90 },
@@ -186,7 +186,7 @@ const initialChaptersData = {
             ],
         },
         {
-            id: 4, title: 'Literature — Prose', status: 'in-progress', firstTime: false,
+            id: 4, title: 'Literature-Prose', status: 'in-progress', firstTime: false,
             practiceCompleted: 5, practiceTotal: 12, mockScore: null, mockAttempts: 0,
             topics: [
                 { name: 'The Last Lesson', learning: 'Completed', practice: '3/4', progress: 65 },
@@ -194,7 +194,7 @@ const initialChaptersData = {
                 { name: 'Deep Water', learning: 'Not Started', practice: '0/4', progress: 0 },
             ],
         },
-        { id: 5, title: 'Literature — Poetry', status: 'not-started', firstTime: false, practiceCompleted: 0, practiceTotal: 10, mockScore: null, mockAttempts: 0, topics: [] },
+        { id: 5, title: 'Literature-Poetry', status: 'not-started', firstTime: false, practiceCompleted: 0, practiceTotal: 10, mockScore: null, mockAttempts: 0, topics: [] },
     ],
     hindi: [
         {
@@ -295,13 +295,13 @@ function SubjectCard({ subject, accentColor, onSelect }) {
             background: '#fff', border: `1.5px solid ${COLORS.border}`,
             transition: 'all 0.2s',
             display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 1.5,
-            '&:hover': { border: `1.5px solid ${s.color}`, boxShadow: `0 4px 16px ${s.color}20`, transform: 'translateY(-2px)' },
+            '&:hover': { border: `1.5px solid ${COLORS.primaryPurple}`, boxShadow: `0 4px 16px ${COLORS.primaryPurple}20`, transform: 'translateY(-2px)' },
         }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, minWidth: 0 }}>
-                <Box sx={{ width: 32, height: 32, borderRadius: '8px', background: `${s.color}15`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1rem', flexShrink: 0 }}>{s.icon}</Box>
+                <Box sx={{ width: 32, height: 32, borderRadius: '8px', background: `${COLORS.primaryPurple}15`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1rem', flexShrink: 0 }}>{s.icon}</Box>
                 <Typography sx={{ fontSize: '0.82rem', fontWeight: 700, color: COLORS.textPrimary, lineHeight: 1.2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{s.name}</Typography>
             </Box>
-            <Button size="small" variant="outlined" onClick={(e) => { e.stopPropagation(); onSelect(subject); }} sx={{ fontSize: '0.65rem', textTransform: 'none', fontWeight: 700, color: s.color, borderColor: `${s.color}50`, py: 0.4, px: 1, flexShrink: 0, '&:hover': { borderColor: s.color, background: `${s.color}08` } }}>
+            <Button size="small" variant="outlined" onClick={(e) => { e.stopPropagation(); onSelect(subject); }} sx={{ fontSize: '0.65rem', textTransform: 'none', fontWeight: 700, color: COLORS.primaryPurple, borderColor: `${COLORS.primaryPurple}50`, py: 0.4, px: 1, flexShrink: 0, '&:hover': { borderColor: COLORS.primaryPurple, background: `${COLORS.primaryPurple}08` } }}>
                 View Roadmap
             </Button>
         </Box>
@@ -368,106 +368,102 @@ function SubjectMatrixView({ onSelectSubject }) {
     );
 }
 
-// ─── Practice Modal ───────────────────────────────────────────────────────────
+// ─── Practice Modal (3 questions + review mode) ───────────────────────────────
 
-function PracticeModal({ chapter, subjectColor, open, onClose, onComplete }) {
+const PRACTICE_QUESTIONS = [
+    {
+        q: 'Q1. Which of the following correctly represents Euclid\'s Division Lemma?',
+        options: ['a = bq + r, 0 ≤ r < b', 'a = bq + r, r > b', 'b = aq + r, 0 ≤ r < a', 'a = bq, q > 0'],
+        correct: 0,
+    },
+    {
+        q: 'Q2. What is the HCF of 26 and 91 using Euclid\'s algorithm?',
+        options: ['7', '13', '26', '91'],
+        correct: 1,
+    },
+    {
+        q: 'Q3. Which number is irrational?',
+        options: ['√4', '√9', '√2', '3/4'],
+        correct: 2,
+    },
+];
+
+function PracticeModal({ chapter, open, onClose }) {
     if (!chapter) return null;
+    const [selected, setSelected] = useState({});
+    const [submitted, setSubmitted] = useState(false);
 
-    if (chapter.practiceCompleted < chapter.practiceTotal) {
-        return (
-            <Modal open={open} onClose={onClose}>
-                <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: { xs: '92vw', sm: 400 }, background: '#fff', borderRadius: '20px', boxShadow: '0 20px 60px rgba(0,0,0,0.18)', p: 3 }}>
-                    <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', mb: 2.5 }}>
-                        <Box>
-                            <Typography sx={{ fontWeight: 800, fontSize: '1.1rem', color: COLORS.textPrimary }}>Practice Challenge</Typography>
-                            <Typography sx={{ fontSize: '0.75rem', color: COLORS.textSecondary, mt: 0.2 }}>{chapter.title}</Typography>
-                        </Box>
-                        <IconButton size="small" onClick={onClose}><svg width="18" height="18" viewBox="0 0 24 24" fill={COLORS.textSecondary}><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" /></svg></IconButton>
-                    </Box>
-
-                    <Typography sx={{ mb: 3, fontWeight: 600, fontSize: '0.95rem' }}>Q1. What is the correct sequence of steps to solve this problem?</Typography>
-                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.2, mb: 4 }}>
-                        {['Option A', 'Option B', 'Option C', 'Option D'].map(o => (
-                            <Button key={o} variant="outlined" sx={{ justifyContent: 'flex-start', color: COLORS.textPrimary, borderColor: COLORS.divider, textTransform: 'none', px: 2, py: 1 }}>{o}</Button>
-                        ))}
-                    </Box>
-                    <Button onClick={() => onComplete(chapter.id)} variant="contained" fullWidth sx={{ background: `linear-gradient(135deg, ${subjectColor}, ${subjectColor}CC)`, color: '#fff', textTransform: 'none', fontWeight: 700, borderRadius: '8px', py: 1.2 }}>Submit Answer & Complete</Button>
-                </Box>
-            </Modal>
-        );
-    }
-
-    const pct = Math.round((chapter.practiceCompleted / chapter.practiceTotal) * 100);
-    const attempts = [{ label: 'Attempt 1', pct: 45 }, { label: 'Attempt 2', pct: 55 }, { label: 'Attempt 3', pct: pct }];
-    const retentionScore = 70;
-    const errorTypes = [
-        { label: 'Concept Errors', count: 6, icon: '❌', color: COLORS.amber },
-        { label: 'Calculation Errors', count: 3, icon: '⚠️', color: COLORS.yellow },
-        { label: 'Careless Mistakes', count: 1, icon: '⚠️', color: COLORS.blue },
-    ];
-    const totalErrors = errorTypes.reduce((s, e) => s + e.count, 0);
+    const handleClose = () => { setSelected({}); setSubmitted(false); onClose(); };
 
     return (
-        <Modal open={open} onClose={onClose}>
-            <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: { xs: '92vw', sm: 520 }, maxHeight: '85vh', overflowY: 'auto', background: '#fff', borderRadius: '20px', boxShadow: '0 20px 60px rgba(0,0,0,0.18)', p: 3 }}>
-                <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', mb: 2.5 }}>
+        <Modal open={open} onClose={handleClose}>
+            <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: { xs: '94vw', sm: 500 }, maxHeight: '90vh', overflowY: 'auto', background: '#fff', borderRadius: '20px', boxShadow: '0 20px 60px rgba(0,0,0,0.18)', p: 0, outline: 'none' }}>
+                {/* Header */}
+                <Box sx={{ p: '20px 24px 16px', borderBottom: `1px solid ${COLORS.divider}`, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                     <Box>
-                        <Typography sx={{ fontWeight: 800, fontSize: '1rem', color: COLORS.textPrimary }}>Practice Progress</Typography>
-                        <Typography sx={{ fontSize: '0.75rem', color: COLORS.textSecondary, mt: 0.2 }}>{chapter.title} · {chapter.practiceCompleted}/{chapter.practiceTotal} questions</Typography>
+                        <Typography sx={{ fontWeight: 800, fontSize: '1.05rem', color: COLORS.textPrimary }}>Practice Questions ✏️</Typography>
+                        <Typography sx={{ fontSize: '0.75rem', color: COLORS.textSecondary, mt: 0.2 }}>{chapter.title} · 3 questions</Typography>
                     </Box>
-                    <IconButton size="small" onClick={onClose}><svg width="18" height="18" viewBox="0 0 24 24" fill={COLORS.textSecondary}><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" /></svg></IconButton>
+                    <IconButton size="small" onClick={handleClose} sx={{ color: '#000' }}>✕</IconButton>
                 </Box>
 
-                <Box sx={{ mb: 2.5, p: 2, borderRadius: '12px', background: `${subjectColor}07`, border: `1px solid ${subjectColor}25` }}>
-                    <Typography sx={{ fontSize: '0.72rem', fontWeight: 700, color: COLORS.textSecondary, letterSpacing: 0.8, textTransform: 'uppercase', mb: 1.5 }}>📈 Progression Across Attempts</Typography>
-                    {attempts.map((a, i) => (
-                        <Box key={a.label} sx={{ mb: i < attempts.length - 1 ? 1.2 : 0 }}>
-                            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.4 }}>
-                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.8 }}>
-                                    <Typography sx={{ fontSize: '0.75rem', fontWeight: 600, color: COLORS.textPrimary }}>{a.label}</Typography>
-                                    {i === attempts.length - 1 && <Chip label="Latest" size="small" sx={{ height: 16, fontSize: '0.58rem', fontWeight: 700, background: `${subjectColor}18`, color: subjectColor, '& .MuiChip-label': { px: 0.8 } }} />}
-                                    {i > 0 && a.pct > attempts[i - 1].pct && <Typography sx={{ fontSize: '0.65rem', color: COLORS.green, fontWeight: 700 }}>↑ +{a.pct - attempts[i - 1].pct}%</Typography>}
+                <Box sx={{ p: 3 }}>
+                    {!submitted ? (
+                        <>
+                            {PRACTICE_QUESTIONS.map((q, qi) => (
+                                <Box key={qi} sx={{ mb: 3 }}>
+                                    <Typography sx={{ fontSize: '0.88rem', fontWeight: 600, color: COLORS.textPrimary, mb: 1.5, lineHeight: 1.5 }}>{q.q}</Typography>
+                                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                                        {q.options.map((opt, oi) => (
+                                            <Box key={oi} onClick={() => setSelected(s => ({ ...s, [qi]: oi }))}
+                                                sx={{ p: '10px 14px', borderRadius: '10px', cursor: 'pointer', border: `1.5px solid ${selected[qi] === oi ? COLORS.primaryPurple : COLORS.border}`, background: selected[qi] === oi ? COLORS.purpleLight : '#fff', transition: 'all 0.15s' }}>
+                                                <Typography sx={{ fontSize: '0.82rem', color: selected[qi] === oi ? COLORS.primaryPurple : COLORS.textPrimary, fontWeight: selected[qi] === oi ? 600 : 400 }}>{opt}</Typography>
+                                            </Box>
+                                        ))}
+                                    </Box>
                                 </Box>
-                                <Typography sx={{ fontSize: '0.75rem', fontWeight: 700, color: subjectColor }}>{a.pct}%</Typography>
+                            ))}
+                            <Button fullWidth variant="contained" disabled={Object.keys(selected).length < PRACTICE_QUESTIONS.length}
+                                onClick={() => setSubmitted(true)}
+                                sx={{ mt: 1, background: COLORS.primaryPurple, color: '#fff', textTransform: 'none', fontWeight: 700, borderRadius: '10px', py: 1.2, '&:hover': { background: COLORS.purpleHover }, '&.Mui-disabled': { background: COLORS.divider } }}>
+                                Submit All Answers →
+                            </Button>
+                        </>
+                    ) : (
+                        <>
+                            <Box sx={{ mb: 3, p: 2, borderRadius: '12px', background: COLORS.purpleLight, border: `1px solid ${COLORS.purpleBorder}`, textAlign: 'center' }}>
+                                <Typography sx={{ fontWeight: 800, fontSize: '1.1rem', color: COLORS.primaryPurple }}>
+                                    {PRACTICE_QUESTIONS.filter((q, i) => selected[i] === q.correct).length}/{PRACTICE_QUESTIONS.length} Correct 🎯
+                                </Typography>
+                                <Typography sx={{ fontSize: '0.78rem', color: COLORS.textSecondary, mt: 0.5 }}>Review your answers below</Typography>
                             </Box>
-                            <LinearProgress variant="determinate" value={a.pct}
-                                sx={{ height: 8, borderRadius: 4, background: COLORS.divider, '& .MuiLinearProgress-bar': { background: i === attempts.length - 1 ? `linear-gradient(90deg,${subjectColor},${subjectColor}CC)` : `${subjectColor}80`, borderRadius: 4 } }} />
-                        </Box>
-                    ))}
-                </Box>
-
-                <Box sx={{ mb: 2.5, p: 2, borderRadius: '12px', background: COLORS.bgWarm, border: `1px solid ${COLORS.border}` }}>
-                    <Typography sx={{ fontSize: '0.72rem', fontWeight: 700, color: COLORS.textSecondary, letterSpacing: 0.8, textTransform: 'uppercase', mb: 1.2 }}>🧠 Retention Score</Typography>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                        <Box sx={{ position: 'relative', width: 64, height: 64, flexShrink: 0 }}>
-                            <svg width={64} height={64} style={{ transform: 'rotate(-90deg)' }}>
-                                <circle cx={32} cy={32} r={26} fill="none" stroke={COLORS.divider} strokeWidth={8} />
-                                <circle cx={32} cy={32} r={26} fill="none" stroke={COLORS.green} strokeWidth={8} strokeDasharray={`${(retentionScore / 100) * 163} 163`} strokeLinecap="round" />
-                            </svg>
-                            <Typography sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', fontSize: '0.8rem', fontWeight: 800, color: COLORS.green }}>{retentionScore}%</Typography>
-                        </Box>
-                        <Box>
-                            <Typography sx={{ fontSize: '0.82rem', fontWeight: 700, color: COLORS.textPrimary, mb: 0.4 }}>Re-attempt after a gap</Typography>
-                            <Typography sx={{ fontSize: '0.72rem', color: COLORS.textSecondary, lineHeight: 1.5 }}>You forgot 3/10 previously correct questions when revisited after 2–5 days.</Typography>
-                        </Box>
-                    </Box>
-                </Box>
-
-                <Box sx={{ p: 2, borderRadius: '12px', background: COLORS.bgWarm, border: `1px solid ${COLORS.border}` }}>
-                    <Typography sx={{ fontSize: '0.72rem', fontWeight: 700, color: COLORS.textSecondary, letterSpacing: 0.8, textTransform: 'uppercase', mb: 1.5 }}>🔍 Error Type Breakdown</Typography>
-                    {errorTypes.map(e => (
-                        <Box key={e.label} sx={{ mb: 1 }}>
-                            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.4 }}>
-                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.7 }}><Typography sx={{ fontSize: '0.8rem' }}>{e.icon}</Typography><Typography sx={{ fontSize: '0.75rem', fontWeight: 600, color: COLORS.textPrimary }}>{e.label}</Typography></Box>
-                                <Typography sx={{ fontSize: '0.75rem', fontWeight: 700, color: e.color }}>{e.count} errors</Typography>
-                            </Box>
-                            <LinearProgress variant="determinate" value={(e.count / totalErrors) * 100}
-                                sx={{ height: 7, borderRadius: 4, background: COLORS.divider, '& .MuiLinearProgress-bar': { background: e.color, borderRadius: 4 } }} />
-                        </Box>
-                    ))}
-                    <Box sx={{ mt: 1.5, p: 1, borderRadius: '8px', background: `${COLORS.amber}0D`, border: `1px solid ${COLORS.amber}25` }}>
-                        <Typography sx={{ fontSize: '0.68rem', color: COLORS.amberDark, fontWeight: 600 }}>💡 Concept errors are highest — revisit theory before more practice.</Typography>
-                    </Box>
+                            {PRACTICE_QUESTIONS.map((q, qi) => {
+                                const isCorrect = selected[qi] === q.correct;
+                                return (
+                                    <Box key={qi} sx={{ mb: 2.5 }}>
+                                        <Typography sx={{ fontSize: '0.85rem', fontWeight: 600, color: COLORS.textPrimary, mb: 1 }}>{q.q}</Typography>
+                                        {q.options.map((opt, oi) => {
+                                            const isSelected = selected[qi] === oi;
+                                            const isRight = oi === q.correct;
+                                            let bg = '#fff', border = COLORS.border, color = COLORS.textSecondary;
+                                            if (isRight) { bg = `${COLORS.green}12`; border = `${COLORS.green}50`; color = COLORS.greenDark; }
+                                            else if (isSelected && !isRight) { bg = '#FFF0F0'; border = '#F0505050'; color = '#C00'; }
+                                            return (
+                                                <Box key={oi} sx={{ p: '8px 12px', borderRadius: '8px', border: `1.5px solid ${border}`, background: bg, mb: 0.7, display: 'flex', alignItems: 'center', gap: 1 }}>
+                                                    <Typography sx={{ fontSize: '0.85rem' }}>{isRight ? '✅' : (isSelected ? '❌' : '')}</Typography>
+                                                    <Typography sx={{ fontSize: '0.8rem', color, fontWeight: isRight ? 600 : 400 }}>{opt}</Typography>
+                                                </Box>
+                                            );
+                                        })}
+                                    </Box>
+                                );
+                            })}
+                            <Button fullWidth variant="outlined" onClick={handleClose}
+                                sx={{ mt: 1, color: COLORS.primaryPurple, borderColor: COLORS.purpleBorder, textTransform: 'none', fontWeight: 700, borderRadius: '10px', py: 1.1, '&:hover': { background: COLORS.purpleLight } }}>
+                                Close Review
+                            </Button>
+                        </>
+                    )}
                 </Box>
             </Box>
         </Modal>
@@ -497,7 +493,7 @@ function MockTestModal({ chapter, subjectColor, open, onClose, onComplete }) {
                             <Button key={o} variant="outlined" sx={{ justifyContent: 'flex-start', color: COLORS.textPrimary, borderColor: COLORS.divider, textTransform: 'none', px: 2, py: 1 }}>{o}</Button>
                         ))}
                     </Box>
-                    <Button onClick={() => onComplete(chapter.id)} variant="contained" fullWidth sx={{ background: `linear-gradient(135deg, ${subjectColor}, ${subjectColor}CC)`, color: '#fff', textTransform: 'none', fontWeight: 700, borderRadius: '8px', py: 1.2 }}>Submit Mock Test & Complete Chapter</Button>
+                    <Button onClick={() => onComplete(chapter.id)} variant="contained" color="primary" fullWidth sx={{ textTransform: 'none', fontWeight: 700, borderRadius: '8px', py: 1.2 }}>Submit Mock Test & Complete Chapter</Button>
                 </Box>
             </Modal>
         );
@@ -530,7 +526,7 @@ function MockTestModal({ chapter, subjectColor, open, onClose, onComplete }) {
                                 <Typography sx={{ fontSize: '0.75rem', fontWeight: 700, color: subjectColor }}>{a.pct}%</Typography>
                             </Box>
                             <LinearProgress variant="determinate" value={a.pct}
-                                sx={{ height: 8, borderRadius: 4, background: COLORS.divider, '& .MuiLinearProgress-bar': { background: i === mockAttempts.length - 1 ? `linear-gradient(90deg,${subjectColor},${subjectColor}CC)` : `${subjectColor}70`, borderRadius: 4 } }} />
+                                sx={{ height: 8, borderRadius: 4, background: COLORS.divider, '& .MuiLinearProgress-bar': { background: i === mockAttempts.length - 1 ? COLORS.primaryPurple : `${COLORS.primaryPurple}70`, borderRadius: 4 } }} />
                         </Box>
                     ))}
                 </Box>
@@ -577,9 +573,9 @@ function MockTestModal({ chapter, subjectColor, open, onClose, onComplete }) {
                     <Typography sx={{ fontSize: '0.72rem', fontWeight: 700, color: COLORS.textSecondary, letterSpacing: 0.8, textTransform: 'uppercase', mb: 1 }}>📌 Retake Readiness</Typography>
                     <Typography sx={{ fontSize: '0.78rem', color: COLORS.textPrimary, fontWeight: 600, mb: 0.6 }}>Suggested: Improve weak topics before retaking</Typography>
                     <Typography sx={{ fontSize: '0.72rem', color: COLORS.textSecondary, lineHeight: 1.5, mb: 1.5 }}>Address Quadratic Formula and Word Problems first. Your trend is positive — one focused attempt should push you above 75%.</Typography>
-                    <Button variant="contained" size="small" fullWidth
+                    <Button variant="contained" color="primary" size="small" fullWidth
                         onClick={chapter.status !== 'completed' ? () => onComplete(chapter.id) : onClose}
-                        sx={{ background: `linear-gradient(135deg,${subjectColor},${subjectColor}CC)`, color: '#fff', textTransform: 'none', fontWeight: 700, borderRadius: '10px', boxShadow: `0 4px 12px ${subjectColor}35` }}>
+                        sx={{ textTransform: 'none', fontWeight: 700, borderRadius: '10px' }}>
                         {chapter.status !== 'completed' ? 'Pass Mock Test & Complete Chapter' : 'Retake Mock Test'}
                     </Button>
                 </Box>
@@ -588,430 +584,348 @@ function MockTestModal({ chapter, subjectColor, open, onClose, onComplete }) {
     );
 }
 
-// ─── Chapter Detail Panel ─────────────────────────────────────────────────────
+// ─── Chapter Detail Panel (4-Phase Learning Carousel) ──────────────────────────
 
-function ChapterDetailPanel({ chapter, subjectColor, onPracticeOpen, onMockOpen, onMoveUp, onMoveDown, isFirst, isLast, currentIndex, totalChapters, onUpdateChapter }) {
-    if (!chapter) {
+const LEARNING_PHASES = [
+    { id: 'phase1', label: '1st Time Learning', desc: 'Initial understanding & basic practice', icon: '🌱' },
+    { id: 'phase2', label: 'Before Mock Test', desc: 'Revision & intermediate problem solving', icon: '📝' },
+    { id: 'phase3', label: 'Before Pre-Board', desc: 'Advanced practice & time management', icon: '🎓' },
+    { id: 'phase4', label: 'Before Board Exams', desc: 'Final polish & previous year papers', icon: '🏆' },
+];
+
+function ChapterDetailModal({ chapter, open, onClose, subjectColor, onPracticeOpen, onMockOpen }) {
+    const [expandedPhase, setExpandedPhase] = useState('phase1');
+    const [checkedTopics, setCheckedTopics] = useState({});
+
+    // Reset local state when chapter changes
+    useEffect(() => {
+        if (open && chapter) {
+            setExpandedPhase('phase1');
+            setCheckedTopics({});
+        }
+    }, [chapter?.id, open]);
+
+    if (!chapter) return null;
+
+    if (chapter.type === 'mock-test' || chapter.type === 'preboard') {
         return (
-            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', p: 4, textAlign: 'center', minHeight: 320 }}>
-                <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ type: 'spring', stiffness: 260 }}>
-                    <Typography sx={{ fontSize: '2.8rem', mb: 1.5 }}>🗺️</Typography>
-                    <Typography sx={{ fontSize: '0.9rem', fontWeight: 600, color: COLORS.textSecondary }}>Select a milestone</Typography>
-                    <Typography sx={{ fontSize: '0.75rem', color: COLORS.textMuted, mt: 0.5, lineHeight: 1.6 }}>
-                        Tap any chapter card on the roadmap<br />to see its full details here.
+            <Modal open={open} onClose={onClose}>
+                <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: { xs: '92vw', sm: 400 }, background: '#fff', borderRadius: '20px', boxShadow: '0 20px 60px rgba(0,0,0,0.18)', p: 4, textAlign: 'center', outline: 'none' }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 1 }}>
+                        <IconButton size="small" onClick={onClose}><svg width="18" height="18" viewBox="0 0 24 24" fill={COLORS.textSecondary}><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" /></svg></IconButton>
+                    </Box>
+                    <Typography sx={{ fontSize: '3rem', mb: 2 }}>{chapter.type === 'preboard' ? '🎓' : '📝'}</Typography>
+                    <Typography sx={{ fontSize: '1.4rem', fontWeight: 800, color: COLORS.textPrimary, mb: 1 }}>{chapter.title}</Typography>
+                    <Typography sx={{ fontSize: '0.9rem', color: COLORS.textSecondary, mb: 4, maxWidth: 400, mx: 'auto' }}>
+                        This is a major evaluation milestone. Make sure you have completed the learning phases for previous chapters before attempting this test.
                     </Typography>
-                </motion.div>
-            </Box>
+                    <Button variant="contained" size="large" onClick={() => { onClose(); onMockOpen(); }}
+                        sx={{ background: COLORS.primaryPurple, color: '#fff', fontWeight: 700, borderRadius: '12px', px: 4, py: 1.5, textTransform: 'none', fontSize: '1rem', '&:hover': { background: COLORS.purpleHover } }}>
+                        Attempt {chapter.type === 'preboard' ? 'Pre-Board' : 'Mock Test'}
+                    </Button>
+                </Box>
+            </Modal>
         );
     }
 
-    const sc = statusConfig[chapter.status];
-    const pct = Math.round((chapter.practiceCompleted / chapter.practiceTotal) * 100);
+    const toggleTopic = (phaseId, topicName) => {
+        setCheckedTopics(prev => {
+            const key = `${phaseId}-${topicName}`;
+            const newState = { ...prev, [key]: !prev[key] };
+
+            // Check if phase is complete now
+            const phaseTopics = chapter.topics || [];
+            const isPhaseNowComplete = phaseTopics.every(t => newState[`${phaseId}-${t.name}`]);
+
+            // Auto unlock next phase
+            if (isPhaseNowComplete) {
+                const phaseIdx = LEARNING_PHASES.findIndex(p => p.id === phaseId);
+                if (phaseIdx !== -1 && phaseIdx < LEARNING_PHASES.length - 1) {
+                    setTimeout(() => setExpandedPhase(LEARNING_PHASES[phaseIdx + 1].id), 300);
+                } else if (phaseIdx === LEARNING_PHASES.length - 1) {
+                    setTimeout(() => setExpandedPhase(null), 300); // All done
+                }
+            }
+
+            return newState;
+        });
+    };
+
+    const isPhaseComplete = (phaseId) => {
+        if (!chapter.topics || chapter.topics.length === 0) return false;
+        return chapter.topics.every(t => checkedTopics[`${phaseId}-${t.name}`]);
+    };
 
     return (
-        <Box sx={{ p: { xs: 2, md: 2.5 }, overflowY: 'auto' }}>
-
-            {/* Study order controls */}
-            <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 1, mb: 2, p: 1.2, borderRadius: '10px', background: `${subjectColor}06`, border: `1px solid ${subjectColor}20` }}>
-                <Box>
-                    <Typography sx={{ fontSize: '0.7rem', fontWeight: 700, color: COLORS.textPrimary }}>Current Position in Roadmap:</Typography>
-                    <Typography sx={{ fontSize: '0.65rem', color: COLORS.textMuted, fontWeight: 600 }}>Chapter {currentIndex + 1} of {totalChapters}</Typography>
-                </Box>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, ml: 'auto' }}>
-                    <Button 
-                        title="Move this chapter earlier in your learning path"
-                        size="small" 
-                        variant="outlined" 
-                        disabled={isFirst}
-                        onClick={onMoveUp}
-                        sx={{ fontSize: '0.65rem', minWidth: 0, px: 1.2, py: 0.3, color: subjectColor, borderColor: `${subjectColor}50`, '&:hover': { borderColor: subjectColor, background: `${subjectColor}10` }, textTransform: 'none', fontWeight: 700 }}
-                    >
-                        Earlier
-                    </Button>
-                    <Button 
-                        title="Delay this chapter to a later point in your roadmap"
-                        size="small" 
-                        variant="outlined" 
-                        disabled={isLast}
-                        onClick={onMoveDown}
-                        sx={{ fontSize: '0.65rem', minWidth: 0, px: 1.2, py: 0.3, color: subjectColor, borderColor: `${subjectColor}50`, '&:hover': { borderColor: subjectColor, background: `${subjectColor}10` }, textTransform: 'none', fontWeight: 700 }}
-                    >
-                        Later
-                    </Button>
-                </Box>
-            </Box>
-
-            {/* Chapter header */}
-            <Box sx={{ mb: 2 }}>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.6 }}>
-                    <Chip label={sc.label} size="small" sx={{ height: 22, fontSize: '0.65rem', fontWeight: 700, background: sc.bg, color: sc.color }} />
-                    {chapter.firstTime && <Chip label="First Time" size="small" sx={{ height: 22, fontSize: '0.65rem', fontWeight: 700, background: `${COLORS.blue}12`, color: COLORS.blue }} />}
-                </Box>
-                <Typography sx={{ fontSize: '1.05rem', fontWeight: 800, color: COLORS.textPrimary, lineHeight: 1.3 }}>{chapter.title}</Typography>
-                {chapter.status !== 'not-started' && (
-                    <Box sx={{ mt: 1 }}>
-                        <Typography sx={{ fontSize: '0.65rem', color: COLORS.textMuted, mb: 0.4 }}>
-                            {chapter.status === 'completed' ? "You're doing great here!" : "You're making steady progress!"}
-                        </Typography>
-                        <LinearProgress variant="determinate" value={pct}
-                            sx={{ height: 6, borderRadius: 4, background: COLORS.divider, '& .MuiLinearProgress-bar': { background: `linear-gradient(90deg,${subjectColor},${subjectColor}CC)`, borderRadius: 4 } }} />
+        <Modal open={open} onClose={onClose}>
+            <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: { xs: '94vw', md: 840 }, maxHeight: '90vh', overflowY: 'auto', background: '#fff', borderRadius: '20px', boxShadow: '0 20px 60px rgba(0,0,0,0.18)', p: 4, outline: 'none' }}>
+                {/* Header */}
+                <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', mb: 3 }}>
+                    <Box>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.8 }}>
+                            <Chip label="Chapter Focus" size="small" sx={{ height: 22, fontSize: '0.65rem', fontWeight: 700, background: COLORS.purpleLight, color: COLORS.primaryPurple }} />
+                            <Typography sx={{ fontSize: '0.75rem', fontWeight: 700, color: COLORS.textSecondary }}>{chapter.topics?.length || 0} Topics</Typography>
+                        </Box>
+                        <Typography sx={{ fontSize: '1.4rem', fontWeight: 800, color: COLORS.textPrimary, lineHeight: 1.3 }}>{chapter.title}</Typography>
                     </Box>
-                )}
-            </Box>
+                    <IconButton size="small" onClick={onClose}><svg width="18" height="18" viewBox="0 0 24 24" fill={COLORS.textSecondary}><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" /></svg></IconButton>
+                </Box>
 
-            <Divider sx={{ mb: 2 }} />
+                {/* 4-Phase Learning Carousel (Accordion) */}
+                <Typography sx={{ fontSize: '0.85rem', fontWeight: 800, color: COLORS.textSecondary, textTransform: 'uppercase', letterSpacing: 0.8, mb: 2 }}>Learning Journey</Typography>
 
-            {/* Info blocks */}
-            <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', lg: 'repeat(3, 1fr)' }, gap: 1.5, mb: 2 }}>
+                <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, alignItems: 'stretch', gap: 1.5, minHeight: 280 }}>
+                    {LEARNING_PHASES.map((phase, idx) => {
+                        const isExpanded = expandedPhase === phase.id;
+                        const isComplete = isPhaseComplete(phase.id);
+                        const prevPhaseComplete = idx === 0 || isPhaseComplete(LEARNING_PHASES[idx - 1].id);
+                        const isLocked = !prevPhaseComplete;
 
-                {/* Learning */}
-                <Box sx={{ p: 1.5, borderRadius: '12px', background: COLORS.bgWarm, border: `1px solid ${COLORS.border}`, display: 'flex', flexDirection: 'column' }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1.2 }}>
-                        <Typography sx={{ fontSize: '1rem' }}>📚</Typography>
-                        <Typography sx={{ fontSize: '0.78rem', fontWeight: 700, color: COLORS.textPrimary }}>Learning</Typography>
-                    </Box>
-                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, flexGrow: 1 }}>
-                        {[
-                            { label: 'Chapter reading complete', isComplete: chapter.status === 'completed' || chapter.status === 'in-progress', action: () => chapter.status === 'not-started' && onUpdateChapter(chapter.id, { status: 'in-progress' }) },
-                            { label: 'Practice Questions Complete', isComplete: chapter.status === 'completed' || (chapter.practiceTotal > 0 && chapter.practiceCompleted >= chapter.practiceTotal) },
-                            { label: 'Mock Test Complete', isComplete: chapter.status === 'completed' || (chapter.mockAttempts !== undefined && chapter.mockAttempts > 0 && chapter.mockScore >= 75) }
-                        ].map((task, i) => (
-                            <Box key={i} sx={{ display: 'flex', alignItems: 'center', gap: 1, cursor: task.action ? 'pointer' : 'default' }} onClick={task.action}>
-                                <Box sx={{ width: 20, height: 20, borderRadius: '6px', background: task.isComplete ? `${COLORS.green}20` : 'transparent', border: task.isComplete ? `1px solid ${COLORS.green}40` : `1.5px solid ${COLORS.textMuted}50`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.65rem', flexShrink: 0, transition: 'all 0.2s', '&:hover': task.action ? { opacity: 0.8 } : {} }}>
-                                    {task.isComplete && '✅'}
+                        return (
+                            <Box key={phase.id} 
+                                onClick={() => !isLocked && setExpandedPhase(isExpanded ? null : phase.id)}
+                                sx={{
+                                flex: { xs: 'none', md: isExpanded ? 2.2 : 1 },
+                                borderRadius: '16px',
+                                border: `1.5px solid ${isExpanded ? COLORS.primaryPurple : isComplete ? COLORS.green : isLocked ? `${COLORS.border}50` : COLORS.border}`,
+                                background: isExpanded ? '#fff' : isComplete ? `${COLORS.green}08` : COLORS.bgWarm,
+                                overflow: 'hidden',
+                                transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+                                opacity: isLocked ? 0.6 : 1,
+                                cursor: isLocked ? 'not-allowed' : 'pointer',
+                                display: 'flex', flexDirection: 'column',
+                                p: 2
+                            }}>
+                                {/* Accordion Header */}
+                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.2, mb: isExpanded ? 1.5 : 0 }}>
+                                    <Box sx={{ width: 34, height: 34, flexShrink: 0, borderRadius: '10px', background: isComplete ? COLORS.green : isExpanded ? COLORS.primaryPurple : '#E2E8F0', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1rem', color: '#fff' }}>
+                                        {isComplete ? '✓' : phase.icon}
+                                    </Box>
+                                    
+                                    <Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1, minWidth: 0 }}>
+                                        <Typography noWrap sx={{ fontSize: '0.9rem', fontWeight: 800, color: isComplete ? COLORS.greenDark : COLORS.textPrimary }}>
+                                            {phase.label}
+                                        </Typography>
+                                    </Box>
                                 </Box>
-                                <Typography sx={{ fontSize: '0.7rem', color: task.isComplete ? COLORS.textPrimary : COLORS.textSecondary, userSelect: 'none' }}>
-                                    {task.label}
-                                </Typography>
-                            </Box>
-                        ))}
-                    </Box>
-                </Box>
 
-                {/* Practice */}
-                <Box sx={{ p: 1.5, borderRadius: '12px', background: COLORS.bgWarm, border: `1px solid ${COLORS.border}`, display: 'flex', flexDirection: 'column' }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-                        <Typography sx={{ fontSize: '1rem' }}>✏️</Typography>
-                        <Typography sx={{ fontSize: '0.78rem', fontWeight: 700, color: COLORS.textPrimary }}>Practice Questions</Typography>
-                    </Box>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1, flexGrow: 1 }}>
-                        <Box sx={{ position: 'relative', width: 44, height: 44, flexShrink: 0 }}>
-                            <svg width={44} height={44} style={{ transform: 'rotate(-90deg)' }}>
-                                <circle cx={22} cy={22} r={18} fill="none" stroke={COLORS.divider} strokeWidth={5} />
-                                <circle cx={22} cy={22} r={18} fill="none" stroke={subjectColor} strokeWidth={5} strokeDasharray={`${(pct / 100) * 113.1} 113.1`} strokeLinecap="round" />
-                            </svg>
-                            <Typography sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', fontSize: '0.65rem', fontWeight: 800, color: subjectColor }}>{pct}%</Typography>
-                        </Box>
-                        <Box>
-                            <Typography sx={{ fontSize: '0.95rem', fontWeight: 800, color: COLORS.textPrimary, lineHeight: 1 }}>{chapter.practiceCompleted}/{chapter.practiceTotal}</Typography>
-                            <Typography sx={{ fontSize: '0.65rem', color: COLORS.textSecondary }}>Completed</Typography>
-                            <Typography sx={{ fontSize: '0.6rem', color: COLORS.textMuted, mt: 0.3 }}>Adaptive difficulty</Typography>
-                        </Box>
-                    </Box>
-                    {chapter.status === 'not-started' ? (
-                        <Button disabled variant="contained" size="small" fullWidth 
-                            sx={{ mt: 1, textTransform: 'none', fontWeight: 600, fontSize: '0.65rem', borderRadius: '8px', '&.Mui-disabled': { background: '#F3F4F6', color: '#9CA3AF' }, py: 0.8 }}>
-                            🔒 Complete Reading to Unlock
-                        </Button>
-                    ) : (
-                        <Button variant={chapter.practiceCompleted < chapter.practiceTotal ? "contained" : "outlined"} size="small" fullWidth onClick={onPracticeOpen} 
-                            sx={{ mt: 1, color: chapter.practiceCompleted < chapter.practiceTotal ? '#fff' : subjectColor, background: chapter.practiceCompleted < chapter.practiceTotal ? `linear-gradient(135deg, ${subjectColor}, ${subjectColor}CC)` : 'transparent', borderColor: `${subjectColor}50`, textTransform: 'none', fontWeight: 700, fontSize: '0.72rem', borderRadius: '8px', '&:hover': { borderColor: subjectColor, opacity: 0.9 } }}>
-                            {chapter.practiceCompleted >= chapter.practiceTotal && chapter.practiceTotal > 0 
-                                ? 'Report →' 
-                                : 'Attempt Questions'}
-                        </Button>
-                    )}
-                </Box>
+                                {/* Accordion Body */}
+                                {!isExpanded && !isLocked && (
+                                    <Box sx={{ display: { xs: 'none', md: 'flex' }, flexDirection: 'column', gap: 0.5, mt: 1.5, opacity: 0.6 }}>
+                                        {chapter.topics?.map((topic, tIdx) => (
+                                            <Box key={tIdx} sx={{ display: 'flex', alignItems: 'flex-start', gap: 0.8 }}>
+                                                <Box sx={{ width: 4, height: 4, borderRadius: '50%', background: COLORS.textMuted, mt: 0.6, flexShrink: 0 }} />
+                                                <Typography noWrap sx={{ fontSize: '0.65rem', color: COLORS.textSecondary, lineHeight: 1.3 }}>
+                                                    {topic.name}
+                                                </Typography>
+                                            </Box>
+                                        ))}
+                                    </Box>
+                                )}
+                                {isLocked && (
+                                    <Typography sx={{ fontSize: '0.7rem', color: COLORS.textSecondary, mt: 1, opacity: 0.8, display: { xs: 'none', md: 'block' } }}>
+                                        🔒 Locked
+                                    </Typography>
+                                )}
+                                {isExpanded && !isLocked && (
+                                    <Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1, animation: 'fadeIn 0.5s ease' }}>
+                                        <Typography sx={{ fontSize: '0.75rem', color: COLORS.textSecondary, mb: 1.5, lineHeight: 1.4 }}>
+                                            {phase.desc}
+                                        </Typography>
+                                        
+                                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, flexGrow: 1 }}>
+                                            {chapter.topics?.map((topic, tIdx) => {
+                                                const checked = !!checkedTopics[`${phase.id}-${topic.name}`];
+                                                return (
+                                                    <Box key={tIdx} onClick={(e) => { e.stopPropagation(); toggleTopic(phase.id, topic.name); }}
+                                                        sx={{
+                                                            display: 'flex', alignItems: 'flex-start', gap: 1.2, p: 1.2, borderRadius: '10px',
+                                                            cursor: 'pointer', transition: 'all 0.2s',
+                                                            background: checked ? `${COLORS.green}10` : '#fff',
+                                                            border: `1px solid ${checked ? `${COLORS.green}40` : COLORS.border}`,
+                                                            '&:hover': { borderColor: checked ? COLORS.green : COLORS.primaryPurple }
+                                                        }}>
+                                                        <Box sx={{
+                                                            width: 20, height: 20, mt: 0.1, borderRadius: '5px', flexShrink: 0,
+                                                            border: `2px solid ${checked ? COLORS.green : COLORS.textMuted}`,
+                                                            background: checked ? COLORS.green : '#fff',
+                                                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                                            color: '#fff', fontSize: '0.75rem'
+                                                        }}>
+                                                            {checked && '✓'}
+                                                        </Box>
+                                                        <Typography sx={{ fontSize: '0.8rem', fontWeight: checked ? 600 : 500, color: checked ? COLORS.textPrimary : COLORS.textSecondary, lineHeight: 1.3 }}>
+                                                            {topic.name}
+                                                        </Typography>
+                                                    </Box>
+                                                );
+                                            })}
+                                        </Box>
 
-                {/* Mock Test */}
-                <Box sx={{ p: 1.5, borderRadius: '12px', background: COLORS.bgWarm, border: `1px solid ${COLORS.border}`, display: 'flex', flexDirection: 'column' }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-                        <Typography sx={{ fontSize: '1rem' }}>📋</Typography>
-                        <Typography sx={{ fontSize: '0.78rem', fontWeight: 700, color: COLORS.textPrimary }}>Mock Test</Typography>
-                    </Box>
-                    <Box sx={{ display: 'flex', gap: 1.5, mb: 1, flexGrow: 1 }}>
-                        <Box sx={{ textAlign: 'center', minWidth: 40 }}>
-                            <Typography sx={{ fontSize: '1.2rem', fontWeight: 800, color: COLORS.textPrimary, lineHeight: 1 }}>{chapter.mockAttempts}</Typography>
-                            <Typography sx={{ fontSize: '0.6rem', color: COLORS.textSecondary }}>Attempts</Typography>
-                        </Box>
-                        {chapter.mockScore !== null && (
-                            <Box sx={{ textAlign: 'center', minWidth: 40 }}>
-                                <Typography sx={{ fontSize: '1.2rem', fontWeight: 800, color: subjectColor, lineHeight: 1 }}>{chapter.mockScore}%</Typography>
-                                <Typography sx={{ fontSize: '0.6rem', color: COLORS.textSecondary }}>Best Score</Typography>
+                                        {phase.id === 'phase1' && (
+                                            <Box sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end', pt: 1 }}>
+                                                <Button
+                                                    variant="contained"
+                                                    onClick={(e) => { e.stopPropagation(); onClose(); onPracticeOpen(); }}
+                                                    sx={{
+                                                        background: COLORS.primaryPurple, color: '#fff', fontWeight: 700, borderRadius: '10px', textTransform: 'none', py: 0.8,
+                                                        boxShadow: `0 4px 12px ${COLORS.primaryPurple}30`,
+                                                        '&:hover': { background: COLORS.purpleHover }
+                                                    }}>
+                                                    ✏️ 1st Time Practice
+                                                </Button>
+                                            </Box>
+                                        )}
+                                    </Box>
+                                )}
                             </Box>
-                        )}
-                    </Box>
-                    {(chapter.status === 'not-started' || chapter.practiceCompleted < chapter.practiceTotal) ? (
-                        <Button disabled variant="contained" size="small" fullWidth 
-                            sx={{ mt: 1, textTransform: 'none', fontWeight: 600, fontSize: '0.65rem', borderRadius: '8px', '&.Mui-disabled': { background: '#F3F4F6', color: '#9CA3AF' }, lineHeight: 1.2, py: 0.8 }}>
-                            🔒 Complete Practice to Unlock Mock Test
-                        </Button>
-                    ) : (
-                        <Button variant={chapter.status !== 'completed' ? "contained" : "outlined"} size="small" fullWidth onClick={onMockOpen} 
-                            sx={{ mt: 1, color: chapter.status !== 'completed' ? '#fff' : subjectColor, background: chapter.status !== 'completed' ? `linear-gradient(135deg, ${subjectColor}, ${subjectColor}CC)` : 'transparent', borderColor: `${subjectColor}50`, textTransform: 'none', fontWeight: 700, fontSize: '0.72rem', borderRadius: '8px', '&:hover': { borderColor: subjectColor, opacity: 0.9 } }}>
-                            {chapter.status === 'completed' ? 'Analysis →' : 'Take Mock Test'}
-                        </Button>
-                    )}
+                        );
+                    })}
                 </Box>
             </Box>
-
-            {/* Topics table */}
-            {chapter.topics.length > 0 && (
-                <Box>
-                    <Typography sx={{ fontSize: '0.72rem', fontWeight: 700, color: COLORS.textSecondary, letterSpacing: 0.8, textTransform: 'uppercase', mb: 1.2 }}>Topics in this Chapter</Typography>
-                    <Box sx={{ borderRadius: '10px', border: `1px solid ${COLORS.border}`, overflow: 'hidden' }}>
-                        <Box sx={{ display: 'grid', gridTemplateColumns: '1.5fr 100px 90px 100px', px: 1.5, py: 0.8, background: COLORS.divider }}>
-                            {['Topic', 'Learning', 'Practices', 'Progress'].map((h, idx) => (
-                                <Typography key={h} sx={{ fontSize: '0.6rem', fontWeight: 700, color: COLORS.textSecondary, textTransform: 'uppercase', letterSpacing: 0.4, textAlign: idx > 0 ? 'center' : 'left' }}>{h}</Typography>
-                            ))}
-                        </Box>
-                        {chapter.topics.map((t, i) => (
-                            <Box key={t.name} sx={{ display: 'grid', gridTemplateColumns: '1.5fr 100px 90px 100px', px: 1.5, py: 1, borderTop: i > 0 ? `1px solid ${COLORS.divider}` : 'none', alignItems: 'center' }}>
-                                <Typography sx={{ fontSize: '0.72rem', color: COLORS.textPrimary, fontWeight: 500, lineHeight: 1.3, pr: 1 }}>{t.name}</Typography>
-                                <Chip label={t.learning} size="small" sx={{ justifySelf: 'center', height: 18, fontSize: '0.57rem', fontWeight: 600, maxWidth: 80, background: t.learning === 'Completed' ? `${COLORS.green}15` : t.learning === 'In Progress' ? `${COLORS.blue}15` : COLORS.divider, color: t.learning === 'Completed' ? COLORS.greenDark : t.learning === 'In Progress' ? COLORS.blue : COLORS.textMuted, '& .MuiChip-label': { px: 0.7 } }} />
-                                <Typography sx={{ fontSize: '0.7rem', color: COLORS.textSecondary, fontWeight: 600, textAlign: 'center' }}>{t.practice}</Typography>
-                                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 0.8, px: 0.5 }}>
-                                    <LinearProgress variant="determinate" value={t.progress} sx={{ flexGrow: 1, height: 4, borderRadius: 4, background: COLORS.divider, '& .MuiLinearProgress-bar': { background: subjectColor, borderRadius: 4 } }} />
-                                    <Typography sx={{ fontSize: '0.56rem', color: subjectColor, fontWeight: 700, flexShrink: 0, minWidth: 26, textAlign: 'right' }}>{t.progress}%</Typography>
-                                </Box>
-                            </Box>
-                        ))}
-                    </Box>
-                </Box>
-            )}
-        </Box>
+        </Modal>
     );
 }
 
-// ─── SVG Chapter Node — Original geometry, text-wrap only ────────────────────
-//
-// Geometry: UNCHANGED from original
-//   cardW  118 px  — original width
-//   cardH   72 px  — original height
-//   nodeR   22 px
-//   connGap 30 px  (nodeR + 8)
-//
-// Only change: title now word-wraps into 2 lines (≤ 12 chars each) via
-// wrapTitle(), instead of hard-truncating at 13 chars with an ellipsis.
-// Y positions are recalculated to fit 2 lines inside the original 72px card.
-//
-//   y offsets (from cardY):
-//     "CHAPTER N" micro-label  →  +12
-//     Title line 1             →  +23
-//     Title line 2 (if any)   →  +33   (10px line-height, tight but clear)
-//     Sub-info line            →  +23 + titleLinesCnt * 10 + 3
-//     Status badge             →  cardH − 16  (pinned to bottom)
+// ─── SVG Milestone Node (horizontal, cards alternate above/below) ─────────────
 
-function SVGChapterNode({ chapter, index, pos, isSelected, subjectColor, onSelect, onReorder }) {
+function SVGChapterNode({ chapter, index, pos, isSelected, subjectColor, onSelect }) {
     const isCompleted = chapter.status === 'completed';
     const isInProgress = chapter.status === 'in-progress';
+    const isMockTest = chapter.type === 'mock-test';
+    const isPreboard = chapter.type === 'preboard';
+    const isSpecial = isMockTest || isPreboard;
 
-    // ── Card geometry — ORIGINAL, unchanged ───────────────────────────────────
-    const nodeR = 22;
-    const cardW = 118;   // original
-    const cardH = 72;    // original
-    const connGap = nodeR + 8;
+    const nodeR = isSpecial ? 18 : 20;
+    const cardW = 130;
+    const cardH = 70;
+    const connGap = nodeR + 6;
 
-    const isOnRight = pos.x > ROAD_VIEWBOX_W / 2;
-    const cardX = isOnRight ? pos.x - connGap - cardW : pos.x + connGap;
-    const cardY = pos.y - cardH / 2;
+    // Alternate cards above (even index) and below (odd index)
+    const isAbove = index % 2 === 0;
+    const cardX = pos.x - cardW / 2;
+    const cardY = isAbove ? pos.y - connGap - cardH : pos.y + connGap;
+    const connY1 = isAbove ? cardY + cardH : pos.y - nodeR;
+    const connY2 = isAbove ? pos.y - nodeR : cardY;
 
-    // Connector endpoints
-    const connX1 = isOnRight ? cardX + cardW : pos.x + nodeR;
-    const connX2 = isOnRight ? pos.x - nodeR : cardX;
+    const accentColor = isSpecial ? COLORS.primaryPurple : isCompleted ? subjectColor : isInProgress ? COLORS.blue : '#D1D5DB';
+    const cardStroke = isSelected ? COLORS.primaryPurple : isSpecial ? `${COLORS.primaryPurple}50` : isInProgress ? `${COLORS.blue}50` : '#E8EAED';
 
-    // ── Visual config ─────────────────────────────────────────────────────────
-    const accentColor = isCompleted ? subjectColor : isInProgress ? COLORS.blue : '#D1D5DB';
-    const cardStroke = isSelected ? subjectColor : isInProgress ? `${COLORS.blue}50` : '#E8EAED';
-
-    const statusLabel = isCompleted ? 'Completed' : isInProgress ? 'In Progress' : 'Not Started';
-    const statusColor = isCompleted ? '#15803d' : isInProgress ? '#1d4ed8' : '#6B7280';
+    const statusLabel = isCompleted ? 'Done' : isInProgress ? 'In Progress' : 'Locked';
+    const statusColor = isCompleted ? '#15803d' : isInProgress ? '#1d4ed8' : '#9CA3AF';
     const statusBg = isCompleted ? '#dcfce7' : isInProgress ? '#dbeafe' : '#F3F4F6';
-    const badgeW = Math.round(statusLabel.length * 4.9 + 14);
 
-    // ── Text layout ───────────────────────────────────────────────────────────
-    const iconCX = cardX + 22;
-    const iconCY = cardY + cardH / 2;
-    const textX = cardX + 42;   // right of icon area (same as original)
-
-    // Word-wrap title into ≤ 2 lines of ≤ 12 chars each.
-    // Text area width ≈ cardW − 42(icon) − 4(padding) = 72px → ~12 chars @ 8.5px font
-    const titleLines = wrapTitle(chapter.title, 12);
-    const titleLinesCnt = titleLines.length;
-
-    // Sub-info line
-    const subText = isCompleted && chapter.mockScore != null
-        ? `Mock: ${chapter.mockScore}%`
-        : isInProgress && chapter.practiceCompleted > 0
-            ? `${chapter.practiceCompleted}/${chapter.practiceTotal} practiced`
-            : chapter.topics?.length > 0
-                ? `${chapter.topics.length} topic${chapter.topics.length !== 1 ? 's' : ''}`
-                : 'Not started';
-
-    // Y positions — recalculated for 72px card height with possible 2-line title
-    const chapterLabelY = cardY + 12;
-    const titleY1 = cardY + 23;
-    const titleY2 = cardY + 33;   // 10px line-height
-    const subInfoY = cardY + 23 + titleLinesCnt * 10 + 3;
-    const badgeBgY = cardY + cardH - 16;
-    const badgeTextY = cardY + cardH - 9;
+    const subText = isSpecial ? (isCompleted ? 'Completed ✓' : 'Upcoming') :
+        isCompleted && chapter.mockScore != null ? `Score: ${chapter.mockScore}%` :
+            isInProgress ? `${chapter.practiceCompleted}/${chapter.practiceTotal} done` :
+                `${chapter.topics?.length || 0} topics`;
 
     return (
         <motion.g
             initial={{ scale: 0, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            transition={{ delay: index * 0.08, type: 'spring', stiffness: 280, damping: 24 }}
+            transition={{ delay: index * 0.07, type: 'spring', stiffness: 280, damping: 24 }}
             style={{ transformOrigin: `${pos.x}px ${pos.y}px` }}
         >
-            {/* ═══════════════════════════════════════════════════════════════
-                MILESTONE CARD
-            ═══════════════════════════════════════════════════════════════ */}
-
-            {/* Card drop-shadow */}
-            <rect x={cardX + 2} y={cardY + 3} width={cardW} height={cardH} rx={11}
-                fill="rgba(0,0,0,0.06)" />
+            {/* Card shadow */}
+            <rect x={cardX + 2} y={cardY + 3} width={cardW} height={cardH} rx={10} fill="rgba(0,0,0,0.06)" />
 
             {/* Card body */}
-            <rect
-                x={cardX} y={cardY} width={cardW} height={cardH} rx={11}
-                fill="#ffffff" stroke={cardStroke} strokeWidth={isSelected ? 2 : 1}
-                onClick={onSelect} style={{ cursor: 'pointer' }}
-            />
+            <rect x={cardX} y={cardY} width={cardW} height={cardH} rx={10}
+                fill={isSpecial ? `${COLORS.primaryPurple}06` : '#fff'}
+                stroke={cardStroke} strokeWidth={isSelected ? 2 : 1}
+                onClick={onSelect} style={{ cursor: 'pointer' }} />
 
-            {/* Left accent strip — original proportions */}
-            <rect x={cardX + 1} y={cardY + 10} width={3.5} height={cardH - 20} rx={2}
+            {/* Top accent bar */}
+            <rect x={cardX + 10} y={cardY + 1} width={cardW - 20} height={3} rx={1.5}
                 fill={accentColor} style={{ pointerEvents: 'none' }} />
 
-            {/* Dashed connector: card edge → node edge */}
-            <line
-                x1={connX1} y1={pos.y} x2={connX2} y2={pos.y}
-                stroke={isSelected ? subjectColor : '#CBD5E1'}
-                strokeWidth={1.5} strokeDasharray="3.5 2.5"
-            />
+            {/* Vertical dashed connector */}
+            <line x1={pos.x} y1={connY1} x2={pos.x} y2={connY2}
+                stroke={isSelected ? COLORS.primaryPurple : '#CBD5E1'}
+                strokeWidth={1.5} strokeDasharray="3.5 2.5" />
 
-            {/* Icon circle background — original radius 14 */}
-            <circle cx={iconCX} cy={iconCY} r={14}
-                fill={isCompleted ? `${subjectColor}18` : isInProgress ? `${COLORS.blue}14` : '#F3F4F6'}
-                style={{ pointerEvents: 'none' }}
-            />
-
-            {/* Status icon — original fontSize 12 */}
-            <text x={iconCX} y={iconCY} textAnchor="middle" dominantBaseline="middle"
-                fontSize={12} style={{ pointerEvents: 'none', userSelect: 'none' }}>
-                {isCompleted ? '🏆' : isInProgress ? '📖' : '🔒'}
+            {/* Milestone type label */}
+            <text x={cardX + cardW / 2} y={cardY + 13}
+                textAnchor="middle" fontSize={5.5} fill={isSpecial ? COLORS.primaryPurple : '#9CA3AF'}
+                fontWeight="700" fontFamily="'Inter',sans-serif" letterSpacing="0.6"
+                style={{ pointerEvents: 'none' }}>
+                {isPreboard ? 'PRE-BOARD' : isMockTest ? 'MOCK TEST' : `CHAPTER ${index + 1}`}
             </text>
 
-            {/* "CHAPTER N" micro-label */}
-            <text x={textX} y={chapterLabelY}
-                fontSize={5.8} fill="#9CA3AF" fontWeight="700"
-                fontFamily="'Inter',sans-serif" letterSpacing="0.6"
-                style={{ pointerEvents: 'none' }}>
-                CHAPTER {index + 1}
+            {/* Title (Single line) */}
+            <text x={cardX + cardW / 2} y={cardY + 30}
+                textAnchor="middle" fontSize={9} fill="#111827" fontWeight="800"
+                fontFamily="'Inter',sans-serif" style={{ pointerEvents: 'none' }}>
+                {chapter.title}
             </text>
 
-            {/* Title — line 1. fontSize 8.5 fits ~12 chars in 72px text area */}
-            <text x={textX} y={titleY1}
-                fontSize={8.5} fill="#111827" fontWeight="800"
-                fontFamily="'Inter',sans-serif"
-                style={{ pointerEvents: 'none' }}>
-                {titleLines[0]}
-            </text>
-
-            {/* Title — line 2 (only when title wraps) */}
-            {titleLinesCnt > 1 && (
-                <text x={textX} y={titleY2}
-                    fontSize={8.5} fill="#111827" fontWeight="800"
-                    fontFamily="'Inter',sans-serif"
-                    style={{ pointerEvents: 'none' }}>
-                    {titleLines[1]}
-                </text>
-            )}
-
-            {/* Sub-info line */}
-            <text x={textX} y={subInfoY}
-                fontSize={6.8} fill="#6B7280"
-                fontFamily="'Inter',sans-serif"
-                style={{ pointerEvents: 'none' }}>
+            {/* Sub info */}
+            <text x={cardX + cardW / 2} y={cardY + 49}
+                textAnchor="middle" fontSize={6.5} fill="#6B7280"
+                fontFamily="'Inter',sans-serif" style={{ pointerEvents: 'none' }}>
                 {subText}
             </text>
 
-            {/* Status badge — background */}
-            <rect x={textX} y={badgeBgY} width={badgeW} height={13} rx={6.5}
+            {/* Status badge */}
+            <rect x={cardX + (cardW / 2) - 20} y={cardY + 55} width={40} height={11} rx={5.5}
                 fill={statusBg} style={{ pointerEvents: 'none' }} />
-
-            {/* Status badge — text */}
-            <text
-                x={textX + badgeW / 2} y={badgeTextY}
+            <text x={cardX + cardW / 2} y={cardY + 62}
                 textAnchor="middle" dominantBaseline="middle"
-                fontSize={6.5} fill={statusColor} fontWeight="700"
-                fontFamily="'Inter',sans-serif"
-                style={{ pointerEvents: 'none' }}>
+                fontSize={6} fill={statusColor} fontWeight="700"
+                fontFamily="'Inter',sans-serif" style={{ pointerEvents: 'none' }}>
                 {statusLabel}
             </text>
 
-            {/* ═══════════════════════════════════════════════════════════════
-                NODE CIRCLE
-            ═══════════════════════════════════════════════════════════════ */}
+            {/* Click zone */}
+            <circle cx={pos.x} cy={pos.y} r={30} fill="transparent" onClick={onSelect} style={{ cursor: 'pointer' }} />
 
-            {/* Wide invisible click zone */}
-            <circle cx={pos.x} cy={pos.y} r={34}
-                fill="transparent" onClick={onSelect} style={{ cursor: 'pointer' }} />
-
-            {/* Pulsing selection ring */}
+            {/* Selection ring */}
             {isSelected && (
-                <motion.circle
-                    cx={pos.x} cy={pos.y} r={26} fill="none"
-                    stroke={subjectColor} strokeWidth={2.5}
-                    animate={{ r: [24, 29, 24], opacity: [0.75, 0.08, 0.75] }}
-                    transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }}
-                />
+                <motion.circle cx={pos.x} cy={pos.y} r={nodeR + 5} fill="none"
+                    stroke={COLORS.primaryPurple} strokeWidth={2.5}
+                    animate={{ r: [nodeR + 4, nodeR + 9, nodeR + 4], opacity: [0.75, 0.08, 0.75] }}
+                    transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }} />
             )}
 
-            {/* In-progress ambient pulse */}
-            {isInProgress && (
-                <motion.circle
-                    cx={pos.x} cy={pos.y} r={25} fill="none"
+            {/* In-progress pulse */}
+            {isInProgress && !isSpecial && (
+                <motion.circle cx={pos.x} cy={pos.y} r={nodeR + 4} fill="none"
                     stroke={COLORS.blue} strokeWidth={2}
-                    animate={{ r: [23, 29, 23], opacity: [0.35, 0.03, 0.35] }}
-                    transition={{ repeat: Infinity, duration: 2.5, ease: 'easeInOut' }}
-                />
+                    animate={{ r: [nodeR + 2, nodeR + 8, nodeR + 2], opacity: [0.35, 0.03, 0.35] }}
+                    transition={{ repeat: Infinity, duration: 2.5, ease: 'easeInOut' }} />
             )}
 
-            {/* Node drop-shadow */}
-            <circle cx={pos.x} cy={pos.y + 3} r={nodeR} fill="rgba(0,0,0,0.10)" />
+            {/* Node shadow */}
+            <circle cx={pos.x} cy={pos.y + 2} r={nodeR} fill="rgba(0,0,0,0.10)" />
 
             {/* Node body */}
-            <motion.circle
-                cx={pos.x} cy={pos.y} r={nodeR}
-                fill={isCompleted ? subjectColor : '#ffffff'}
-                stroke={isCompleted ? 'none' : isInProgress ? COLORS.blue : '#D1D5DB'}
+            <motion.circle cx={pos.x} cy={pos.y} r={nodeR}
+                fill={isSpecial ? COLORS.primaryPurple : isCompleted ? subjectColor : '#fff'}
+                stroke={isSpecial ? 'none' : isCompleted ? 'none' : isInProgress ? COLORS.blue : '#D1D5DB'}
                 strokeWidth={isInProgress ? 3 : 2}
-                whileTap={{ scale: 0.88 }}
-                onClick={onSelect} style={{ cursor: 'pointer' }}
-            />
+                whileTap={{ scale: 0.88 }} onClick={onSelect} style={{ cursor: 'pointer' }} />
 
-            {/* Node inner icon */}
-            {isCompleted ? (
-                <path
-                    d={`M ${pos.x - 8} ${pos.y + 0.5} L ${pos.x - 2} ${pos.y + 7} L ${pos.x + 9} ${pos.y - 7}`}
+            {/* Node icon */}
+            {isPreboard ? (
+                <text x={pos.x} y={pos.y} textAnchor="middle" dominantBaseline="middle"
+                    fontSize={11} style={{ pointerEvents: 'none', userSelect: 'none' }}>🎓</text>
+            ) : isMockTest ? (
+                <text x={pos.x} y={pos.y} textAnchor="middle" dominantBaseline="middle"
+                    fontSize={11} style={{ pointerEvents: 'none', userSelect: 'none' }}>📝</text>
+            ) : isCompleted ? (
+                <path d={`M ${pos.x - 7} ${pos.y + 0.5} L ${pos.x - 2} ${pos.y + 6} L ${pos.x + 8} ${pos.y - 6}`}
                     fill="none" stroke="white" strokeWidth="2.5"
-                    strokeLinecap="round" strokeLinejoin="round"
-                    style={{ pointerEvents: 'none' }}
-                />
+                    strokeLinecap="round" strokeLinejoin="round" style={{ pointerEvents: 'none' }} />
             ) : isInProgress ? (
-                <motion.circle
-                    cx={pos.x} cy={pos.y} r={8} fill={COLORS.blue}
+                <motion.circle cx={pos.x} cy={pos.y} r={7} fill={COLORS.blue}
                     animate={{ scale: [1, 1.18, 1] }}
                     transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }}
-                    style={{ pointerEvents: 'none' }}
-                />
+                    style={{ pointerEvents: 'none' }} />
             ) : (
-                <text
-                    x={pos.x} y={pos.y}
-                    textAnchor="middle" dominantBaseline="middle"
-                    fill="#9CA3AF" fontSize="11" fontWeight="700"
-                    fontFamily="'DM Sans','Inter',sans-serif"
-                    style={{ pointerEvents: 'none' }}>
+                <text x={pos.x} y={pos.y} textAnchor="middle" dominantBaseline="middle"
+                    fill="#9CA3AF" fontSize="10" fontWeight="700"
+                    fontFamily="'DM Sans','Inter',sans-serif" style={{ pointerEvents: 'none' }}>
                     {index + 1}
                 </text>
             )}
@@ -1019,19 +933,41 @@ function SVGChapterNode({ chapter, index, pos, isSelected, subjectColor, onSelec
     );
 }
 
-// ─── SVG Roadmap Panel ────────────────────────────────────────────────────────
+// ─── SVG Roadmap Panel (horizontal) ──────────────────────────────────────────
 
-function SVGRoadmapPanel({ chapters, subjectColor, selectedChapter, onSelectChapter, onReorderChapter }) {
+function SVGRoadmapPanel({ chapters, subjectColor, selectedChapter, onSelectChapter }) {
     const pathRef = useRef(null);
     const [nodePts, setNodePts] = useState([]);
+
+    // Build full node list: chapters interleaved with mock-test milestones + pre-board at end
+    const allNodes = React.useMemo(() => {
+        const nodes = [];
+        chapters.forEach((ch, i) => {
+            nodes.push({ ...ch, type: 'chapter' });
+            if ((i + 1) % 2 === 0 && i < chapters.length - 1) {
+                nodes.push({
+                    id: `mock-${i}`, type: 'mock-test',
+                    title: `Mock Test ${Math.floor((i + 1) / 2)}`,
+                    status: chapters.slice(0, i + 1).every(c => c.status === 'completed') ? 'completed' : 'not-started',
+                    topics: [], practiceCompleted: 0, practiceTotal: 0, mockScore: null, mockAttempts: 0,
+                });
+            }
+        });
+        nodes.push({
+            id: 'preboard', type: 'preboard', title: 'Pre-Board Exam',
+            status: chapters.every(c => c.status === 'completed') ? 'completed' : 'not-started',
+            topics: [], practiceCompleted: 0, practiceTotal: 0, mockScore: null, mockAttempts: 0,
+        });
+        return nodes;
+    }, [chapters]);
 
     useEffect(() => {
         const el = pathRef.current;
         if (!el) return;
         try {
             const total = el.getTotalLength();
-            const anchors = getNodeAnchors(chapters.length);
-            const pts = anchors.slice(0, chapters.length).map(a => {
+            const anchors = getNodeAnchors(allNodes.length);
+            const pts = anchors.slice(0, allNodes.length).map(a => {
                 const p = el.getPointAtLength(a * total);
                 return { x: p.x, y: p.y };
             });
@@ -1039,7 +975,7 @@ function SVGRoadmapPanel({ chapters, subjectColor, selectedChapter, onSelectChap
         } catch (e) {
             console.warn('Road path measurement failed:', e);
         }
-    }, [chapters.length]);
+    }, [allNodes.length]);
 
     const completedCount = chapters.filter(c => c.status === 'completed').length;
     const hasInProgress = chapters.some(c => c.status === 'in-progress');
@@ -1047,7 +983,7 @@ function SVGRoadmapPanel({ chapters, subjectColor, selectedChapter, onSelectChap
         ? (completedCount + (hasInProgress ? 0.5 : 0)) / chapters.length
         : 0;
 
-    const sw = 26;
+    const sw = 20;
     const baseRoadColor = '#E8F0FE';
 
     return (
@@ -1057,103 +993,56 @@ function SVGRoadmapPanel({ chapters, subjectColor, selectedChapter, onSelectChap
             preserveAspectRatio="xMidYMid meet"
             style={{ display: 'block', overflow: 'visible' }}
         >
-            {/* ── Scenic decorations ── */}
+            {/* ── Decorations ── */}
             <g aria-hidden="true">
-                {/* GOAL flag */}
-                <line x1="160" y1="40" x2="160" y2="4" stroke="#CBD5E1" strokeWidth="1.8" strokeLinecap="round" />
-                <path d="M 160 4 L 182 12 L 160 20 Z" fill={subjectColor} opacity={0.92} />
-                <text x="168" y="14" textAnchor="middle" fill="#ffffff" fontSize="5.5" fontWeight="700"
-                    fontFamily="'Inter',sans-serif" letterSpacing="0.5" style={{ pointerEvents: 'none' }}>
-                    GOAL
-                </text>
-                <circle cx="160" cy="40" r="3.5" fill={baseRoadColor} opacity={0.85} />
-
-                {/* START marker */}
-                <circle cx="160" cy="622" r="14" fill={subjectColor} opacity={0.08} />
-                <circle cx="160" cy="622" r="9" fill={subjectColor} opacity={0.15} />
-                <circle cx="160" cy="622" r="5" fill={subjectColor} opacity={0.60} />
-                <circle cx="160" cy="622" r="2.5" fill="#ffffff" opacity={0.9} />
-                <text x="160" y="640" textAnchor="middle" fill={subjectColor} fontSize="7" fontWeight="700"
-                    fontFamily="'Inter',sans-serif" letterSpacing="0.8" opacity={0.75} style={{ pointerEvents: 'none' }}>
-                    START
-                </text>
-
-                {/* Foliage — left */}
-                <g opacity={0.16} fill="#5AAF68">
-                    <circle cx="28" cy="126" r="15" /><circle cx="42" cy="116" r="10" />
-                    <rect x="26" y="139" width="5" height="14" rx="2.5" fill="#A0AEC0" />
-                    <circle cx="24" cy="390" r="13" /><circle cx="36" cy="382" r="9" />
-                    <rect x="22" y="401" width="5" height="12" rx="2.5" fill="#A0AEC0" />
-                </g>
-
-                {/* Foliage — right */}
-                <g opacity={0.16} fill="#5AAF68">
-                    <circle cx="294" cy="254" r="14" /><circle cx="282" cy="244" r="9" />
-                    <rect x="292" y="267" width="5" height="13" rx="2.5" fill="#A0AEC0" />
-                    <circle cx="298" cy="514" r="12" /><circle cx="286" cy="506" r="8" />
-                    <rect x="296" y="525" width="5" height="11" rx="2.5" fill="#A0AEC0" />
-                </g>
-
-                {/* Travel chevrons */}
-                <g opacity={0.22} stroke={subjectColor} strokeWidth="1.5" strokeLinecap="round" fill="none">
-                    <polyline points="155,580 160,574 165,580" />
-                    <polyline points="155,440 160,434 165,440" />
-                    <polyline points="155,310 160,304 165,310" />
-                    <polyline points="155,180 160,174 165,180" />
-                </g>
-
-                {/* Ground pebbles */}
-                <g opacity={0.09} fill="#6B7280">
-                    <circle cx="52" cy="208" r="3" />
-                    <circle cx="268" cy="338" r="3" />
-                    <circle cx="52" cy="462" r="3" />
+                <line x1="870" y1="100" x2="870" y2="55" stroke="#CBD5E1" strokeWidth="2" strokeLinecap="round" />
+                <path d="M 870 55 L 898 65 L 870 75 Z" fill={COLORS.primaryPurple} opacity={0.92} />
+                <text x="882" y="67" textAnchor="middle" fill="#fff" fontSize="7" fontWeight="700"
+                    fontFamily="'Inter',sans-serif" style={{ pointerEvents: 'none' }}>GOAL</text>
+                <circle cx="870" cy="100" r="4" fill={baseRoadColor} opacity={0.85} />
+                <circle cx="30" cy="100" r="16" fill={COLORS.primaryPurple} opacity={0.08} />
+                <circle cx="30" cy="100" r="10" fill={COLORS.primaryPurple} opacity={0.14} />
+                <circle cx="30" cy="100" r="6" fill={COLORS.primaryPurple} opacity={0.55} />
+                <circle cx="30" cy="100" r="3" fill="#fff" opacity={0.9} />
+                <text x="30" y="124" textAnchor="middle" fill={COLORS.primaryPurple} fontSize="8" fontWeight="700"
+                    fontFamily="'Inter',sans-serif" opacity={0.7} style={{ pointerEvents: 'none' }}>START</text>
+                <g opacity={0.20} stroke={COLORS.primaryPurple} strokeWidth="1.5" strokeLinecap="round" fill="none">
+                    <polyline points="150,96 156,100 150,104" />
+                    <polyline points="360,96 366,100 360,104" />
+                    <polyline points="560,96 566,100 560,104" />
+                    <polyline points="740,96 746,100 740,104" />
                 </g>
             </g>
 
             {/* ── Road layers ── */}
-            <path d={ROAD_PATH_D} fill="none" stroke="rgba(0,0,0,0.07)"
-                strokeWidth={sw + 7} strokeLinecap="round" />
-            <path d={ROAD_PATH_D} fill="none" stroke={baseRoadColor}
-                strokeWidth={sw} strokeLinecap="round" />
-            <path d={ROAD_PATH_D} fill="none" stroke="rgba(255,255,255,0.50)"
-                strokeWidth={sw * 0.36} strokeLinecap="round" />
+            <path d={ROAD_PATH_D} fill="none" stroke="rgba(0,0,0,0.07)" strokeWidth={sw + 7} strokeLinecap="round" />
+            <path d={ROAD_PATH_D} fill="none" stroke={baseRoadColor} strokeWidth={sw} strokeLinecap="round" />
+            <path d={ROAD_PATH_D} fill="none" stroke="rgba(255,255,255,0.50)" strokeWidth={sw * 0.36} strokeLinecap="round" />
 
-            {/* Progress fill */}
-            <motion.path
-                d={ROAD_PATH_D} fill="none"
-                stroke={subjectColor} strokeWidth={sw} strokeLinecap="round" opacity={0.84}
-                initial={{ pathLength: 0 }}
-                animate={{ pathLength: progressFrac }}
-                transition={{ duration: 1.8, ease: [0.43, 0.13, 0.23, 0.96], delay: 0.3 }}
-            />
-            <motion.path
-                d={ROAD_PATH_D} fill="none"
+            <motion.path d={ROAD_PATH_D} fill="none"
+                stroke={COLORS.primaryPurple} strokeWidth={sw} strokeLinecap="round" opacity={0.84}
+                initial={{ pathLength: 0 }} animate={{ pathLength: progressFrac }}
+                transition={{ duration: 1.8, ease: [0.43, 0.13, 0.23, 0.96], delay: 0.3 }} />
+            <motion.path d={ROAD_PATH_D} fill="none"
                 stroke="rgba(255,255,255,0.30)" strokeWidth={sw * 0.34} strokeLinecap="round"
-                initial={{ pathLength: 0 }}
-                animate={{ pathLength: progressFrac }}
-                transition={{ duration: 1.8, ease: [0.43, 0.13, 0.23, 0.96], delay: 0.3 }}
-            />
-
-            {/* Centre lane dashes */}
-            <path d={ROAD_PATH_D} fill="none"
-                stroke="rgba(255,255,255,0.55)" strokeWidth={1.6} strokeDasharray="14 12" />
+                initial={{ pathLength: 0 }} animate={{ pathLength: progressFrac }}
+                transition={{ duration: 1.8, ease: [0.43, 0.13, 0.23, 0.96], delay: 0.3 }} />
+            <path d={ROAD_PATH_D} fill="none" stroke="rgba(255,255,255,0.55)" strokeWidth={1.6} strokeDasharray="14 12" />
 
             {/* Hidden reference path */}
-            <path ref={pathRef} id={ROAD_PATH_ID} d={ROAD_PATH_D}
-                fill="none" stroke="transparent" strokeWidth={1} />
+            <path ref={pathRef} id={ROAD_PATH_ID} d={ROAD_PATH_D} fill="none" stroke="transparent" strokeWidth={1} />
 
-            {/* ── Chapter milestone nodes ── */}
+            {/* ── All milestone nodes ── */}
             <AnimatePresence>
-                {nodePts.length === chapters.length && chapters.map((chapter, i) => (
+                {nodePts.length === allNodes.length && allNodes.map((node, i) => (
                     <SVGChapterNode
-                        key={chapter.id}
-                        chapter={chapter}
+                        key={node.id}
+                        chapter={node}
                         index={i}
                         pos={nodePts[i]}
-                        isSelected={selectedChapter?.id === chapter.id}
-                        subjectColor={subjectColor}
-                        onSelect={() => onSelectChapter(chapter)}
-                        onReorder={onReorderChapter}
+                        isSelected={selectedChapter?.id === node.id}
+                        subjectColor={COLORS.primaryPurple}
+                        onSelect={() => onSelectChapter(node)}
                     />
                 ))}
             </AnimatePresence>
@@ -1169,8 +1058,14 @@ function RoadmapView({ subjectId, onBack }) {
 
     const [chapters, setChapters] = useState(initChs);
     const [selectedChapter, setSelectedChapter] = useState(null);
+    const [detailModalOpen, setDetailModalOpen] = useState(false);
     const [practiceModalOpen, setPracticeModalOpen] = useState(false);
     const [mockModalOpen, setMockModalOpen] = useState(false);
+
+    const handleSelectChapter = (node) => {
+        setSelectedChapter(node);
+        setDetailModalOpen(true);
+    };
 
     const handleUpdateChapter = (chapterId, updates) => {
         setChapters(prev => prev.map(c => c.id === chapterId ? { ...c, ...updates } : c));
@@ -1233,9 +1128,9 @@ function RoadmapView({ subjectId, onBack }) {
     const selectedIndex = chapters.findIndex(c => c.id === selectedChapter?.id);
 
     return (
-        <Box>
+        <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: 'calc(100vh - 140px)' }}>
             {/* Header */}
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 2 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 4, flexWrap: 'wrap' }}>
                 <IconButton onClick={onBack} size="small"
                     sx={{ border: `1.5px solid ${COLORS.border}`, borderRadius: '10px', width: 34, height: 34, color: COLORS.textSecondary, '&:hover': { borderColor: subject.color, color: subject.color } }}>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" /></svg>
@@ -1247,89 +1142,44 @@ function RoadmapView({ subjectId, onBack }) {
                         <Typography sx={{ fontSize: '0.72rem', color: COLORS.textSecondary }}>{completedCount}/{chapters.length} chapters · {overallPct}% complete</Typography>
                     </Box>
                 </Box>
-                <Box sx={{ flexGrow: 1, maxWidth: 180, display: { xs: 'none', md: 'block' }, ml: 'auto' }}>
-                    <LinearProgress variant="determinate" value={overallPct}
-                        sx={{ height: 8, borderRadius: 4, background: COLORS.divider, '& .MuiLinearProgress-bar': { background: `linear-gradient(90deg,${subject.color},${subject.color}CC)`, borderRadius: 4 } }} />
-                    <Typography sx={{ fontSize: '0.62rem', color: COLORS.textSecondary, mt: 0.3, textAlign: 'right' }}>{overallPct}% complete</Typography>
+
+                <Box sx={{ display: 'flex', gap: 1.5, ml: 'auto' }}>
+                    {[
+                        { label: 'Score', value: `${subject.score}%`, icon: '🎯' },
+                        { label: 'Practice', value: `${subject.practice}%`, icon: '✏️' },
+                        { label: 'Syllabus', value: `${overallPct}%`, icon: '📚' },
+                    ].map((stat, i) => (
+                        <Box key={i} sx={{ px: 1.5, py: 0.8, borderRadius: '10px', background: '#fff', border: `1px solid ${COLORS.border}`, display: 'flex', alignItems: 'center', gap: 1.2 }}>
+                            <Box sx={{ width: 26, height: 26, borderRadius: '6px', background: `${COLORS.primaryPurple}10`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.9rem' }}>{stat.icon}</Box>
+                            <Box>
+                                <Typography sx={{ fontSize: '0.55rem', color: COLORS.textSecondary, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.5, lineHeight: 1 }}>{stat.label}</Typography>
+                                <Typography sx={{ fontSize: '0.95rem', fontWeight: 800, color: COLORS.textPrimary, lineHeight: 1.1 }}>{stat.value}</Typography>
+                            </Box>
+                        </Box>
+                    ))}
                 </Box>
             </Box>
 
-            {/* Direction hint removed per user request */}
-
-            {/* Legend */}
-            <Box sx={{ display: 'flex', gap: 2, mb: 2.5, flexWrap: 'wrap', alignItems: 'center' }}>
-                {[
-                    { label: 'Completed', color: subject.color },
-                    { label: 'In Progress', color: COLORS.blue },
-                    { label: 'Not Started', color: COLORS.textMuted },
-                ].map(l => (
-                    <Box key={l.label} sx={{ display: 'flex', alignItems: 'center', gap: 0.6 }}>
-                        <Box sx={{ width: 9, height: 9, borderRadius: '50%', background: l.color }} />
-                        <Typography sx={{ fontSize: '0.67rem', color: COLORS.textSecondary }}>{l.label}</Typography>
-                    </Box>
-                ))}
-                <Box sx={{ ml: 'auto', display: 'flex', alignItems: 'center', gap: 0.6, opacity: 0.7 }}>
-                    <Typography sx={{ fontSize: '0.67rem', color: COLORS.textMuted }}>Bottom = Start · Top = Goal 🚩</Typography>
-                </Box>
-            </Box>
-
-            <Box sx={{ display: 'flex', gap: 2.5, alignItems: 'flex-start' }}>
-
-                {/* Left: SVG Roadmap — original width 300px, road itself unchanged */}
-                <Box sx={{
-                    width: { xs: '100%', md: 300 },
-                    flexShrink: 0,
-                    position: { md: 'sticky' },
-                    top: { md: 16 },
-                }}>
+            {/* Horizontal Roadmap Full Width */}
+            <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', width: '100%', mb: 4, overflowX: 'auto', overflowY: 'hidden', '&::-webkit-scrollbar': { display: 'none' } }}>
+                <Box sx={{ minWidth: 900, width: '100%' }}>
                     <SVGRoadmapPanel
                         chapters={chapters}
-                        subjectColor={subject.color}
+                        subjectColor={COLORS.primaryPurple}
                         selectedChapter={selectedChapter}
-                        onSelectChapter={setSelectedChapter}
-                        onReorderChapter={handleReorderChapter}
+                        onSelectChapter={handleSelectChapter}
                     />
                 </Box>
-
-                {/* Right: Chapter detail — naturally narrower now */}
-                <Box sx={{
-                    flexGrow: 1,
-                    minWidth: 0,
-                    borderRadius: '16px',
-                    border: `1.5px solid ${COLORS.border}`,
-                    background: '#fff',
-                    minHeight: { md: 480 },
-                    overflow: 'hidden',
-                }}>
-                    <AnimatePresence mode="wait">
-                        <motion.div
-                            key={selectedChapter?.id ?? 'empty'}
-                            initial={{ opacity: 0, y: 8 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: -8 }}
-                            transition={{ duration: 0.2 }}
-                        >
-                            <ChapterDetailPanel
-                                chapter={selectedChapter}
-                                subjectColor={subject.color}
-                                onPracticeOpen={() => setPracticeModalOpen(true)}
-                                onMockOpen={() => setMockModalOpen(true)}
-                                onMoveUp={() => {
-                                    if (selectedIndex > 0) { moveChapter(selectedIndex, -1); }
-                                }}
-                                onMoveDown={() => {
-                                    if (selectedIndex < chapters.length - 1) { moveChapter(selectedIndex, 1); }
-                                }}
-                                isFirst={selectedIndex === 0}
-                                isLast={selectedIndex === chapters.length - 1}
-                                currentIndex={selectedIndex}
-                                totalChapters={chapters.length}
-                                onUpdateChapter={handleUpdateChapter}
-                            />
-                        </motion.div>
-                    </AnimatePresence>
-                </Box>
             </Box>
+
+            <ChapterDetailModal
+                chapter={selectedChapter}
+                open={detailModalOpen}
+                onClose={() => setDetailModalOpen(false)}
+                subjectColor={COLORS.primaryPurple}
+                onPracticeOpen={() => setPracticeModalOpen(true)}
+                onMockOpen={() => setMockModalOpen(true)}
+            />
 
             <PracticeModal
                 chapter={selectedChapter} subjectColor={subject.color}

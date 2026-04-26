@@ -1,3 +1,4 @@
+// src/theme.js
 import { createTheme } from '@mui/material/styles';
 
 // ─── Moodboard-exact palette ────────────────────────────────────────────────
@@ -15,6 +16,12 @@ export const COLORS = {
   purpleDark: '#7953A8',
   blueDark:   '#3A62B6',
   amberDark:  '#A64834',
+
+  // CTA Button Colors
+  primaryPurple: '#6C5CE7',
+  purpleHover:   '#5A4BD1',
+  purpleLight:   '#F1EEFF',
+  purpleBorder:  '#DCD6FF',
 
   // Backgrounds
   bgWarm:  '#F9FAFC',   // Extremely pale grey / almost white
@@ -112,9 +119,10 @@ const theme = createTheme({
           transition: 'all 0.2s ease',
         },
         containedPrimary: {
-          background: `linear-gradient(135deg, ${COLORS.green} 0%, ${COLORS.greenDark} 100%)`,
-          boxShadow: `0 3px 10px ${COLORS.green}40`,
-          '&:hover': { boxShadow: `0 5px 16px ${COLORS.green}60` },
+          background: COLORS.primaryPurple,
+          color: '#fff',
+          boxShadow: `0 3px 10px ${COLORS.primaryPurple}40`,
+          '&:hover': { background: COLORS.purpleHover, boxShadow: `0 5px 16px ${COLORS.primaryPurple}60` },
         },
       },
     },

@@ -165,7 +165,7 @@ export default function P1_ProgressOverview() {
           <Card elevation={0} sx={{ border: `1px solid ${COLORS.divider}`, height: '100%' }}>
             <CardContent sx={{ p: { xs: 3, sm: 4 }, display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'center' }}>
               <Typography variant="overline" sx={{ display: 'block', mb: 2, color: COLORS.textSecondary, fontWeight: 700, letterSpacing: 1.2 }}>
-                Overall Status
+                📊 Overall Status
               </Typography>
 
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2.5, mb: 1 }}>
@@ -194,7 +194,7 @@ export default function P1_ProgressOverview() {
           <Card elevation={0} sx={{ background: `linear-gradient(135deg, ${COLORS.green}08, ${COLORS.blue}05)`, border: `1px solid ${COLORS.green}30`, height: '100%' }}>
             <CardContent sx={{ p: { xs: 3, sm: 4 }, display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'center' }}>
               <Typography variant="overline" sx={{ display: 'block', mb: 2, color: COLORS.greenDark, fontWeight: 800, letterSpacing: 1.2 }}>
-                What's Going Well
+                🌟 What's Going Well
               </Typography>
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
                 <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1.5 }}>
@@ -244,13 +244,13 @@ export default function P1_ProgressOverview() {
           <Card elevation={0} sx={{ border: `1px solid ${COLORS.divider}`, height: '100%' }}>
             <CardContent sx={{ p: 2, display: 'flex', flexDirection: 'column', justifyContent: 'center', height: '100%', pb: '16px !important' }}>
               <Typography variant="overline" sx={{ display: 'block', mb: 1.5, color: COLORS.textSecondary, fontWeight: 700, letterSpacing: 1.2 }}>
-                Subject-Wise Summary
+                📚 Subject-Wise Summary
               </Typography>
-              <SubjectRow subject="Math" statusText="Improving" statusType="improving" />
-              <SubjectRow subject="Science" statusText="Needs Support" statusType="support" />
-              <SubjectRow subject="English" statusText="Consistent" statusType="strong" />
-              <SubjectRow subject="Hindi" statusText="Consistent" statusType="strong" />
-              <SubjectRow subject="Social Science" statusText="Consistent" statusType="strong" />
+              <SubjectRow subject="📐 Math" statusText="Improving" statusType="improving" />
+              <SubjectRow subject="🔬 Science" statusText="Needs Support" statusType="support" />
+              <SubjectRow subject="📖 English" statusText="Consistent" statusType="strong" />
+              <SubjectRow subject="✍️ Hindi" statusText="Consistent" statusType="strong" />
+              <SubjectRow subject="🌍 Social Science" statusText="Consistent" statusType="strong" />
             </CardContent>
           </Card>
         </Grid>
@@ -260,7 +260,7 @@ export default function P1_ProgressOverview() {
           <Card elevation={0} sx={{ border: `1px solid ${COLORS.divider}`, height: '100%' }}>
             <CardContent sx={{ p: { xs: 3, sm: 4 } }}>
               <Typography variant="overline" sx={{ display: 'block', mb: 3, color: COLORS.textSecondary, fontWeight: 700, letterSpacing: 1.2 }}>
-                Where Support Is Needed &amp; How Parents Can Help
+                🤝 Where Support Is Needed &amp; How Parents Can Help
               </Typography>
 
               <Grid container spacing={4}>

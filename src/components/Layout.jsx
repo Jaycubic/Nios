@@ -37,29 +37,38 @@ const ROLE_META = {
 function Sidebar({ navItems }) {
   const navigate = useNavigate();
   const location = useLocation();
+  const [isExpanded, setIsExpanded] = React.useState(false);
 
   return (
-    <Box sx={{
-      width: 72, minHeight: '100vh',
+    <Box 
+      onMouseEnter={() => setIsExpanded(true)}
+      onMouseLeave={() => setIsExpanded(false)}
+      sx={{
+      width: isExpanded ? 240 : 72, minHeight: '100vh',
       background: COLORS.bgNav,
       borderRight: `1px solid ${COLORS.border}`,
       display: 'flex', flexDirection: 'column', alignItems: 'center',
+      px: isExpanded ? 2 : 0,
       pt: 2, pb: 3, gap: 0.5,
       position: 'fixed', left: 0, top: 0, bottom: 0, zIndex: 100,
+      transition: 'width 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+      overflowX: 'hidden',
     }}>
 
       {/* Logo — navigates home */}
-      <Tooltip title="Home" placement="right">
+      <Tooltip title={!isExpanded ? "Home" : ""} placement="right">
         <Box onClick={() => navigate('/')} sx={{
-          width: 40, height: 40, borderRadius: '10px',
-          background: `linear-gradient(135deg, ${COLORS.green} 0%, ${COLORS.greenDark} 100%)`,
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          width: isExpanded ? '100%' : 40, height: 40, borderRadius: '10px',
+          background: `linear-gradient(135deg, ${COLORS.primaryPurple} 0%, ${COLORS.purpleHover} 100%)`,
+          display: 'flex', alignItems: 'center', justifyContent: isExpanded ? 'flex-start' : 'center',
           mb: 3, cursor: 'pointer',
-          boxShadow: `0 4px 12px ${COLORS.green}35`,
+          boxShadow: `0 4px 12px ${COLORS.primaryPurple}35`,
           transition: 'all 0.2s ease',
-          '&:hover': { transform: 'scale(1.09)', boxShadow: `0 6px 20px ${COLORS.green}55` },
+          px: isExpanded ? 2 : 0,
+          '&:hover': { transform: isExpanded ? 'none' : 'scale(1.09)', boxShadow: `0 6px 20px ${COLORS.primaryPurple}55` },
         }}>
           <Typography sx={{ color: '#fff', fontWeight: 800, fontSize: '1rem', fontFamily: "'DM Sans'" }}>N</Typography>
+          {isExpanded && <Typography sx={{ color: '#fff', fontWeight: 800, ml: 1.5, fontSize: '1rem', fontFamily: "'DM Sans'", whiteSpace: 'nowrap' }}>NIOS Tracker</Typography>}
         </Box>
       </Tooltip>
 
@@ -67,43 +76,38 @@ function Sidebar({ navItems }) {
       {navItems.map(({ label, path, Icon }) => {
         const active = location.pathname === path;
         return (
-          <Tooltip title={label} placement="right" key={path}>
-            <IconButton onClick={() => navigate(path)} sx={{
-              width: 48, height: 48, borderRadius: '12px',
-              color: active ? COLORS.greenDark : COLORS.textSecondary,
-              background: active ? `${COLORS.green}30` : 'transparent',
-              border: active ? `1px solid ${COLORS.green}60` : '1px solid transparent',
+          <Tooltip title={!isExpanded ? label : ""} placement="right" key={path}>
+            <Box onClick={() => navigate(path)} sx={{
+              width: isExpanded ? '100%' : 48, height: 48, borderRadius: '12px',
+              display: 'flex', alignItems: 'center', justifyContent: isExpanded ? 'flex-start' : 'center',
+              color: active ? COLORS.primaryPurple : COLORS.textSecondary,
+              background: active ? COLORS.purpleLight : 'transparent',
+              border: active ? `1px solid ${COLORS.purpleBorder}` : '1px solid transparent',
+              cursor: 'pointer',
+              px: isExpanded ? 2 : 0,
               transition: 'all 0.2s ease',
-              '&:hover': { background: `${COLORS.green}20`, color: COLORS.greenDark },
+              '&:hover': { background: `${COLORS.primaryPurple}10`, color: COLORS.primaryPurple },
             }}>
               <Icon />
-            </IconButton>
+              {isExpanded && <Typography sx={{ ml: 2, fontWeight: 600, fontSize: '0.85rem', whiteSpace: 'nowrap' }}>{label}</Typography>}
+            </Box>
           </Tooltip>
         );
       })}
 
       <Box sx={{ flexGrow: 1 }} />
 
-      {/* Switch Role — bottom home */}
-      <Tooltip title="Switch Role" placement="right">
-        <IconButton onClick={() => navigate('/')} sx={{
-          width: 48, height: 48, borderRadius: '12px',
-          color: COLORS.textMuted,
-          border: `1px dashed ${COLORS.border}`,
-          transition: 'all 0.2s ease',
-          '&:hover': { color: COLORS.green, borderColor: `${COLORS.green}60`, background: `${COLORS.green}10` },
-        }}>
-          <IconHome />
-        </IconButton>
-      </Tooltip>
-
-      <Tooltip title="Settings" placement="right">
-        <IconButton sx={{
-          width: 48, height: 48, borderRadius: '12px', color: COLORS.textSecondary,
-          '&:hover': { color: COLORS.textPrimary, background: COLORS.divider },
+      <Tooltip title={!isExpanded ? "Settings" : ""} placement="right">
+        <Box onClick={() => navigate('/settings')} sx={{
+          width: isExpanded ? '100%' : 48, height: 48, borderRadius: '12px', color: COLORS.textSecondary,
+          display: 'flex', alignItems: 'center', justifyContent: isExpanded ? 'flex-start' : 'center',
+          cursor: 'pointer',
+          px: isExpanded ? 2 : 0,
+          '&:hover': { color: COLORS.primaryPurple, background: `${COLORS.primaryPurple}10` },
         }}>
           <IconSettings />
-        </IconButton>
+          {isExpanded && <Typography sx={{ ml: 2, fontWeight: 600, fontSize: '0.85rem', whiteSpace: 'nowrap' }}>Settings</Typography>}
+        </Box>
       </Tooltip>
     </Box>
   );
