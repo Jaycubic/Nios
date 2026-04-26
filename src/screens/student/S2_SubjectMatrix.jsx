@@ -601,11 +601,23 @@ function ChapterDetailModal({ chapter, open, onClose, subjectColor, onPracticeOp
     // Reset local state when chapter changes
     useEffect(() => {
         if (open && chapter) {
-            setExpandedPhase('phase1');
-            setCheckedTopics({});
-            prevPracticeDone.current = chapter.practiceCompleted || 0;
+            if (chapter.status === 'completed') {
+                setExpandedPhase(null);
+                const allChecked = {};
+                LEARNING_PHASES.forEach(phase => {
+                    chapter.topics?.forEach(t => {
+                        allChecked[`${phase.id}-${t.name}`] = true;
+                    });
+                });
+                setCheckedTopics(allChecked);
+                prevPracticeDone.current = chapter.practiceTotal || 0;
+            } else {
+                setExpandedPhase('phase1');
+                setCheckedTopics({});
+                prevPracticeDone.current = chapter.practiceCompleted || 0;
+            }
         }
-    }, [chapter?.id, open]);
+    }, [chapter?.id, chapter?.status, open]);
 
     useEffect(() => {
         if (!chapter) return;
@@ -621,8 +633,12 @@ function ChapterDetailModal({ chapter, open, onClose, subjectColor, onPracticeOp
     if (!chapter) return null;
 
     if (chapter.type === 'mock-test' || chapter.type === 'preboard') {
+        const isCompleted = chapter.status === 'completed';
         return (
-            <Modal open={open} onClose={onClose}>
+            <Modal open={open} onClose={(e, reason) => {
+                if (isPracticeOpen) return;
+                if (onClose) onClose(e, reason);
+            }} slotProps={{ backdrop: { invisible: isPracticeOpen } }}>
                 <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: { xs: '92vw', sm: 400 }, background: '#fff', borderRadius: '20px', boxShadow: '0 20px 60px rgba(0,0,0,0.18)', p: 4, textAlign: 'center', outline: 'none' }}>
                     <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 1 }}>
                         <IconButton size="small" onClick={onClose}><svg width="18" height="18" viewBox="0 0 24 24" fill={COLORS.textSecondary}><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" /></svg></IconButton>
@@ -630,11 +646,13 @@ function ChapterDetailModal({ chapter, open, onClose, subjectColor, onPracticeOp
                     <Typography sx={{ fontSize: '3rem', mb: 2 }}>{chapter.type === 'preboard' ? '🎓' : '📝'}</Typography>
                     <Typography sx={{ fontSize: '1.4rem', fontWeight: 800, color: COLORS.textPrimary, mb: 1 }}>{chapter.title}</Typography>
                     <Typography sx={{ fontSize: '0.9rem', color: COLORS.textSecondary, mb: 4, maxWidth: 400, mx: 'auto' }}>
-                        This is a major evaluation milestone. Make sure you have completed the learning phases for previous chapters before attempting this test.
+                        {isCompleted 
+                            ? `You have already completed this ${chapter.type === 'preboard' ? 'pre-board' : 'mock test'}. You can review your detailed performance analysis.`
+                            : "This is a major evaluation milestone. Make sure you have completed the learning phases for previous chapters before attempting this test."}
                     </Typography>
                     <Button variant="contained" size="large" onClick={() => { onClose(); onMockOpen(); }}
                         sx={{ background: COLORS.primaryPurple, color: '#fff', fontWeight: 700, borderRadius: '12px', px: 4, py: 1.5, textTransform: 'none', fontSize: '1rem', '&:hover': { background: COLORS.purpleHover } }}>
-                        Attempt {chapter.type === 'preboard' ? 'Pre-Board' : 'Mock Test'}
+                        {isCompleted ? 'Review Score' : `Attempt ${chapter.type === 'preboard' ? 'Pre-Board' : 'Mock Test'}`}
                     </Button>
                 </Box>
             </Modal>
