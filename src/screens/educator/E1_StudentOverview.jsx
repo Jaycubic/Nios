@@ -87,8 +87,8 @@ const conceptRecs = [
 ];
 
 const practiceRecs = [
-  { id: 'P1', label: '10 questions on Trigonometry', type: 'Adaptive drill', est: '~15 min', icon: '📝', color: COLORS.blue },
-  { id: 'P2', label: '2 practice sets — Identities', type: 'Concept building', est: '~20 min', icon: '📝', color: COLORS.purple },
+  { id: 'P1', label: '10 questions on Linear Equations', type: 'Adaptive drill', est: '~15 min', icon: '📝', color: COLORS.blue },
+  { id: 'P2', label: '2 practice sets — Coordinate Geometry', type: 'Concept building', est: '~20 min', icon: '📝', color: COLORS.purple },
 ];
 
 const teachingStrategies = [
