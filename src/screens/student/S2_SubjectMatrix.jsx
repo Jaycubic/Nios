@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
     Box, Typography, Chip, LinearProgress,
-    Divider, Button, Modal, IconButton,
+    Divider, Button, Modal, IconButton, Drawer,
 } from '@mui/material';
 import { motion, AnimatePresence } from 'framer-motion';
 import Layout from '../../components/Layout';
@@ -388,7 +388,7 @@ const PRACTICE_QUESTIONS = [
     },
 ];
 
-function PracticeModal({ chapter, open, onClose, onComplete }) {
+function PracticeDrawer({ chapter, open, onClose, onComplete }) {
     if (!chapter) return null;
     const [selected, setSelected] = useState({});
     const [submitted, setSubmitted] = useState(false);
@@ -396,8 +396,8 @@ function PracticeModal({ chapter, open, onClose, onComplete }) {
     const handleClose = () => { setSelected({}); setSubmitted(false); onClose(); };
 
     return (
-        <Modal open={open} onClose={handleClose}>
-            <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: { xs: '94vw', sm: 500 }, maxHeight: '90vh', overflowY: 'auto', background: '#fff', borderRadius: '20px', boxShadow: '0 20px 60px rgba(0,0,0,0.18)', p: 0, outline: 'none' }}>
+        <Drawer anchor="right" open={open} onClose={handleClose} slotProps={{ backdrop: { invisible: true } }}>
+            <Box sx={{ width: { xs: '100vw', sm: 480 }, height: '100%', overflowY: 'auto', background: '#fff', p: 0, outline: 'none', borderLeft: `1px solid ${COLORS.border}` }}>
                 {/* Header */}
                 <Box sx={{ p: '20px 24px 16px', borderBottom: `1px solid ${COLORS.divider}`, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                     <Box>
@@ -466,7 +466,7 @@ function PracticeModal({ chapter, open, onClose, onComplete }) {
                     )}
                 </Box>
             </Box>
-        </Modal>
+        </Drawer>
     );
 }
 
@@ -593,7 +593,7 @@ const LEARNING_PHASES = [
     { id: 'phase4', label: 'Before Board Exams', desc: 'Final polish & previous year papers', icon: '🏆' },
 ];
 
-function ChapterDetailModal({ chapter, open, onClose, subjectColor, onPracticeOpen, onMockOpen }) {
+function ChapterDetailModal({ chapter, open, onClose, subjectColor, onPracticeOpen, onMockOpen, isPracticeOpen }) {
     const [expandedPhase, setExpandedPhase] = useState('phase1');
     const [checkedTopics, setCheckedTopics] = useState({});
     const prevPracticeDone = useRef(chapter?.practiceCompleted || 0);
@@ -677,8 +677,22 @@ function ChapterDetailModal({ chapter, open, onClose, subjectColor, onPracticeOp
     };
 
     return (
-        <Modal open={open} onClose={onClose}>
-            <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: { xs: '94vw', md: 840 }, maxHeight: '90vh', overflowY: 'auto', background: '#fff', borderRadius: '20px', boxShadow: '0 20px 60px rgba(0,0,0,0.18)', p: 4, outline: 'none' }}>
+        <Modal open={open} onClose={onClose} slotProps={{ backdrop: { invisible: isPracticeOpen } }}>
+            <Box sx={{ 
+                position: 'absolute', 
+                top: '50%', 
+                left: isPracticeOpen ? { xs: '50%', lg: 'calc(50% - 240px)' } : '50%', 
+                transform: 'translate(-50%,-50%)', 
+                width: { xs: '94vw', md: 840 }, 
+                maxHeight: '90vh', 
+                overflowY: 'auto', 
+                background: '#fff', 
+                borderRadius: '20px', 
+                boxShadow: '0 20px 60px rgba(0,0,0,0.18)', 
+                p: 4, 
+                outline: 'none',
+                transition: 'left 0.4s cubic-bezier(0.4, 0, 0.2, 1)' 
+            }}>
                 {/* Header */}
                 <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', mb: 3 }}>
                     <Box>
@@ -1206,9 +1220,10 @@ function RoadmapView({ subjectId, onBack }) {
                 subjectColor={COLORS.primaryPurple}
                 onPracticeOpen={() => setPracticeModalOpen(true)}
                 onMockOpen={() => setMockModalOpen(true)}
+                isPracticeOpen={practiceModalOpen}
             />
 
-            <PracticeModal
+            <PracticeDrawer
                 chapter={selectedChapter} subjectColor={subject.color}
                 open={practiceModalOpen} onClose={() => setPracticeModalOpen(false)}
                 onComplete={handleCompletePractice}
