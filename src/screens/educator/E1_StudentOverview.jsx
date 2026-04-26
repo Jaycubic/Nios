@@ -519,7 +519,7 @@ function ActionableInterventions() {
                     {assignedTopics.has(r.topic) ? (
                         <Chip label="Assigned ✓" size="small" sx={{ background: `${COLORS.green}15`, color: COLORS.greenDark, fontWeight: 700, fontSize: '0.65rem', height: 22 }} />
                     ) : (
-                        <Button size="small" onClick={(e) => handleClick(e, r.topic, 'concept')} sx={{ minWidth: 0, p: 0.5, px: 1, borderRadius: '8px', color: COLORS.blue, border: `1px solid ${COLORS.blue}30`, textTransform: 'none', fontWeight: 600 }}>+ Assign</Button>
+                        <Button size="small" onClick={(e) => handleClick(e, r.topic, 'concept')} sx={{ minWidth: 0, p: 0.5, px: 1, borderRadius: '8px', color: COLORS.primaryPurple, background: 'transparent', border: `1px solid ${COLORS.purpleBorder}`, textTransform: 'none', fontWeight: 600, '&:hover': { background: COLORS.purpleLight, color: COLORS.purpleHover, borderColor: COLORS.purpleHover } }}>+ Assign</Button>
                     )}
                   </Box>
                   {r.isNotStarted ? (
@@ -561,7 +561,7 @@ function ActionableInterventions() {
                   {assignedTopics.has(r.label) ? (
                         <Chip label="Assigned ✓" size="small" sx={{ background: `${COLORS.green}15`, color: COLORS.greenDark, fontWeight: 700, fontSize: '0.65rem', height: 22 }} />
                   ) : (
-                        <Button size="small" onClick={(e) => handleClick(e, r.label, 'practice')} sx={{ minWidth: 0, p: 0.5, px: 1, borderRadius: '8px', color: r.color, border: `1px solid ${r.color}30`, textTransform: 'none', fontWeight: 600 }}>+ Assign</Button>
+                        <Button size="small" onClick={(e) => handleClick(e, r.label, 'practice')} sx={{ minWidth: 0, p: 0.5, px: 1, borderRadius: '8px', color: COLORS.primaryPurple, background: 'transparent', border: `1px solid ${COLORS.purpleBorder}`, textTransform: 'none', fontWeight: 600, '&:hover': { background: COLORS.purpleLight, color: COLORS.purpleHover, borderColor: COLORS.purpleHover } }}>+ Assign</Button>
                   )}
                 </Box>
                 <Box sx={{ display: 'flex', gap: 1 }}>
