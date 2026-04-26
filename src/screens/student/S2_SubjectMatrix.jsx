@@ -677,7 +677,10 @@ function ChapterDetailModal({ chapter, open, onClose, subjectColor, onPracticeOp
     };
 
     return (
-        <Modal open={open} onClose={onClose} slotProps={{ backdrop: { invisible: isPracticeOpen } }}>
+        <Modal open={open} onClose={(e, reason) => {
+            if (isPracticeOpen) return;
+            if (onClose) onClose(e, reason);
+        }} slotProps={{ backdrop: { invisible: isPracticeOpen } }}>
             <Box sx={{ 
                 position: 'absolute', 
                 top: '50%', 
