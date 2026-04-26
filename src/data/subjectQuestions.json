@@ -1,0 +1,27 @@
+{
+  "math": [
+    { "q": "Solve for x: 2x + 5 = 15", "options": ["x = 3", "x = 5", "x = 10", "x = 20"], "answer": 1 },
+    { "q": "What is the value of pi?", "options": ["3.14", "2.71", "1.61", "1.41"], "answer": 0 },
+    { "q": "Evaluate: 5^2 - 3^2", "options": ["16", "8", "34", "4"], "answer": 0 }
+  ],
+  "science": [
+    { "q": "What is the chemical formula for water?", "options": ["CO2", "H2O", "O2", "NaCl"], "answer": 1 },
+    { "q": "Which planet is known as the Red Planet?", "options": ["Earth", "Mars", "Jupiter", "Venus"], "answer": 1 },
+    { "q": "What is the powerhouse of the cell?", "options": ["Nucleus", "Ribosome", "Mitochondria", "Golgi Body"], "answer": 2 }
+  ],
+  "english": [
+    { "q": "Choose the correct synonym for 'Happy':", "options": ["Sad", "Joyful", "Angry", "Tired"], "answer": 1 },
+    { "q": "Which of these is a noun?", "options": ["Run", "Quickly", "Apple", "Beautiful"], "answer": 2 },
+    { "q": "Identify the past tense of 'Go':", "options": ["Goes", "Going", "Went", "Gone"], "answer": 2 }
+  ],
+  "hindi": [
+    { "q": "'आसमान' का पर्यायवाची शब्द क्या है?", "options": ["धरती", "गगन", "पानी", "हवा"], "answer": 1 },
+    { "q": "'दिन' का विलोम शब्द चुनें:", "options": ["रात", "सुबह", "शाम", "दोपहर"], "answer": 0 },
+    { "q": "संज्ञा के कितने भेद होते हैं?", "options": ["2", "3", "5", "4"], "answer": 2 }
+  ],
+  "social": [
+    { "q": "Who was the first President of India?", "options": ["Mahatma Gandhi", "Dr. Rajendra Prasad", "Jawaharlal Nehru", "B.R. Ambedkar"], "answer": 1 },
+    { "q": "Which is the longest river in the world?", "options": ["Nile", "Amazon", "Ganga", "Yangtze"], "answer": 0 },
+    { "q": "In which year did India gain independence?", "options": ["1945", "1947", "1950", "1952"], "answer": 1 }
+  ]
+}

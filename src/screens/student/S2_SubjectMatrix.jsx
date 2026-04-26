@@ -16,6 +16,7 @@ import {
     ROAD_VIEWBOX_H,
     getNodeAnchors,
 } from '../../components/RoadPath';
+import subjectQuestions from '../../data/subjectQuestions.json';
 
 // ─── Static Data ──────────────────────────────────────────────────────────────
 
@@ -388,10 +389,12 @@ const PRACTICE_QUESTIONS = [
     },
 ];
 
-function PracticeDrawer({ chapter, open, onClose, onComplete }) {
+function PracticeDrawer({ chapter, subjectId, open, onClose, onComplete }) {
     if (!chapter) return null;
     const [selected, setSelected] = useState({});
     const [submitted, setSubmitted] = useState(false);
+
+    const questions = subjectQuestions[subjectId] || subjectQuestions['math'];
 
     const handleClose = () => { setSelected({}); setSubmitted(false); onClose(); };
 
@@ -410,7 +413,7 @@ function PracticeDrawer({ chapter, open, onClose, onComplete }) {
                 <Box sx={{ p: 3 }}>
                     {!submitted ? (
                         <>
-                            {PRACTICE_QUESTIONS.map((q, qi) => (
+                            {questions.map((q, qi) => (
                                 <Box key={qi} sx={{ mb: 3 }}>
                                     <Typography sx={{ fontSize: '0.88rem', fontWeight: 600, color: COLORS.textPrimary, mb: 1.5, lineHeight: 1.5 }}>{q.q}</Typography>
                                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
@@ -423,7 +426,7 @@ function PracticeDrawer({ chapter, open, onClose, onComplete }) {
                                     </Box>
                                 </Box>
                             ))}
-                            <Button fullWidth variant="contained" disabled={Object.keys(selected).length < PRACTICE_QUESTIONS.length}
+                            <Button fullWidth variant="contained" disabled={Object.keys(selected).length < questions.length}
                                 onClick={() => setSubmitted(true)}
                                 sx={{ mt: 1, background: COLORS.primaryPurple, color: '#fff', textTransform: 'none', fontWeight: 700, borderRadius: '10px', py: 1.2, '&:hover': { background: COLORS.purpleHover }, '&.Mui-disabled': { background: COLORS.divider } }}>
                                 Submit All Answers →
@@ -433,18 +436,18 @@ function PracticeDrawer({ chapter, open, onClose, onComplete }) {
                         <>
                             <Box sx={{ mb: 3, p: 2, borderRadius: '12px', background: COLORS.purpleLight, border: `1px solid ${COLORS.purpleBorder}`, textAlign: 'center' }}>
                                 <Typography sx={{ fontWeight: 800, fontSize: '1.1rem', color: COLORS.primaryPurple }}>
-                                    {PRACTICE_QUESTIONS.filter((q, i) => selected[i] === q.correct).length}/{PRACTICE_QUESTIONS.length} Correct 🎯
+                                    {questions.filter((q, i) => selected[i] === q.answer).length}/{questions.length} Correct 🎯
                                 </Typography>
                                 <Typography sx={{ fontSize: '0.78rem', color: COLORS.textSecondary, mt: 0.5 }}>Review your answers below</Typography>
                             </Box>
-                            {PRACTICE_QUESTIONS.map((q, qi) => {
-                                const isCorrect = selected[qi] === q.correct;
+                            {questions.map((q, qi) => {
+                                const isCorrect = selected[qi] === q.answer;
                                 return (
                                     <Box key={qi} sx={{ mb: 2.5 }}>
                                         <Typography sx={{ fontSize: '0.85rem', fontWeight: 600, color: COLORS.textPrimary, mb: 1 }}>{q.q}</Typography>
                                         {q.options.map((opt, oi) => {
                                             const isSelected = selected[qi] === oi;
-                                            const isRight = oi === q.correct;
+                                            const isRight = oi === q.answer;
                                             let bg = '#fff', border = COLORS.border, color = COLORS.textSecondary;
                                             if (isRight) { bg = `${COLORS.green}12`; border = `${COLORS.green}50`; color = COLORS.greenDark; }
                                             else if (isSelected && !isRight) { bg = '#FFF0F0'; border = '#F0505050'; color = '#C00'; }
@@ -472,13 +475,17 @@ function PracticeDrawer({ chapter, open, onClose, onComplete }) {
 
 // ─── Mock Test Modal ──────────────────────────────────────────────────────────
 
-function MockTestModal({ chapter, subjectColor, open, onClose, onComplete }) {
+function MockTestModal({ chapter, subjectColor, subjectId, open, onClose, onComplete }) {
+    const [selected, setSelected] = useState({});
+
     if (!chapter) return null;
+
+    const questions = (subjectQuestions[subjectId] || subjectQuestions['math']).slice(0, 2);
 
     if (chapter.status !== 'completed') {
         return (
             <Modal open={open} onClose={onClose}>
-                <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: { xs: '92vw', sm: 400 }, background: '#fff', borderRadius: '20px', boxShadow: '0 20px 60px rgba(0,0,0,0.18)', p: 3 }}>
+                <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: { xs: '92vw', sm: 480 }, maxHeight: '90vh', display: 'flex', flexDirection: 'column', background: '#fff', borderRadius: '20px', boxShadow: '0 20px 60px rgba(0,0,0,0.18)', p: 3 }}>
                     <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', mb: 2.5 }}>
                         <Box>
                             <Typography sx={{ fontWeight: 800, fontSize: '1.1rem', color: COLORS.textPrimary }}>Mock Test Challenge</Typography>
@@ -487,13 +494,28 @@ function MockTestModal({ chapter, subjectColor, open, onClose, onComplete }) {
                         <IconButton size="small" onClick={onClose}><svg width="18" height="18" viewBox="0 0 24 24" fill={COLORS.textSecondary}><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" /></svg></IconButton>
                     </Box>
 
-                    <Typography sx={{ mb: 3, fontWeight: 600, fontSize: '0.95rem' }}>Q1. Review the scenario and select the most appropriate overall consequence:</Typography>
-                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.2, mb: 4 }}>
-                        {['Option A', 'Option B', 'Option C', 'Option D'].map(o => (
-                            <Button key={o} variant="outlined" sx={{ justifyContent: 'flex-start', color: COLORS.textPrimary, borderColor: COLORS.divider, textTransform: 'none', px: 2, py: 1 }}>{o}</Button>
+                    <Box sx={{ flexGrow: 1, overflowY: 'auto', pr: 1, mb: 3 }}>
+                        {questions.map((q, qi) => (
+                            <Box key={qi} sx={{ mb: 4 }}>
+                                <Typography sx={{ mb: 1.5, fontWeight: 600, fontSize: '0.95rem' }}>Q{qi + 1}. {q.q}</Typography>
+                                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                                    {q.options.map((opt, oi) => (
+                                        <Box key={oi} onClick={() => setSelected(s => ({ ...s, [qi]: oi }))}
+                                            sx={{ p: '10px 14px', borderRadius: '10px', cursor: 'pointer', border: `1.5px solid ${selected[qi] === oi ? COLORS.primaryPurple : COLORS.border}`, background: selected[qi] === oi ? COLORS.purpleLight : '#fff', transition: 'all 0.15s' }}>
+                                            <Typography sx={{ fontSize: '0.82rem', color: selected[qi] === oi ? COLORS.primaryPurple : COLORS.textPrimary, fontWeight: selected[qi] === oi ? 600 : 400 }}>{opt}</Typography>
+                                        </Box>
+                                    ))}
+                                </Box>
+                            </Box>
                         ))}
                     </Box>
-                    <Button onClick={() => onComplete(chapter.id)} variant="contained" color="primary" fullWidth sx={{ textTransform: 'none', fontWeight: 700, borderRadius: '8px', py: 1.2 }}>Submit Mock Test & Complete Chapter</Button>
+                    <Button 
+                        disabled={Object.keys(selected).length < questions.length}
+                        onClick={() => { onComplete(chapter.id); setSelected({}); }} 
+                        variant="contained" fullWidth 
+                        sx={{ background: COLORS.primaryPurple, color: '#fff', '&:hover': { background: COLORS.purpleHover }, textTransform: 'none', fontWeight: 700, borderRadius: '8px', py: 1.2, '&.Mui-disabled': { background: COLORS.divider } }}>
+                        Submit Mock Test & Complete Chapter
+                    </Button>
                 </Box>
             </Modal>
         );
@@ -593,7 +615,7 @@ const LEARNING_PHASES = [
     { id: 'phase4', label: 'Before Board Exams', desc: 'Final polish & previous year papers', icon: '🏆' },
 ];
 
-function ChapterDetailModal({ chapter, open, onClose, subjectColor, onPracticeOpen, onMockOpen, isPracticeOpen }) {
+function ChapterDetailModal({ chapter, open, onClose, subjectColor, onPracticeOpen, onMockOpen, isPracticeOpen, onFinishChapter }) {
     const [expandedPhase, setExpandedPhase] = useState('phase1');
     const [checkedTopics, setCheckedTopics] = useState({});
     const prevPracticeDone = useRef(chapter?.practiceCompleted || 0);
@@ -681,7 +703,10 @@ function ChapterDetailModal({ chapter, open, onClose, subjectColor, onPracticeOp
                         setTimeout(() => setExpandedPhase(nextPhaseId), 300);
                     }
                 } else if (phaseIdx === LEARNING_PHASES.length - 1) {
-                    setTimeout(() => setExpandedPhase(null), 300); // All done
+                    setTimeout(() => {
+                        setExpandedPhase(null); // All done
+                        if (onFinishChapter) onFinishChapter(chapter.id);
+                    }, 300);
                 }
             }
 
@@ -1146,6 +1171,20 @@ function RoadmapView({ subjectId, onBack }) {
         setPracticeModalOpen(false);
     };
 
+    const handleFinishChapter = (chapterId) => {
+        const newChapters = chapters.map(c => c.id === chapterId ? { ...c, status: 'completed' } : c);
+        const idx = chapters.findIndex(c => c.id === chapterId);
+        if (idx !== -1 && idx + 1 < chapters.length) {
+            if (newChapters[idx + 1].status === 'not-started') {
+                newChapters[idx + 1] = { ...newChapters[idx + 1], status: 'in-progress' };
+            }
+        }
+        setChapters(newChapters);
+        if (selectedChapter?.id === chapterId) {
+            setSelectedChapter(newChapters[idx]);
+        }
+    };
+
     const handleCompleteChapter = (chapterId) => {
         let nextChapter = null;
         const newChapters = chapters.map(c => {
@@ -1244,15 +1283,16 @@ function RoadmapView({ subjectId, onBack }) {
                 onPracticeOpen={() => setPracticeModalOpen(true)}
                 onMockOpen={() => setMockModalOpen(true)}
                 isPracticeOpen={practiceModalOpen}
+                onFinishChapter={handleFinishChapter}
             />
 
             <PracticeDrawer
-                chapter={selectedChapter} subjectColor={subject.color}
+                chapter={selectedChapter} subjectColor={subject.color} subjectId={subjectId}
                 open={practiceModalOpen} onClose={() => setPracticeModalOpen(false)}
                 onComplete={handleCompletePractice}
             />
             <MockTestModal
-                chapter={selectedChapter} subjectColor={subject.color}
+                chapter={selectedChapter} subjectColor={subject.color} subjectId={subjectId}
                 open={mockModalOpen} onClose={() => setMockModalOpen(false)}
                 onComplete={handleCompleteChapter}
             />
