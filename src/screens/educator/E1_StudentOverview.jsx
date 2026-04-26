@@ -601,8 +601,8 @@ function ActionableInterventions() {
             </Box>
 
             <Box sx={{ display: 'flex', gap: 2 }}>
-                <Button fullWidth onClick={() => setAssignModalOpen(false)} variant="outlined" sx={{ borderRadius: '10px', textTransform: 'none', fontWeight: 700, color: COLORS.textSecondary, borderColor: COLORS.border }}>Cancel</Button>
-                <Button fullWidth onClick={handleConfirmAssign} variant="contained" sx={{ borderRadius: '10px', textTransform: 'none', fontWeight: 700, background: COLORS.blue, '&:hover': { background: COLORS.blueDark } }}>Confirm & Assign</Button>
+                <Button fullWidth onClick={() => setAssignModalOpen(false)} variant="outlined" sx={{ borderRadius: '10px', textTransform: 'none', fontWeight: 700, color: COLORS.primaryPurple, borderColor: COLORS.purpleBorder, '&:hover': { background: COLORS.purpleLight, borderColor: COLORS.purpleHover, color: COLORS.purpleHover } }}>Cancel</Button>
+                <Button fullWidth onClick={handleConfirmAssign} variant="contained" sx={{ borderRadius: '10px', textTransform: 'none', fontWeight: 700, background: COLORS.primaryPurple, '&:hover': { background: COLORS.purpleHover } }}>Confirm & Assign</Button>
             </Box>
         </Box>
       </Dialog>
