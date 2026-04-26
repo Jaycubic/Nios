@@ -388,7 +388,7 @@ const PRACTICE_QUESTIONS = [
     },
 ];
 
-function PracticeModal({ chapter, open, onClose }) {
+function PracticeModal({ chapter, open, onClose, onComplete }) {
     if (!chapter) return null;
     const [selected, setSelected] = useState({});
     const [submitted, setSubmitted] = useState(false);
@@ -458,9 +458,9 @@ function PracticeModal({ chapter, open, onClose }) {
                                     </Box>
                                 );
                             })}
-                            <Button fullWidth variant="outlined" onClick={handleClose}
+                            <Button fullWidth variant="outlined" onClick={() => { setSelected({}); setSubmitted(false); if (onComplete) onComplete(chapter.id); else onClose(); }}
                                 sx={{ mt: 1, color: COLORS.primaryPurple, borderColor: COLORS.purpleBorder, textTransform: 'none', fontWeight: 700, borderRadius: '10px', py: 1.1, '&:hover': { background: COLORS.purpleLight } }}>
-                                Close Review
+                                Finish Practice & Close
                             </Button>
                         </>
                     )}
@@ -641,7 +641,14 @@ function ChapterDetailModal({ chapter, open, onClose, subjectColor, onPracticeOp
             if (isPhaseNowComplete) {
                 const phaseIdx = LEARNING_PHASES.findIndex(p => p.id === phaseId);
                 if (phaseIdx !== -1 && phaseIdx < LEARNING_PHASES.length - 1) {
-                    setTimeout(() => setExpandedPhase(LEARNING_PHASES[phaseIdx + 1].id), 300);
+                    const nextPhaseId = LEARNING_PHASES[phaseIdx + 1].id;
+                    let canUnlock = true;
+                    if (nextPhaseId === 'phase2' && chapter.practiceCompleted < chapter.practiceTotal) {
+                        canUnlock = false;
+                    }
+                    if (canUnlock) {
+                        setTimeout(() => setExpandedPhase(nextPhaseId), 300);
+                    }
                 } else if (phaseIdx === LEARNING_PHASES.length - 1) {
                     setTimeout(() => setExpandedPhase(null), 300); // All done
                 }
@@ -678,7 +685,14 @@ function ChapterDetailModal({ chapter, open, onClose, subjectColor, onPracticeOp
                     {LEARNING_PHASES.map((phase, idx) => {
                         const isExpanded = expandedPhase === phase.id;
                         const isComplete = isPhaseComplete(phase.id);
-                        const prevPhaseComplete = idx === 0 || isPhaseComplete(LEARNING_PHASES[idx - 1].id);
+                        let prevPhaseComplete = idx === 0 || isPhaseComplete(LEARNING_PHASES[idx - 1].id);
+                        
+                        if (phase.id === 'phase2' && prevPhaseComplete) {
+                            if (chapter.practiceCompleted < chapter.practiceTotal) {
+                                prevPhaseComplete = false;
+                            }
+                        }
+
                         const isLocked = !prevPhaseComplete;
 
                         return (
@@ -772,7 +786,7 @@ function ChapterDetailModal({ chapter, open, onClose, subjectColor, onPracticeOp
                                                         boxShadow: `0 4px 12px ${COLORS.primaryPurple}30`,
                                                         '&:hover': { background: COLORS.purpleHover }
                                                     }}>
-                                                    ✏️ 1st Time Practice
+                                                    {chapter.practiceCompleted >= chapter.practiceTotal ? '✅ Practice Completed' : '✏️ 1st Time Practice'}
                                                 </Button>
                                             </Box>
                                         )}
