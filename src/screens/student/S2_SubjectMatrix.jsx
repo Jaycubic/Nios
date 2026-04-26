@@ -396,7 +396,7 @@ function PracticeDrawer({ chapter, open, onClose, onComplete }) {
     const handleClose = () => { setSelected({}); setSubmitted(false); onClose(); };
 
     return (
-        <Drawer anchor="right" open={open} onClose={handleClose} slotProps={{ backdrop: { invisible: true } }}>
+        <Drawer anchor="right" open={open} onClose={handleClose} sx={{ zIndex: 1400 }} slotProps={{ backdrop: { invisible: true } }}>
             <Box sx={{ width: { xs: '100vw', sm: 480 }, height: '100%', overflowY: 'auto', background: '#fff', p: 0, outline: 'none', borderLeft: `1px solid ${COLORS.border}` }}>
                 {/* Header */}
                 <Box sx={{ p: '20px 24px 16px', borderBottom: `1px solid ${COLORS.divider}`, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
@@ -727,7 +727,7 @@ function ChapterDetailModal({ chapter, open, onClose, subjectColor, onPracticeOp
 
                         return (
                             <Box key={phase.id} 
-                                onClick={() => !isLocked && setExpandedPhase(isExpanded ? null : phase.id)}
+                                onClick={() => !isLocked && !isExpanded && setExpandedPhase(phase.id)}
                                 sx={{
                                 flex: { xs: 'none', md: isExpanded ? 2.2 : 1 },
                                 borderRadius: '16px',
@@ -736,12 +736,14 @@ function ChapterDetailModal({ chapter, open, onClose, subjectColor, onPracticeOp
                                 overflow: 'hidden',
                                 transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
                                 opacity: isLocked ? 0.6 : 1,
-                                cursor: isLocked ? 'not-allowed' : 'pointer',
+                                cursor: isLocked ? 'not-allowed' : (isExpanded ? 'default' : 'pointer'),
                                 display: 'flex', flexDirection: 'column',
                                 p: 2
                             }}>
                                 {/* Accordion Header */}
-                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.2, mb: isExpanded ? 1.5 : 0 }}>
+                                <Box 
+                                    onClick={(e) => { e.stopPropagation(); if (!isLocked) setExpandedPhase(isExpanded ? null : phase.id); }} 
+                                    sx={{ display: 'flex', alignItems: 'center', gap: 1.2, mb: isExpanded ? 1.5 : 0, cursor: isLocked ? 'not-allowed' : 'pointer' }}>
                                     <Box sx={{ width: 34, height: 34, flexShrink: 0, borderRadius: '10px', background: isComplete ? COLORS.green : isExpanded ? COLORS.primaryPurple : '#E2E8F0', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1rem', color: '#fff' }}>
                                         {isComplete ? '✓' : phase.icon}
                                     </Box>
