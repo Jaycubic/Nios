@@ -294,6 +294,16 @@ function PerformanceDrilldown() {
                       }}>
                         {s.score}%
                       </Typography>
+
+                      <Typography sx={{
+                        fontSize: '0.65rem',
+                        color: COLORS.textMuted,
+                        fontWeight: 700,
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.05em'
+                      }}>
+                        Score
+                      </Typography>
                     </Box>
                   </Box>
 
