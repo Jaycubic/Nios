@@ -22,9 +22,9 @@ const studentsDb = {
 const subjectData = [
   { subject: '📐 Math', score: 45, practice: 'Needs Support', retention: 50, status: '🔴', statusColor: COLORS.amber },
   { subject: '🔬 Science', score: 58, practice: 'Improving', retention: 62, status: '🟡', statusColor: COLORS.yellow },
-  { subject: '📖 English', score: 72, practice: 'Needs Support', retention: 78, status: '🟢', statusColor: COLORS.green },
-  { subject: '🌍 Social Science', score: 61, practice: 'On Track', retention: 55, status: '🟡', statusColor: COLORS.yellow },
-  { subject: '✍️ Hindi', score: 85, practice: 'Needs Support', retention: 80, status: '🟢', statusColor: COLORS.green },
+  { subject: '📖 English', score: 72, practice: 'On Track', retention: 78, status: '🟢', statusColor: COLORS.green },
+  { subject: '🌍 Social Science', score: 61, practice: 'Improving', retention: 55, status: '🟡', statusColor: COLORS.yellow },
+  { subject: '✍️ Hindi', score: 85, practice: 'On Track', retention: 80, status: '🟢', statusColor: COLORS.green },
 ];
 
 const chapterData = {
