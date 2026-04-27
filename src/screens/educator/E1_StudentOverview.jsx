@@ -285,20 +285,32 @@ function PerformanceDrilldown() {
                     <Typography sx={{ fontWeight: isActive ? 800 : 600, fontSize: '0.9rem', color: COLORS.textPrimary, mt: 0.3 }}>
                       {s.subject}
                     </Typography>
-                    <Box sx={{ textAlign: 'right' }}>
-                      <Typography sx={{ fontWeight: 800, fontSize: '1rem', color: s.statusColor, lineHeight: 1.2 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                      <Typography sx={{
+                        fontWeight: 800,
+                        fontSize: '1rem',
+                        color: s.statusColor,
+                        lineHeight: 1
+                      }}>
                         {s.score}%
                       </Typography>
-                      <Typography sx={{ fontSize: '0.65rem', color: COLORS.textMuted, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                        Subject Score
+
+                      <Typography sx={{
+                        fontSize: '0.65rem',
+                        color: COLORS.textMuted,
+                        fontWeight: 700,
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.05em'
+                      }}>
+                        Score
                       </Typography>
                     </Box>
                   </Box>
-                  
+
                   <Box sx={{ mb: 1.5 }}>
                     <LinearProgress variant="determinate" value={s.retention} sx={{ width: '100%', height: 4, borderRadius: 4, background: COLORS.divider, '& .MuiLinearProgress-bar': { background: `${s.statusColor}80` } }} />
                   </Box>
-                  
+
                   <Box>
                     {practiceChip(s.practice)}
                   </Box>
