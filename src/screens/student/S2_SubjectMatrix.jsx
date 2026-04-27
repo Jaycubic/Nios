@@ -880,11 +880,13 @@ function ChapterDetailModal({ chapter, open, onClose, subjectColor, onPracticeOp
                                             <Box sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end', pt: 1 }}>
                                                 <Button
                                                     variant="contained"
+                                                    disabled={!isPhaseComplete('phase1') && chapter.practiceCompleted < chapter.practiceTotal}
                                                     onClick={(e) => { e.stopPropagation(); onPracticeOpen(); }}
                                                     sx={{
                                                         background: COLORS.primaryPurple, color: '#fff', fontWeight: 700, borderRadius: '10px', textTransform: 'none', py: 0.8,
                                                         boxShadow: `0 4px 12px ${COLORS.primaryPurple}30`,
-                                                        '&:hover': { background: COLORS.purpleHover }
+                                                        '&:hover': { background: COLORS.purpleHover },
+                                                        '&.Mui-disabled': { background: COLORS.divider, color: COLORS.textMuted, boxShadow: 'none' }
                                                     }}>
                                                     {chapter.practiceCompleted >= chapter.practiceTotal ? 'Review Score' : '✏️ 1st Time Practice'}
                                                 </Button>

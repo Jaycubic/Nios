@@ -6,6 +6,7 @@ import {
 } from '@mui/material';
 import Layout from '../../components/Layout';
 import { COLORS } from '../../theme';
+import subjectQuestions from '../../data/subjectQuestions.json';
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 const syllabusSubjects = [
@@ -167,6 +168,15 @@ function LearningPathRow({ subject, needsAttention, strengthen, practice, onComp
   const [activeStep, setActiveStep] = useState(0); 
   const [studyModalOpen, setStudyModalOpen] = useState(false);
   const [practiceModalOpen, setPracticeModalOpen] = useState(false);
+  const [selected, setSelected] = useState({});
+
+  const subjectKey = subject.toLowerCase().includes('math') ? 'math' : 
+                     subject.toLowerCase().includes('science') ? 'science' : 
+                     subject.toLowerCase().includes('english') ? 'english' : 
+                     subject.toLowerCase().includes('hindi') ? 'hindi' : 
+                     subject.toLowerCase().includes('social') ? 'social' : 'math';
+  
+  const questions = (subjectQuestions[subjectKey] || subjectQuestions['math']).slice(0, 2);
 
   const handleNext = () => {
     setActiveStep(prev => {
@@ -197,6 +207,7 @@ function LearningPathRow({ subject, needsAttention, strengthen, practice, onComp
 
   const handlePracticeComplete = () => {
     setPracticeModalOpen(false);
+    setSelected({});
     handleNext();
   }
 
@@ -386,20 +397,38 @@ function LearningPathRow({ subject, needsAttention, strengthen, practice, onComp
         </DialogActions>
       </Dialog>
 
-      <Dialog open={practiceModalOpen} onClose={() => setPracticeModalOpen(false)} maxWidth="sm" fullWidth PaperProps={{ sx: { borderRadius: '16px' } }}>
-        <DialogTitle sx={{ fontWeight: 800 }}>Practice Challenge</DialogTitle>
-        <DialogContent dividers sx={{ minHeight: 180, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-          <Typography sx={{ mb: 3, fontWeight: 600, fontSize: '1rem' }}>Q1. What is the correct sequence of steps to solve this problem?</Typography>
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-            {['Option A', 'Option B', 'Option C', 'Option D'].map(o => (
-              <Button key={o} variant="outlined" sx={{ justifyContent: 'flex-start', color: COLORS.textPrimary, borderColor: COLORS.divider, textTransform: 'none' }}>{o}</Button>
-            ))}
-          </Box>
-        </DialogContent>
-        <DialogActions sx={{ p: 2 }}>
-          <Button onClick={handlePracticeComplete} variant="contained" color="primary">Submit Answer</Button>
-        </DialogActions>
-      </Dialog>
+      <Drawer anchor="right" open={practiceModalOpen} onClose={() => { setPracticeModalOpen(false); setSelected({}); }} sx={{ zIndex: 1400 }} slotProps={{ backdrop: { invisible: true } }}>
+        <Box sx={{ width: { xs: '100vw', sm: 480 }, height: '100%', overflowY: 'auto', background: '#fff', p: 0, outline: 'none', borderLeft: `1px solid ${COLORS.border}` }}>
+            <Box sx={{ p: '20px 24px 16px', borderBottom: `1px solid ${COLORS.divider}`, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                <Box>
+                    <Typography sx={{ fontWeight: 800, fontSize: '1.05rem', color: COLORS.textPrimary }}>Practice Challenge ✏️</Typography>
+                    <Typography sx={{ fontSize: '0.75rem', color: COLORS.textSecondary, mt: 0.2 }}>{subject} · 2 questions</Typography>
+                </Box>
+                <IconButton size="small" onClick={() => { setPracticeModalOpen(false); setSelected({}); }} sx={{ color: '#000' }}>✕</IconButton>
+            </Box>
+
+            <Box sx={{ p: 3 }}>
+                {questions.map((q, qi) => (
+                    <Box key={qi} sx={{ mb: 3 }}>
+                        <Typography sx={{ fontSize: '0.88rem', fontWeight: 600, color: COLORS.textPrimary, mb: 1.5, lineHeight: 1.5 }}>{q.q}</Typography>
+                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                            {q.options.map((opt, oi) => (
+                                <Box key={oi} onClick={() => setSelected(s => ({ ...s, [qi]: oi }))}
+                                    sx={{ p: '10px 14px', borderRadius: '10px', cursor: 'pointer', border: `1.5px solid ${selected[qi] === oi ? COLORS.primaryPurple : COLORS.border}`, background: selected[qi] === oi ? COLORS.purpleLight : '#fff', transition: 'all 0.15s' }}>
+                                    <Typography sx={{ fontSize: '0.82rem', color: selected[qi] === oi ? COLORS.primaryPurple : COLORS.textPrimary, fontWeight: selected[qi] === oi ? 600 : 400 }}>{opt}</Typography>
+                                </Box>
+                            ))}
+                        </Box>
+                    </Box>
+                ))}
+                <Button fullWidth variant="contained" disabled={Object.keys(selected).length < questions.length}
+                    onClick={handlePracticeComplete}
+                    sx={{ mt: 1, background: COLORS.primaryPurple, color: '#fff', textTransform: 'none', fontWeight: 700, borderRadius: '10px', py: 1.2, '&:hover': { background: COLORS.purpleHover }, '&.Mui-disabled': { background: COLORS.divider } }}>
+                    Submit Answer & Complete →
+                </Button>
+            </Box>
+        </Box>
+      </Drawer>
     </Box>
   );
 }
