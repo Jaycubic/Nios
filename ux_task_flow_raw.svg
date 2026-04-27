@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 1000" width="100%" height="100%">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#64748b" />
+    </marker>
+  </defs>
+  <rect width="1100" height="1000" fill="#f8fafc" />
+  
+  <text x="550" y="40" font-family="sans-serif" font-size="24" font-weight="bold" text-anchor="middle" fill="#0f172a">Student UX Task Flow</text>
+  <text x="250" y="90" font-family="sans-serif" font-size="18" font-weight="bold" text-anchor="middle" fill="#4c1d95">S1_Dashboard Flow</text>
+  <text x="750" y="90" font-family="sans-serif" font-size="18" font-weight="bold" text-anchor="middle" fill="#4c1d95">S2_SubjectMatrix Flow</text>
+  <line x1="500" y1="70" x2="500" y2="950" stroke="#cbd5e1" stroke-width="2" stroke-dasharray="8 8" />
+
+  <!-- S1 Dashboard Flow -->
+  <rect x="130" y="120" width="240" height="60" rx="8" fill="#f3e8ff" stroke="#9333ea" stroke-width="2" />
+  <text x="250" y="155" font-family="sans-serif" font-size="14" font-weight="bold" fill="#1e293b" text-anchor="middle">Dashboard Screen</text>
+
+  <line x1="250" y1="180" x2="250" y2="215" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)" />
+  <rect x="130" y="220" width="240" height="60" rx="4" fill="#e0f2fe" stroke="#0284c7" stroke-width="2" />
+  <text x="250" y="255" font-family="sans-serif" font-size="14" font-weight="bold" fill="#1e293b" text-anchor="middle">Click Improvement Area</text>
+
+  <line x1="250" y1="280" x2="250" y2="315" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)" />
+  <rect x="130" y="320" width="240" height="60" rx="8" fill="#f3e8ff" stroke="#9333ea" stroke-width="2" />
+  <text x="250" y="355" font-family="sans-serif" font-size="14" font-weight="bold" fill="#1e293b" text-anchor="middle">Dialog: Learning Path</text>
+
+  <line x1="250" y1="380" x2="250" y2="415" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)" />
+  <rect x="130" y="420" width="240" height="60" rx="8" fill="#f3e8ff" stroke="#9333ea" stroke-width="2" />
+  <text x="250" y="455" font-family="sans-serif" font-size="14" font-weight="bold" fill="#1e293b" text-anchor="middle">Drawer: Practice Challenge</text>
+
+  <line x1="250" y1="480" x2="250" y2="515" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)" />
+  <rect x="130" y="520" width="240" height="60" rx="4" fill="#e0f2fe" stroke="#0284c7" stroke-width="2" />
+  <text x="250" y="555" font-family="sans-serif" font-size="14" font-weight="bold" fill="#1e293b" text-anchor="middle">Select Options &amp; Submit</text>
+
+  <line x1="250" y1="580" x2="250" y2="615" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)" />
+  <rect x="130" y="620" width="240" height="60" rx="30" fill="#dcfce7" stroke="#16a34a" stroke-width="2" />
+  <text x="250" y="655" font-family="sans-serif" font-size="14" font-weight="bold" fill="#1e293b" text-anchor="middle">Learning Path Completes</text>
+
+  <!-- S2 SubjectMatrix Flow - Chapter -->
+  <rect x="580" y="120" width="240" height="60" rx="8" fill="#f3e8ff" stroke="#9333ea" stroke-width="2" />
+  <text x="700" y="155" font-family="sans-serif" font-size="14" font-weight="bold" fill="#1e293b" text-anchor="middle">Subject Matrix Roadmap</text>
+
+  <path d="M 700 180 C 700 200, 640 200, 640 215" fill="none" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)" />
+  <text x="640" y="200" font-family="sans-serif" font-size="11" font-weight="bold" fill="#475569" text-anchor="end">Chapter Node</text>
+
+  <rect x="520" y="220" width="240" height="60" rx="8" fill="#f3e8ff" stroke="#9333ea" stroke-width="2" />
+  <text x="640" y="255" font-family="sans-serif" font-size="14" font-weight="bold" fill="#1e293b" text-anchor="middle">Modal: Chapter Details</text>
+
+  <line x1="640" y1="280" x2="640" y2="315" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)" />
+  <rect x="520" y="320" width="240" height="60" rx="4" fill="#e0f2fe" stroke="#0284c7" stroke-width="2" />
+  <text x="640" y="355" font-family="sans-serif" font-size="14" font-weight="bold" fill="#1e293b" text-anchor="middle">Check Phase 1 Topics</text>
+
+  <line x1="640" y1="380" x2="640" y2="415" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)" />
+  <rect x="520" y="420" width="240" height="60" rx="8" fill="#f3e8ff" stroke="#9333ea" stroke-width="2" />
+  <text x="640" y="455" font-family="sans-serif" font-size="14" font-weight="bold" fill="#1e293b" text-anchor="middle">Drawer: Practice Challenge</text>
+
+  <line x1="640" y1="480" x2="640" y2="515" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)" />
+  <rect x="520" y="520" width="240" height="60" rx="4" fill="#e0f2fe" stroke="#0284c7" stroke-width="2" />
+  <text x="640" y="555" font-family="sans-serif" font-size="14" font-weight="bold" fill="#1e293b" text-anchor="middle">Submit Practice Answers</text>
+
+  <line x1="640" y1="580" x2="640" y2="615" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)" />
+  <rect x="520" y="620" width="240" height="60" rx="4" fill="#f1f5f9" stroke="#64748b" stroke-width="2" stroke-dasharray="5 5" />
+  <text x="640" y="655" font-family="sans-serif" font-size="14" font-weight="bold" fill="#1e293b" text-anchor="middle">Drawer Closes / Phase 2 Expands</text>
+
+  <line x1="640" y1="680" x2="640" y2="715" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)" />
+  <rect x="520" y="720" width="240" height="60" rx="4" fill="#e0f2fe" stroke="#0284c7" stroke-width="2" />
+  <text x="640" y="755" font-family="sans-serif" font-size="14" font-weight="bold" fill="#1e293b" text-anchor="middle">Finish Chapter</text>
+
+  <line x1="640" y1="780" x2="640" y2="815" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)" />
+  <rect x="520" y="820" width="240" height="60" rx="30" fill="#dcfce7" stroke="#16a34a" stroke-width="2" />
+  <text x="640" y="855" font-family="sans-serif" font-size="14" font-weight="bold" fill="#1e293b" text-anchor="middle">Chapter Node Unlocks Next</text>
+
+  <!-- S2 SubjectMatrix Flow - Mock Test -->
+  <path d="M 700 180 C 700 200, 880 200, 880 215" fill="none" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)" />
+  <text x="760" y="200" font-family="sans-serif" font-size="11" font-weight="bold" fill="#475569" text-anchor="start">Mock Test Node</text>
+
+  <rect x="760" y="220" width="240" height="60" rx="8" fill="#f3e8ff" stroke="#9333ea" stroke-width="2" />
+  <text x="880" y="255" font-family="sans-serif" font-size="14" font-weight="bold" fill="#1e293b" text-anchor="middle">Modal: Mock Test</text>
+
+  <line x1="880" y1="280" x2="880" y2="315" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)" />
+  <rect x="760" y="320" width="240" height="60" rx="4" fill="#e0f2fe" stroke="#0284c7" stroke-width="2" />
+  <text x="880" y="355" font-family="sans-serif" font-size="14" font-weight="bold" fill="#1e293b" text-anchor="middle">Answer 10 Qs &amp; Submit</text>
+
+  <line x1="880" y1="380" x2="880" y2="415" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)" />
+  <rect x="760" y="420" width="240" height="60" rx="30" fill="#dcfce7" stroke="#16a34a" stroke-width="2" />
+  <text x="880" y="455" font-family="sans-serif" font-size="14" font-weight="bold" fill="#1e293b" text-anchor="middle">Mock Test Completes</text>
+
+</svg>
