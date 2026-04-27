@@ -154,9 +154,18 @@ const initialChaptersData = {
             ],
         },
         { id: 2, title: 'Acids, Bases & Salts', status: 'not-started', firstTime: false, practiceCompleted: 0, practiceTotal: 15, mockScore: null, mockAttempts: 0, topics: [{ name: 'Properties of Acids & Bases', learning: 'Not Started', practice: '0/5', progress: 0 }, { name: 'pH Scale', learning: 'Not Started', practice: '0/5', progress: 0 }] },
-        { id: 3, title: 'Metals and Non-Metals', status: 'not-started', firstTime: false, practiceCompleted: 0, practiceTotal: 12, mockScore: null, mockAttempts: 0, topics: [] },
-        { id: 4, title: 'Life Processes', status: 'not-started', firstTime: false, practiceCompleted: 0, practiceTotal: 14, mockScore: null, mockAttempts: 0, topics: [] },
-        { id: 5, title: 'Control & Coordination', status: 'not-started', firstTime: false, practiceCompleted: 0, practiceTotal: 12, mockScore: null, mockAttempts: 0, topics: [] },
+        { id: 3, title: 'Metals and Non-Metals', status: 'not-started', firstTime: false, practiceCompleted: 0, practiceTotal: 12, mockScore: null, mockAttempts: 0, topics: [
+            { name: 'Physical Properties', learning: 'Not Started', practice: '0/5', progress: 0 },
+            { name: 'Chemical Properties', learning: 'Not Started', practice: '0/5', progress: 0 }
+        ] },
+        { id: 4, title: 'Life Processes', status: 'not-started', firstTime: false, practiceCompleted: 0, practiceTotal: 14, mockScore: null, mockAttempts: 0, topics: [
+            { name: 'Nutrition & Digestion', learning: 'Not Started', practice: '0/5', progress: 0 },
+            { name: 'Respiration & Circulation', learning: 'Not Started', practice: '0/5', progress: 0 }
+        ] },
+        { id: 5, title: 'Control & Coordination', status: 'not-started', firstTime: false, practiceCompleted: 0, practiceTotal: 12, mockScore: null, mockAttempts: 0, topics: [
+            { name: 'Nervous System', learning: 'Not Started', practice: '0/5', progress: 0 },
+            { name: 'Hormones in Animals', learning: 'Not Started', practice: '0/5', progress: 0 }
+        ] },
     ],
     english: [
         {
@@ -195,7 +204,11 @@ const initialChaptersData = {
                 { name: 'Deep Water', learning: 'Not Started', practice: '0/4', progress: 0 },
             ],
         },
-        { id: 5, title: 'Literature-Poetry', status: 'not-started', firstTime: false, practiceCompleted: 0, practiceTotal: 10, mockScore: null, mockAttempts: 0, topics: [] },
+        { id: 5, title: 'Literature-Poetry', status: 'not-started', firstTime: false, practiceCompleted: 0, practiceTotal: 10, mockScore: null, mockAttempts: 0, topics: [
+            { name: 'My Mother at Sixty-six', learning: 'Not Started', practice: '0/3', progress: 0 },
+            { name: 'Keeping Quiet', learning: 'Not Started', practice: '0/3', progress: 0 },
+            { name: 'A Thing of Beauty', learning: 'Not Started', practice: '0/4', progress: 0 }
+        ] },
     ],
     hindi: [
         {
@@ -225,7 +238,11 @@ const initialChaptersData = {
                 { name: 'Shabdalankar', learning: 'Not Started', practice: '0/5', progress: 0 },
             ],
         },
-        { id: 4, title: 'निबंध — Essay Writing', status: 'not-started', firstTime: false, practiceCompleted: 0, practiceTotal: 10, mockScore: null, mockAttempts: 0, topics: [] },
+        { id: 4, title: 'निबंध — Essay Writing', status: 'not-started', firstTime: false, practiceCompleted: 0, practiceTotal: 10, mockScore: null, mockAttempts: 0, topics: [
+            { name: 'Introduction and Format', learning: 'Not Started', practice: '0/3', progress: 0 },
+            { name: 'Current Affairs Topics', learning: 'Not Started', practice: '0/4', progress: 0 },
+            { name: 'Proverb Based Essays', learning: 'Not Started', practice: '0/3', progress: 0 }
+        ] },
     ],
     social: [
         {
@@ -246,8 +263,16 @@ const initialChaptersData = {
                 { name: 'Sense of Collective Belonging', learning: 'Not Started', practice: '2/5', progress: 20 },
             ],
         },
-        { id: 3, title: 'Resources & Development', status: 'not-started', firstTime: false, practiceCompleted: 0, practiceTotal: 12, mockScore: null, mockAttempts: 0, topics: [] },
-        { id: 4, title: 'Development — Economics', status: 'not-started', firstTime: false, practiceCompleted: 0, practiceTotal: 12, mockScore: null, mockAttempts: 0, topics: [] },
+        { id: 3, title: 'Resources & Development', status: 'not-started', firstTime: false, practiceCompleted: 0, practiceTotal: 12, mockScore: null, mockAttempts: 0, topics: [
+            { name: 'Types of Resources', learning: 'Not Started', practice: '0/4', progress: 0 },
+            { name: 'Land & Soil Resources', learning: 'Not Started', practice: '0/4', progress: 0 },
+            { name: 'Resource Planning', learning: 'Not Started', practice: '0/4', progress: 0 }
+        ] },
+        { id: 4, title: 'Development — Economics', status: 'not-started', firstTime: false, practiceCompleted: 0, practiceTotal: 12, mockScore: null, mockAttempts: 0, topics: [
+            { name: 'Income and Other Goals', learning: 'Not Started', practice: '0/4', progress: 0 },
+            { name: 'National Development', learning: 'Not Started', practice: '0/4', progress: 0 },
+            { name: 'Sustainability', learning: 'Not Started', practice: '0/4', progress: 0 }
+        ] },
         { id: 5, title: 'Money & Credit', status: 'not-started', firstTime: false, practiceCompleted: 0, practiceTotal: 10, mockScore: null, mockAttempts: 0, topics: [] },
     ],
 };
