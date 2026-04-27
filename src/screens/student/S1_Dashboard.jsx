@@ -164,10 +164,14 @@ function GoalRow({ text, done }) {
 }
 
 // ─── Learning Path Row (Horizontal Expandable Flow) ───────────────────────────
-function LearningPathRow({ subject, needsAttention, strengthen, practice, onComplete }) {
+function LearningPathRow({ subject, needsAttention, strengthen, practice, onComplete, onPracticeOpenChange }) {
   const [activeStep, setActiveStep] = useState(0); 
   const [studyModalOpen, setStudyModalOpen] = useState(false);
   const [practiceModalOpen, setPracticeModalOpen] = useState(false);
+
+  React.useEffect(() => {
+    if (onPracticeOpenChange) onPracticeOpenChange(practiceModalOpen);
+  }, [practiceModalOpen, onPracticeOpenChange]);
   const [selected, setSelected] = useState({});
 
   const subjectKey = subject.toLowerCase().includes('math') ? 'math' : 
@@ -438,6 +442,7 @@ export default function S1_Dashboard() {
   const [goals, setGoals] = useState(todayGoals);
   const [activeLearningPath, setActiveLearningPath] = useState(null);
   const [completedAreas, setCompletedAreas] = useState([]);
+  const [isPracticeDrawerOpen, setIsPracticeDrawerOpen] = useState(false);
   const doneCnt = goals.filter(g => g.done).length;
   const goalPct = Math.round((doneCnt / goals.length) * 100);
 
@@ -761,7 +766,7 @@ export default function S1_Dashboard() {
         </Grid>
 
         {/* ── Modal for Active Learning Path ── */}
-        <Dialog open={!!activeLearningPath} onClose={() => setActiveLearningPath(null)} maxWidth="md" fullWidth PaperProps={{ sx: { borderRadius: '28px', background: COLORS.bgCard, overflow: 'hidden' } }}>
+        <Dialog open={!!activeLearningPath} onClose={() => setActiveLearningPath(null)} maxWidth="md" fullWidth PaperProps={{ sx: { borderRadius: '28px', background: COLORS.bgCard, overflow: 'hidden', transform: isPracticeDrawerOpen ? 'translateX(-12vw)' : 'translateX(0)', transition: 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)' } }}>
           <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', p: '24px 24px 16px 24px' }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
               <Box sx={{ width: 48, height: 48, borderRadius: '14px', background: COLORS.purpleLight, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -787,6 +792,7 @@ export default function S1_Dashboard() {
                 strengthen={activeLearningPath.strengthen} 
                 practice={activeLearningPath.practice} 
                 onComplete={() => handleLearningPathComplete(activeLearningPath.subject)}
+                onPracticeOpenChange={setIsPracticeDrawerOpen}
               />
             )}
           </DialogContent>
