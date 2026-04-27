@@ -11,20 +11,20 @@ import { COLORS } from '../../theme';
 
 // ─── Student data ─────────────────────────────────────────────────────────────
 const studentsDb = {
-  '1': { name: 'Rahul Sharma', grade: 'Grade 10 · NIOS', rollNo: '2024NIOS1048', score: 52, practice: 'Medium', retention: 60, status: 'Needs Support' },
-  '2': { name: 'Aisha Khan', grade: 'Grade 10 · NIOS', rollNo: '2024NIOS1049', score: 65, practice: 'High', retention: 68, status: 'Improving' },
-  '3': { name: 'Priya Patel', grade: 'Grade 10 · NIOS', rollNo: '2024NIOS1050', score: 85, practice: 'High', retention: 88, status: 'On Track' },
-  '4': { name: 'Dev Joshi', grade: 'Grade 10 · NIOS', rollNo: '2024NIOS1051', score: 48, practice: 'Low', retention: 55, status: 'Needs Support' },
-  '5': { name: 'Meera Reddy', grade: 'Grade 10 · NIOS', rollNo: '2024NIOS1052', score: 72, practice: 'Medium', retention: 70, status: 'Improving' },
-  '6': { name: 'Rohan Gupta', grade: 'Grade 10 · NIOS', rollNo: '2024NIOS1053', score: 82, practice: 'High', retention: 85, status: 'On Track' },
+  '1': { name: 'Rahul Sharma', grade: 'Grade 10 · NIOS', rollNo: '2024NIOS1048', score: 52, practice: 'Improving', retention: 60, status: 'Needs Support' },
+  '2': { name: 'Aisha Khan', grade: 'Grade 10 · NIOS', rollNo: '2024NIOS1049', score: 65, practice: 'Needs Support', retention: 68, status: 'Improving' },
+  '3': { name: 'Priya Patel', grade: 'Grade 10 · NIOS', rollNo: '2024NIOS1050', score: 85, practice: 'Needs Support', retention: 88, status: 'On Track' },
+  '4': { name: 'Dev Joshi', grade: 'Grade 10 · NIOS', rollNo: '2024NIOS1051', score: 48, practice: 'On Track', retention: 55, status: 'Needs Support' },
+  '5': { name: 'Meera Reddy', grade: 'Grade 10 · NIOS', rollNo: '2024NIOS1052', score: 72, practice: 'Improving', retention: 70, status: 'Improving' },
+  '6': { name: 'Rohan Gupta', grade: 'Grade 10 · NIOS', rollNo: '2024NIOS1053', score: 82, practice: 'Needs Support', retention: 85, status: 'On Track' },
 };
 
 const subjectData = [
   { subject: '📐 Math', score: 45, practice: 'Needs Support', retention: 50, status: '🔴', statusColor: COLORS.amber },
   { subject: '🔬 Science', score: 58, practice: 'Improving', retention: 62, status: '🟡', statusColor: COLORS.yellow },
-  { subject: '📖 English', score: 72, practice: 'On Track', retention: 78, status: '🟢', statusColor: COLORS.green },
-  { subject: '🌍 Social Science', score: 61, practice: 'Needs Support', retention: 55, status: '🟡', statusColor: COLORS.yellow },
-  { subject: '✍️ Hindi', score: 85, practice: 'On Track', retention: 80, status: '🟢', statusColor: COLORS.green },
+  { subject: '📖 English', score: 72, practice: 'Needs Support', retention: 78, status: '🟢', statusColor: COLORS.green },
+  { subject: '🌍 Social Science', score: 61, practice: 'On Track', retention: 55, status: '🟡', statusColor: COLORS.yellow },
+  { subject: '✍️ Hindi', score: 85, practice: 'Needs Support', retention: 80, status: '🟢', statusColor: COLORS.green },
 ];
 
 const chapterData = {
@@ -285,9 +285,13 @@ function PerformanceDrilldown() {
                     <Typography sx={{ fontWeight: isActive ? 800 : 600, fontSize: '0.9rem', color: COLORS.textPrimary }}>
                       {s.subject}
                     </Typography>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <Typography sx={{ fontWeight: 800, fontSize: '0.85rem', color: s.statusColor }}>{s.score}%</Typography>
-                      <Typography sx={{ fontSize: '1rem', lineHeight: 1 }}>{s.status}</Typography>
+                    <Box sx={{ textAlign: 'right' }}>
+                      <Typography sx={{ fontWeight: 800, fontSize: '0.9rem', color: COLORS.textPrimary }}>
+                        {s.score}%
+                      </Typography>
+                      <Typography sx={{ fontSize: '0.65rem', color: COLORS.textMuted }}>
+                        Subject Score
+                      </Typography>
                     </Box>
                   </Box>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
