@@ -1034,18 +1034,27 @@ function SVGRoadmapPanel({ chapters, subjectColor, selectedChapter, onSelectChap
         chapters.forEach((ch, i) => {
             nodes.push({ ...ch, type: 'chapter' });
             if ((i + 1) % 2 === 0 && i < chapters.length - 1) {
+                const isUnlocked = chapters.slice(0, i + 1).every(c => c.status === 'completed');
+                const isCompleted = isUnlocked && ch.mockAttempts > 0;
                 nodes.push({
                     id: `mock-${i}`, type: 'mock-test',
                     title: `Mock Test ${Math.floor((i + 1) / 2)}`,
-                    status: chapters.slice(0, i + 1).every(c => c.status === 'completed') ? 'completed' : 'not-started',
-                    topics: [], practiceCompleted: 0, practiceTotal: 0, mockScore: null, mockAttempts: 0,
+                    status: isCompleted ? 'completed' : isUnlocked ? 'in-progress' : 'not-started',
+                    topics: [], practiceCompleted: 0, practiceTotal: 0, 
+                    mockScore: ch.mockScore, mockAttempts: ch.mockAttempts,
+                    linkedChapterId: ch.id
                 });
             }
         });
+        const lastCh = chapters[chapters.length - 1];
+        const isPreboardUnlocked = chapters.every(c => c.status === 'completed');
+        const isPreboardCompleted = isPreboardUnlocked && lastCh?.mockAttempts > 0;
         nodes.push({
             id: 'preboard', type: 'preboard', title: 'Pre-Board Exam',
-            status: chapters.every(c => c.status === 'completed') ? 'completed' : 'not-started',
-            topics: [], practiceCompleted: 0, practiceTotal: 0, mockScore: null, mockAttempts: 0,
+            status: isPreboardCompleted ? 'completed' : isPreboardUnlocked ? 'in-progress' : 'not-started',
+            topics: [], practiceCompleted: 0, practiceTotal: 0, 
+            mockScore: lastCh?.mockScore, mockAttempts: lastCh?.mockAttempts,
+            linkedChapterId: lastCh?.id
         });
         return nodes;
     }, [chapters]);
@@ -1174,36 +1183,45 @@ function RoadmapView({ subjectId, onBack }) {
     const handleFinishChapter = (chapterId) => {
         const newChapters = chapters.map(c => c.id === chapterId ? { ...c, status: 'completed' } : c);
         const idx = chapters.findIndex(c => c.id === chapterId);
-        if (idx !== -1 && idx + 1 < chapters.length) {
+        
+        const isNextMock = ((idx + 1) % 2 === 0 && idx < chapters.length - 1) || (idx === chapters.length - 1);
+        
+        if (!isNextMock && idx !== -1 && idx + 1 < chapters.length) {
             if (newChapters[idx + 1].status === 'not-started') {
                 newChapters[idx + 1] = { ...newChapters[idx + 1], status: 'in-progress' };
             }
         }
+        
         setChapters(newChapters);
         if (selectedChapter?.id === chapterId) {
             setSelectedChapter(newChapters[idx]);
         }
     };
 
-    const handleCompleteChapter = (chapterId) => {
-        let nextChapter = null;
+    const handleCompleteChapter = (mockId) => {
+        let linkedChapterId = mockId;
+        if (typeof mockId === 'string' && mockId.startsWith('mock-')) {
+            const mockIdx = parseInt(mockId.split('-')[1]);
+            linkedChapterId = chapters[mockIdx]?.id;
+        } else if (mockId === 'preboard') {
+            linkedChapterId = chapters[chapters.length - 1]?.id;
+        }
+
         const newChapters = chapters.map(c => {
-            if (c.id === chapterId) {
-                return { ...c, status: 'completed', mockScore: c.mockScore || 85, mockAttempts: Math.max(c.mockAttempts, 1) };
+            if (c.id === linkedChapterId) {
+                return { ...c, mockScore: c.mockScore || 85, mockAttempts: Math.max(c.mockAttempts || 0, 1) };
             }
             return c;
         });
-        const idx = chapters.findIndex(c => c.id === chapterId);
+        
+        const idx = chapters.findIndex(c => c.id === linkedChapterId);
         if (idx !== -1 && idx + 1 < chapters.length) {
             if (newChapters[idx + 1].status === 'not-started') {
                 newChapters[idx + 1] = { ...newChapters[idx + 1], status: 'in-progress' };
             }
-            nextChapter = newChapters[idx + 1];
-        } else if (idx !== -1) {
-            nextChapter = newChapters[idx];
         }
+        
         setChapters(newChapters);
-        setSelectedChapter(nextChapter);
         setMockModalOpen(false);
     };
 
