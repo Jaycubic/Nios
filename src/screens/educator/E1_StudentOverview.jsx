@@ -20,11 +20,11 @@ const studentsDb = {
 };
 
 const subjectData = [
-  { subject: '📐 Math', score: 45, practice: 'High', retention: 50, status: '🔴', statusColor: COLORS.amber },
-  { subject: '🔬 Science', score: 58, practice: 'Medium', retention: 62, status: '🟡', statusColor: COLORS.yellow },
-  { subject: '📖 English', score: 72, practice: 'High', retention: 78, status: '🟢', statusColor: COLORS.green },
-  { subject: '🌍 Social Science', score: 61, practice: 'Low', retention: 55, status: '🟡', statusColor: COLORS.yellow },
-  { subject: '✍️ Hindi', score: 85, practice: 'High', retention: 80, status: '🟢', statusColor: COLORS.green },
+  { subject: '📐 Math', score: 45, practice: 'Needs Support', retention: 50, status: '🔴', statusColor: COLORS.amber },
+  { subject: '🔬 Science', score: 58, practice: 'Improving', retention: 62, status: '🟡', statusColor: COLORS.yellow },
+  { subject: '📖 English', score: 72, practice: 'On Track', retention: 78, status: '🟢', statusColor: COLORS.green },
+  { subject: '🌍 Social Science', score: 61, practice: 'Needs Support', retention: 55, status: '🟡', statusColor: COLORS.yellow },
+  { subject: '✍️ Hindi', score: 85, practice: 'On Track', retention: 80, status: '🟢', statusColor: COLORS.green },
 ];
 
 const chapterData = {
@@ -135,9 +135,9 @@ function AccuracyBar({ value, color }) {
 
 function practiceChip(level) {
   const map = {
-    High: { bg: `${COLORS.green}15`, color: COLORS.green },
-    Medium: { bg: `${COLORS.yellow}15`, color: COLORS.yellowDark },
-    Low: { bg: `${COLORS.amber}15`, color: COLORS.amberDark },
+    'On Track': { bg: `${COLORS.green}15`, color: COLORS.green },
+    'Improving': { bg: `${COLORS.yellow}15`, color: COLORS.yellowDark },
+    'Needs Support': { bg: `${COLORS.amber}15`, color: COLORS.amberDark },
   };
   const s = map[level] || {};
   return (
