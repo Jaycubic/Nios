@@ -82,8 +82,8 @@ const chapterData = {
 
 // ─── E5 Data: Recommendations & Strategies ──────────────────────────────────
 const conceptRecs = [
-  { id: 'C1', topic: 'Trigonometry Basics', reason: 'Confusing complementary angle values — needs table review', priority: 'high', icon: '📐', subject: 'Math' },
-  { id: 'C2', topic: 'Fundamental Identities', reason: 'Not Started — substitution error pattern confirmed in 4 Qs', priority: 'high', icon: '🔢', subject: 'Math', isNotStarted: true },
+  { id: 'C1', topic: 'Trigonometry Basics', reason: 'Confusing complementary angle values — needs table review', priority: 'Needs Support', icon: '📐', subject: 'Math' },
+  { id: 'C2', topic: 'Fundamental Identities', reason: 'Not Started — substitution error pattern confirmed in 4 Qs', priority: 'Needs Support', icon: '🔢', subject: 'Math', isNotStarted: true },
 ];
 
 const practiceRecs = [
@@ -92,18 +92,18 @@ const practiceRecs = [
 ];
 
 const teachingStrategies = [
-  { 
-    icon: '🔢', 
+  {
+    icon: '🔢',
     title: 'Focus on Step-by-Step Solving',
     text: 'Encourage breaking problems into explicit, labeled steps before computing. Scaffold practice so they write knowns, unknowns, and formulas to reduce substitution errors.'
   },
-  { 
-    icon: '📉', 
+  {
+    icon: '📉',
     title: 'Reduce Problem Complexity',
     text: 'Start with simpler, isolated problem variants rather than full multi-step equations. Gradually increase difficulty only once foundational accuracy is consistent.'
   },
-  { 
-    icon: '🖼️', 
+  {
+    icon: '🖼️',
     title: 'Use Visual Explanations',
     text: 'Anchor abstract concepts visually. Draw right-angled triangle diagrams for trigonometry boundaries and use core number lines for algebra to build natural intuition.'
   }
@@ -244,9 +244,9 @@ function PerformanceDrilldown() {
   const activeSubjData = subjectData.find(s => s.subject === activeSubj);
   const activeChapters = [...(chapterData[activeSubj] || [])].sort((a, b) => a.score - b.score);
   const weakChaptersCount = activeChapters.filter(c => c.status === '🔴' || c.status === '🟡').length;
-  
-  const weakestChapter = activeChapters.length > 0 
-    ? activeChapters.reduce((prev, curr) => (prev.score < curr.score ? prev : curr), activeChapters[0]) 
+
+  const weakestChapter = activeChapters.length > 0
+    ? activeChapters.reduce((prev, curr) => (prev.score < curr.score ? prev : curr), activeChapters[0])
     : { chapter: 'general topics' };
   const insightText = `Main issue detected in ${weakestChapter.chapter}. Targeted revision recommended to improve retention and accuracy.`;
 
@@ -280,7 +280,7 @@ function PerformanceDrilldown() {
                   {isActive && (
                     <Box sx={{ position: 'absolute', left: -2, top: '15%', height: '70%', width: 4, borderRadius: 2, background: s.statusColor }} />
                   )}
-                  
+
                   <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
                     <Typography sx={{ fontWeight: isActive ? 800 : 600, fontSize: '0.9rem', color: COLORS.textPrimary }}>
                       {s.subject}
@@ -302,10 +302,10 @@ function PerformanceDrilldown() {
 
         {/* RIGHT PANEL: Chapter Drilldown */}
         <Grid item xs={12} lg={8} sx={{ p: 0, position: 'relative', background: '#fff' }}>
-          <Box sx={{ 
-            p: 3, 
-            opacity: isAnimating ? 0 : 1, 
-            transform: isAnimating ? 'translateY(10px)' : 'translateY(0)', 
+          <Box sx={{
+            p: 3,
+            opacity: isAnimating ? 0 : 1,
+            transform: isAnimating ? 'translateY(10px)' : 'translateY(0)',
             transition: 'opacity 0.15s ease-out, transform 0.15s ease-out',
             height: '100%',
           }}>
@@ -330,7 +330,7 @@ function PerformanceDrilldown() {
                 View all {activeChapters.length} chapters →
               </Button>
             </Box>
-            
+
             <Box sx={{ overflowX: 'auto' }}>
               <Table size="small">
                 <TableHead>
@@ -343,10 +343,10 @@ function PerformanceDrilldown() {
                 </TableHead>
                 <TableBody>
                   {activeChapters.slice(0, 5).map(c => (
-                    <Tooltip 
-                      key={c.chapter} 
-                      title="Click to reveal deep-dive diagnostics on concept accuracy and learning gaps." 
-                      arrow 
+                    <Tooltip
+                      key={c.chapter}
+                      title="Click to reveal deep-dive diagnostics on concept accuracy and learning gaps."
+                      arrow
                       placement="left"
                     >
                       <TableRow
@@ -381,7 +381,7 @@ function PerformanceDrilldown() {
           </Box>
         </Grid>
       </Grid>
-      
+
       {/* View All Dialog */}
       <Dialog open={!!viewAllSubject} onClose={() => setViewAllSubject(null)} maxWidth="md" fullWidth PaperProps={{ sx: { borderRadius: '16px' } }}>
         <DialogTitle sx={{
@@ -410,10 +410,10 @@ function PerformanceDrilldown() {
             </TableHead>
             <TableBody>
               {viewAllSubject && chapterData[viewAllSubject].map(c => (
-                <Tooltip 
-                  key={c.chapter} 
-                  title="Click to reveal deep-dive diagnostics on concept accuracy and learning gaps." 
-                  arrow 
+                <Tooltip
+                  key={c.chapter}
+                  title="Click to reveal deep-dive diagnostics on concept accuracy and learning gaps."
+                  arrow
                   placement="top"
                 >
                   <TableRow
@@ -484,7 +484,7 @@ function ActionableInterventions() {
   };
   const handleConfirmAssign = () => {
     if (selectedTopic) {
-        setAssignedTopics(prev => new Set(prev).add(selectedTopic));
+      setAssignedTopics(prev => new Set(prev).add(selectedTopic));
     }
     setAssignModalOpen(false);
   };
@@ -517,9 +517,9 @@ function ActionableInterventions() {
                   <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 0.3 }}>
                     <Typography sx={{ fontWeight: 700, fontSize: '0.85rem', color: COLORS.textPrimary }}>{r.topic}</Typography>
                     {assignedTopics.has(r.topic) ? (
-                        <Chip label="Assigned ✓" size="small" sx={{ background: `${COLORS.green}15`, color: COLORS.greenDark, fontWeight: 700, fontSize: '0.65rem', height: 22 }} />
+                      <Chip label="Assigned ✓" size="small" sx={{ background: `${COLORS.green}15`, color: COLORS.greenDark, fontWeight: 700, fontSize: '0.65rem', height: 22 }} />
                     ) : (
-                        <Button size="small" onClick={(e) => handleClick(e, r.topic, 'concept')} sx={{ minWidth: 0, p: 0.5, px: 1, borderRadius: '8px', color: COLORS.primaryPurple, background: 'transparent', border: `1px solid ${COLORS.purpleBorder}`, textTransform: 'none', fontWeight: 600, '&:hover': { background: COLORS.purpleLight, color: COLORS.purpleHover, borderColor: COLORS.purpleHover } }}>+ Assign</Button>
+                      <Button size="small" onClick={(e) => handleClick(e, r.topic, 'concept')} sx={{ minWidth: 0, p: 0.5, px: 1, borderRadius: '8px', color: COLORS.primaryPurple, background: 'transparent', border: `1px solid ${COLORS.purpleBorder}`, textTransform: 'none', fontWeight: 600, '&:hover': { background: COLORS.purpleLight, color: COLORS.purpleHover, borderColor: COLORS.purpleHover } }}>+ Assign</Button>
                     )}
                   </Box>
                   {r.isNotStarted ? (
@@ -559,9 +559,9 @@ function ActionableInterventions() {
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 0.2 }}>
                   <Typography sx={{ fontWeight: 600, fontSize: '0.8rem', color: COLORS.textPrimary }}>{r.label}</Typography>
                   {assignedTopics.has(r.label) ? (
-                        <Chip label="Assigned ✓" size="small" sx={{ background: `${COLORS.green}15`, color: COLORS.greenDark, fontWeight: 700, fontSize: '0.65rem', height: 22 }} />
+                    <Chip label="Assigned ✓" size="small" sx={{ background: `${COLORS.green}15`, color: COLORS.greenDark, fontWeight: 700, fontSize: '0.65rem', height: 22 }} />
                   ) : (
-                        <Button size="small" onClick={(e) => handleClick(e, r.label, 'practice')} sx={{ minWidth: 0, p: 0.5, px: 1, borderRadius: '8px', color: COLORS.primaryPurple, background: 'transparent', border: `1px solid ${COLORS.purpleBorder}`, textTransform: 'none', fontWeight: 600, '&:hover': { background: COLORS.purpleLight, color: COLORS.purpleHover, borderColor: COLORS.purpleHover } }}>+ Assign</Button>
+                    <Button size="small" onClick={(e) => handleClick(e, r.label, 'practice')} sx={{ minWidth: 0, p: 0.5, px: 1, borderRadius: '8px', color: COLORS.primaryPurple, background: 'transparent', border: `1px solid ${COLORS.purpleBorder}`, textTransform: 'none', fontWeight: 600, '&:hover': { background: COLORS.purpleLight, color: COLORS.purpleHover, borderColor: COLORS.purpleHover } }}>+ Assign</Button>
                   )}
                 </Box>
                 <Box sx={{ display: 'flex', gap: 1 }}>
@@ -584,28 +584,28 @@ function ActionableInterventions() {
           ]}
         </Menu>
 
-      <Dialog open={assignModalOpen} onClose={() => setAssignModalOpen(false)} maxWidth="sm" fullWidth PaperProps={{ sx: { borderRadius: '16px', background: '#fff' } }}>
-        <Box sx={{ p: 3, textAlign: 'center' }}>
+        <Dialog open={assignModalOpen} onClose={() => setAssignModalOpen(false)} maxWidth="sm" fullWidth PaperProps={{ sx: { borderRadius: '16px', background: '#fff' } }}>
+          <Box sx={{ p: 3, textAlign: 'center' }}>
             <Box sx={{ width: 64, height: 64, background: `${COLORS.blue}15`, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
-                <Typography sx={{ fontSize: '1.8rem' }}>💌</Typography>
+              <Typography sx={{ fontSize: '1.8rem' }}>💌</Typography>
             </Box>
             <Typography sx={{ fontWeight: 800, fontSize: '1.25rem', color: COLORS.textPrimary, mb: 1 }}>Distribute Content</Typography>
             <Typography sx={{ fontSize: '0.85rem', color: COLORS.textSecondary, mb: 3 }}>
-                You are about to assign <b>{assignType}</b> covering the topic of <b>"{selectedTopic}"</b> to the student's learning roadmap. They will receive an automated notification.
+              You are about to assign <b>{assignType}</b> covering the topic of <b>"{selectedTopic}"</b> to the student's learning roadmap. They will receive an automated notification.
             </Typography>
-            
+
             <Box sx={{ background: COLORS.bgWarm, border: `1px solid ${COLORS.divider}`, borderRadius: '12px', p: 2, mb: 3, textAlign: 'left' }}>
-                <Typography sx={{ fontSize: '0.75rem', fontWeight: 700, color: COLORS.textSecondary, textTransform: 'uppercase', mb: 1 }}>Assignment Summary</Typography>
-                <Typography sx={{ fontSize: '0.9rem', color: COLORS.textPrimary, mb: 0.5 }}><b>Type:</b> {assignType}</Typography>
-                <Typography sx={{ fontSize: '0.9rem', color: COLORS.textPrimary }}><b>Topic:</b> {selectedTopic}</Typography>
+              <Typography sx={{ fontSize: '0.75rem', fontWeight: 700, color: COLORS.textSecondary, textTransform: 'uppercase', mb: 1 }}>Assignment Summary</Typography>
+              <Typography sx={{ fontSize: '0.9rem', color: COLORS.textPrimary, mb: 0.5 }}><b>Type:</b> {assignType}</Typography>
+              <Typography sx={{ fontSize: '0.9rem', color: COLORS.textPrimary }}><b>Topic:</b> {selectedTopic}</Typography>
             </Box>
 
             <Box sx={{ display: 'flex', gap: 2 }}>
-                <Button fullWidth onClick={() => setAssignModalOpen(false)} variant="outlined" sx={{ borderRadius: '10px', textTransform: 'none', fontWeight: 700, color: COLORS.primaryPurple, borderColor: COLORS.purpleBorder, '&:hover': { background: COLORS.purpleLight, borderColor: COLORS.purpleHover, color: COLORS.purpleHover } }}>Cancel</Button>
-                <Button fullWidth onClick={handleConfirmAssign} variant="contained" sx={{ borderRadius: '10px', textTransform: 'none', fontWeight: 700, background: COLORS.primaryPurple, '&:hover': { background: COLORS.purpleHover } }}>Confirm & Assign</Button>
+              <Button fullWidth onClick={() => setAssignModalOpen(false)} variant="outlined" sx={{ borderRadius: '10px', textTransform: 'none', fontWeight: 700, color: COLORS.primaryPurple, borderColor: COLORS.purpleBorder, '&:hover': { background: COLORS.purpleLight, borderColor: COLORS.purpleHover, color: COLORS.purpleHover } }}>Cancel</Button>
+              <Button fullWidth onClick={handleConfirmAssign} variant="contained" sx={{ borderRadius: '10px', textTransform: 'none', fontWeight: 700, background: COLORS.primaryPurple, '&:hover': { background: COLORS.purpleHover } }}>Confirm & Assign</Button>
             </Box>
-        </Box>
-      </Dialog>
+          </Box>
+        </Dialog>
       </CardContent>
     </Card>
   );
