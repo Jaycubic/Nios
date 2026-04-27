@@ -110,9 +110,9 @@ const teachingStrategies = [
 ];
 
 const priorityStyle = {
-  high: { bg: `${COLORS.amber}18`, color: COLORS.amberDark, label: '🔴 High' },
-  medium: { bg: `${COLORS.yellow}15`, color: COLORS.yellowDark, label: '🟡 Medium' },
-  low: { bg: `${COLORS.blue}12`, color: COLORS.blue, label: '🔵 Low' },
+  'Needs Support': { bg: `${COLORS.amber}18`, color: COLORS.amberDark, label: '🔴 Needs Support' },
+  'Improving': { bg: `${COLORS.yellow}15`, color: COLORS.yellowDark, label: '🟡 Improving' },
+  'On Track': { bg: `${COLORS.blue}12`, color: COLORS.blue, label: '🔵 On Track' },
 };
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
