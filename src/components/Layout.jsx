@@ -18,7 +18,6 @@ const PARENT_NAV = [
 ];
 const EDUCATOR_NAV = [
   { label: 'My Students', path: '/educator/mystudents', Icon: IconLearning },
-  { label: 'Class Overview', path: '/educator/class', Icon: IconClass },
   { label: 'Student View', path: '/educator/overview', Icon: IconDashboard },
 ];
 const STUDENT_NAV = [

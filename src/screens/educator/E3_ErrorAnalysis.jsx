@@ -77,8 +77,8 @@ const statusStyle = {
   mastered: { fill: COLORS.green, ring: COLORS.green, label: 'Mastered', text: '#fff' },
   proficient: { fill: COLORS.blue, ring: COLORS.blue, label: 'Proficient', text: '#fff' },
   developing: { fill: COLORS.yellow, ring: COLORS.yellow, label: 'Developing', text: '#fff' },
-  gap: { fill: COLORS.amber, ring: COLORS.amber, label: 'Not Started', tooltip: 'Prerequisite concept has not been started or needs review.', text: '#fff' },
-  blocked: { fill: '#B91C1C', ring: '#B91C1C', label: 'Not Started', tooltip: 'Blocked: Cannot proceed until prerequisite concepts are started.', text: '#fff' },
+  gap: { fill: COLORS.amber, ring: COLORS.amber, label: 'Needs Review', tooltip: 'Prerequisite concept has not been started or needs review.', text: '#fff' },
+  blocked: { fill: '#94a3b8', ring: '#94a3b8', label: 'Not Started', tooltip: 'Blocked: Cannot proceed until prerequisite concepts are started.', text: '#fff' },
 };
 
 // ─── Prerequisite Gap Map SVG ─────────────────────────────────────────────────
