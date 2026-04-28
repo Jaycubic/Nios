@@ -651,9 +651,10 @@ function ChapterDetailModal({ chapter, open, onClose, subjectColor, onPracticeOp
             if (chapter.status === 'completed') {
                 setExpandedPhase(null);
                 const allChecked = {};
-                LEARNING_PHASES.forEach(phase => {
+                const completedPhases = ['phase1', 'phase2']; // phase3/phase4 remain pending
+                completedPhases.forEach(phaseId => {
                     chapter.topics?.forEach(t => {
-                        allChecked[`${phase.id}-${t.name}`] = true;
+                        allChecked[`${phaseId}-${t.name}`] = true;
                     });
                 });
                 setCheckedTopics(allChecked);
